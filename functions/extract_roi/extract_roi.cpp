@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include "extract_roi.h"
 
-#define CIRCLE_FINGER_PROPORTION 0.12	/*Use to position the maximum inscribed circle up to the palm*/
+#define CIRCLE_FINGER_PROPORTION 0.13	/*Use to position the maximum inscribed circle up to the palm*/
 #define CIRCLE_WIDTH_PROPORTION 0.01	/*Use to reduce slightly the maximum inscribed circle*/
 #define CIRCLE_RADIUS_WIDTH_PROPORTION 0.22	/*Use to judge wthether the circle compliance with standards*/
 
