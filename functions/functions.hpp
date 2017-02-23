@@ -21,6 +21,8 @@
 
 #include "./extract_features/extract_features.h"
 
+#include "./process_parameter/process_parameter.h"
+
 #endif
 
 

@@ -16,7 +16,7 @@ Mat origin_image;
 Mat origin_rotate_image;
 double image_scale;
 
-int main( int argc, char **argvs )
+int main( int argc, char **argv )
 {
 	/*if( argc !=  2 ) {
 		printf( "error" );
@@ -25,6 +25,8 @@ int main( int argc, char **argvs )
 
 	Mat image;
 	image = imread( *++argvs , 1 );*/
+
+	process( argc, argv );
 	
 	/*Open Video*/
 	VideoCapture video( "../TestVideo/2016-12-25 184700.mp4" );

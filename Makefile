@@ -231,6 +231,33 @@ functions/pretreatment/binarization.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/pretreatment/binarization.cpp.s
 .PHONY : functions/pretreatment/binarization.cpp.s
 
+functions/process_parameter/process_parameter.o: functions/process_parameter/process_parameter.cpp.o
+
+.PHONY : functions/process_parameter/process_parameter.o
+
+# target to build an object file
+functions/process_parameter/process_parameter.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/process_parameter/process_parameter.cpp.o
+.PHONY : functions/process_parameter/process_parameter.cpp.o
+
+functions/process_parameter/process_parameter.i: functions/process_parameter/process_parameter.cpp.i
+
+.PHONY : functions/process_parameter/process_parameter.i
+
+# target to preprocess a source file
+functions/process_parameter/process_parameter.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/process_parameter/process_parameter.cpp.i
+.PHONY : functions/process_parameter/process_parameter.cpp.i
+
+functions/process_parameter/process_parameter.s: functions/process_parameter/process_parameter.cpp.s
+
+.PHONY : functions/process_parameter/process_parameter.s
+
+# target to generate assembly for a file
+functions/process_parameter/process_parameter.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/process_parameter/process_parameter.cpp.s
+.PHONY : functions/process_parameter/process_parameter.cpp.s
+
 global/general_function.o: global/general_function.cpp.o
 
 .PHONY : global/general_function.o
@@ -306,6 +333,9 @@ help:
 	@echo "... functions/pretreatment/binarization.o"
 	@echo "... functions/pretreatment/binarization.i"
 	@echo "... functions/pretreatment/binarization.s"
+	@echo "... functions/process_parameter/process_parameter.o"
+	@echo "... functions/process_parameter/process_parameter.i"
+	@echo "... functions/process_parameter/process_parameter.s"
 	@echo "... global/general_function.o"
 	@echo "... global/general_function.i"
 	@echo "... global/general_function.s"
