@@ -123,6 +123,7 @@ main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+<<<<<<< HEAD
 functions/extract_roi/extract_roi.o: functions/extract_roi/extract_roi.cpp.o
 
 .PHONY : functions/extract_roi/extract_roi.o
@@ -312,6 +313,8 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+=======
+>>>>>>> feature_statistic
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -321,6 +324,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... main"
+<<<<<<< HEAD
 	@echo "... functions/extract_roi/extract_roi.o"
 	@echo "... functions/extract_roi/extract_roi.i"
 	@echo "... functions/extract_roi/extract_roi.s"
@@ -342,6 +346,8 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+=======
+>>>>>>> feature_statistic
 .PHONY : help
 
 

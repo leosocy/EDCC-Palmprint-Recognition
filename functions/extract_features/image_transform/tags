@@ -1,0 +1,17 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+IWDT	wavelet.cpp	/^void IWDT( const Mat &src, Mat &dst, const string &w_name, const int level )$/;"	f	signature:( const Mat &src, Mat &dst, const string &w_name, const int level )
+IWDT	wavelet.h	/^extern void IWDT( const Mat &src, Mat &dst, const string &w_name, const int level );$/;"	p	signature:( const Mat &src, Mat &dst, const string &w_name, const int level )
+WDT	wavelet.cpp	/^void WDT( const Mat &src, Mat &dst, const string &w_name, const int level )$/;"	f	signature:( const Mat &src, Mat &dst, const string &w_name, const int level )
+WDT	wavelet.h	/^extern void WDT( const Mat &src, Mat &dst, const string &w_name, const int level );$/;"	p	signature:( const Mat &src, Mat &dst, const string &w_name, const int level )
+__WAVELET_H__	wavelet.h	8;"	d
+wavelet	wavelet.cpp	/^void wavelet( const string &w_name, Mat &lowFilter, Mat &highFilter )$/;"	f	signature:( const string &w_name, Mat &lowFilter, Mat &highFilter )
+wavelet	wavelet.cpp	/^void wavelet( const string &w_name, Mat &lowFilter, Mat &highFilter );$/;"	p	file:	signature:( const string &w_name, Mat &lowFilter, Mat &highFilter )
+waveletDecompose	wavelet.cpp	/^void waveletDecompose( const Mat &src, Mat &dst, const Mat &lowFilter, const Mat &highFilter )$/;"	f	signature:( const Mat &src, Mat &dst, const Mat &lowFilter, const Mat &highFilter )
+waveletDecompose	wavelet.cpp	/^void waveletDecompose( const Mat &src, Mat &dst, const Mat &lowFilter, const Mat &highFilter );$/;"	p	file:	signature:( const Mat &src, Mat &dst, const Mat &lowFilter, const Mat &highFilter )
+waveletReconstruct	wavelet.cpp	/^Mat waveletReconstruct( const Mat &_src, const Mat &_lowFilter, const Mat &_highFilter )const$/;"	f	signature:( const Mat &_src, const Mat &_lowFilter, const Mat &_highFilter ) const
+waveletReconstruct	wavelet.cpp	/^void waveletReconstruct( const Mat &src, Mat &dst, const Mat &lowFilter, const Mat &highFilter);$/;"	p	file:	signature:( const Mat &src, Mat &dst, const Mat &lowFilter, const Mat &highFilter)

@@ -65,6 +65,8 @@ int main( int argc, char **argv )
 			//Mat roi_d = Mat::zeros( roi.size(), CV_8U );
 		//	binarization( roi, roi_d );
 		//	imshow( "roi_d", roi_d ); 
+			WDT( roi, roi, "haar", 1 );
+			imshow( "roi_wavelet", roi );
 			successful_count++;	
 		}
 		
