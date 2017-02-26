@@ -62,11 +62,13 @@ int main( int argc, char **argv )
 		start_timing();
 		Mat roi;
 		if( extract_roi( dst, roi ) == EXIT_SUCCESS ) {
-			//Mat roi_d = Mat::zeros( roi.size(), CV_8U );
+			resize( roi, roi, Size( 512, 512 ) );
+			Mat roi_g;
+			cvtColor( roi, roi_g, CV_BGR2GRAY );
 		//	binarization( roi, roi_d );
 		//	imshow( "roi_d", roi_d ); 
-			WDT( roi, roi, "haar", 1 );
-			imshow( "roi_wavelet", roi );
+			WDT( roi_g, roi_g, "haar", 2 );
+			imshow( "roi_wavelet", roi_g );
 			successful_count++;	
 		}
 		

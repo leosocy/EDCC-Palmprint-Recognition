@@ -123,7 +123,33 @@ main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
-<<<<<<< HEAD
+functions/extract_features/image_transform/wavelet.o: functions/extract_features/image_transform/wavelet.cpp.o
+
+.PHONY : functions/extract_features/image_transform/wavelet.o
+
+# target to build an object file
+functions/extract_features/image_transform/wavelet.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/wavelet.cpp.o
+.PHONY : functions/extract_features/image_transform/wavelet.cpp.o
+
+functions/extract_features/image_transform/wavelet.i: functions/extract_features/image_transform/wavelet.cpp.i
+
+.PHONY : functions/extract_features/image_transform/wavelet.i
+
+# target to preprocess a source file
+functions/extract_features/image_transform/wavelet.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/wavelet.cpp.i
+.PHONY : functions/extract_features/image_transform/wavelet.cpp.i
+
+functions/extract_features/image_transform/wavelet.s: functions/extract_features/image_transform/wavelet.cpp.s
+
+.PHONY : functions/extract_features/image_transform/wavelet.s
+
+# target to generate assembly for a file
+functions/extract_features/image_transform/wavelet.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/wavelet.cpp.s
+.PHONY : functions/extract_features/image_transform/wavelet.cpp.s
+
 functions/extract_roi/extract_roi.o: functions/extract_roi/extract_roi.cpp.o
 
 .PHONY : functions/extract_roi/extract_roi.o
@@ -313,8 +339,6 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-=======
->>>>>>> feature_statistic
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -324,7 +348,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... main"
-<<<<<<< HEAD
+	@echo "... functions/extract_features/image_transform/wavelet.o"
+	@echo "... functions/extract_features/image_transform/wavelet.i"
+	@echo "... functions/extract_features/image_transform/wavelet.s"
 	@echo "... functions/extract_roi/extract_roi.o"
 	@echo "... functions/extract_roi/extract_roi.i"
 	@echo "... functions/extract_roi/extract_roi.s"
@@ -346,8 +372,6 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-=======
->>>>>>> feature_statistic
 .PHONY : help
 
 

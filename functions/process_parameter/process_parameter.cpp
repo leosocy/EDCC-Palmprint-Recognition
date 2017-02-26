@@ -65,7 +65,7 @@ void process( int argc, char **argv )
 					/*
 					 *test( filename, 0, 0 )
 					 * */
-				} else if( strcmp( *( argv + 4 ), "Databaseimage" ) == 0 ) {
+				} else if( strcmp( *( argv + 4 ), "DatabaseImage" ) == 0 ) {
 					/*
 					 * test( filename, 0, 1 )
 					 * */

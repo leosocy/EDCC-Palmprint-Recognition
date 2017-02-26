@@ -13,4 +13,6 @@
 #include "../../global/global_definition.h"
 #include "../../global/general_function.h"
 
+#include "./image_transform/wavelet.h"
+
 #endif /* extract_features.h */

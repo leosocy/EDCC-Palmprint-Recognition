@@ -15,6 +15,7 @@ void WDT( const Mat &src, Mat &dst, const string &w_name, const int level )
 {
 	//int reValue = THID_ERR_NONE;
 	Mat _src = Mat_<float>( src );
+	printf( " HERE \n" );
 	dst = Mat::zeros( _src.rows, _src.cols, _src.type() ); 
     int N = _src.rows;
     int D = _src.cols;
