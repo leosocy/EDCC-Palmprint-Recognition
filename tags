@@ -30,6 +30,9 @@ ARCHITECTURE_ID	CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	420;"	d	fi
 ARCHITECTURE_ID	CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	423;"	d	file:
 ARCHITECTURE_ID	CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	426;"	d	file:
 ARCHITECTURE_ID	CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	430;"	d	file:
+CIRCLE_FINGER_PROPORTION	functions/extract_roi/extract_roi.cpp	10;"	d	file:
+CIRCLE_RADIUS_WIDTH_PROPORTION	functions/extract_roi/extract_roi.cpp	12;"	d	file:
+CIRCLE_WIDTH_PROPORTION	functions/extract_roi/extract_roi.cpp	11;"	d	file:
 CMAKE_BINARY_DIR	Makefile	/^CMAKE_BINARY_DIR = \/home\/leosocy\/Desktop\/GraduationProject$/;"	m
 CMAKE_COMMAND	Makefile	/^CMAKE_COMMAND = \/usr\/bin\/cmake$/;"	m
 CMAKE_SOURCE_DIR	Makefile	/^CMAKE_SOURCE_DIR = \/home\/leosocy\/Desktop\/GraduationProject$/;"	m
@@ -359,6 +362,7 @@ _GENERAL_FUNCTION_H	global/general_function.h	9;"	d
 _GLOBAL_DEFINITION_H	global/global_definition.h	11;"	d
 __ADJUST_PALM_H__	functions/pretreatment/adjust_palm.h	9;"	d
 __BINARIZATION_H__	functions/pretreatment/binarization.h	9;"	d
+__EXTRACT_FEATURES_H__	functions/extract_features/extract_features.h	10;"	d
 __EXTRACT_ROI_H__	functions/extract_roi/extract_roi.h	9;"	d
 __FUNCTIONS_HPP__	functions/functions.hpp	2;"	d
 __PEAK_VALLEY_DETECT_H__	functions/extract_roi/peak_valley_detect.h	9;"	d
@@ -416,6 +420,8 @@ palm_adjust_angle	functions/pretreatment/adjust_palm.cpp	/^double palm_adjust_an
 peak_valley_detect	functions/extract_roi/extract_roi.cpp	/^extern int peak_valley_detect( const Mat &src, vector< cv::Point > &peak, vector< cv::Point > &valley );$/;"	p	file:	signature:( const Mat &src, vector< cv::Point > &peak, vector< cv::Point > &valley )
 peak_valley_detect	functions/extract_roi/peak_valley_detect.cpp	/^int peak_valley_detect( const Mat &src, vector< cv::Point> &peak, vector< cv::Point > &valley )$/;"	f	signature:( const Mat &src, vector< cv::Point> &peak, vector< cv::Point > &valley )
 peak_valley_detect	functions/extract_roi/peak_valley_detect.h	/^int peak_valley_detect( const Mat &src, vector< cv::Point > &peak, vector< cv::Point > &valley );$/;"	p	signature:( const Mat &src, vector< cv::Point > &peak, vector< cv::Point > &valley )
+point_dist	functions/extract_roi/extract_roi.cpp	/^double point_dist( const cv::Point &p1, const cv::Point &p2 )$/;"	f	signature:( const cv::Point &p1, const cv::Point &p2 )
+point_dist	functions/extract_roi/extract_roi.cpp	/^double point_dist( const cv::Point &p1, const cv::Point &p2 ); $/;"	p	file:	signature:( const cv::Point &p1, const cv::Point &p2 )
 qnxnto	CMakeFiles/3.5.1/CompilerIdC/CMakeCCompilerId.c	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
 qnxnto	CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
 remove_small_area	functions/pretreatment/adjust_palm.cpp	/^int remove_small_area( const Mat &src, Mat &dst )$/;"	f	signature:( const Mat &src, Mat &dst )

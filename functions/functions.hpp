@@ -14,6 +14,15 @@
  */
 #include "./extract_roi/extract_roi.h"
 
+
+/*
+ * extract_features
+ * */
+
+#include "./extract_features/extract_features.h"
+
+#include "./process_parameter/process_parameter.h"
+
 #endif
 
 
