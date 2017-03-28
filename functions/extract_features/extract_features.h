@@ -14,5 +14,11 @@
 #include "../../global/general_function.h"
 
 #include "./image_transform/wavelet.h"
+#include "./image_transform/dft.h"
+
+#include "./image_reduce_dimension/pca.h"
+
+#include "./features_statistic/extract_features_with_statisic.h"
+#include "./features_subspace/extract_features_with_subspace.h"
 
 #endif /* extract_features.h */

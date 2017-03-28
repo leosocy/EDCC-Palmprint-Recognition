@@ -123,6 +123,114 @@ main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+functions/extract_features/features_statistic/extract_features_with_statisic.o: functions/extract_features/features_statistic/extract_features_with_statisic.cpp.o
+
+.PHONY : functions/extract_features/features_statistic/extract_features_with_statisic.o
+
+# target to build an object file
+functions/extract_features/features_statistic/extract_features_with_statisic.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_statistic/extract_features_with_statisic.cpp.o
+.PHONY : functions/extract_features/features_statistic/extract_features_with_statisic.cpp.o
+
+functions/extract_features/features_statistic/extract_features_with_statisic.i: functions/extract_features/features_statistic/extract_features_with_statisic.cpp.i
+
+.PHONY : functions/extract_features/features_statistic/extract_features_with_statisic.i
+
+# target to preprocess a source file
+functions/extract_features/features_statistic/extract_features_with_statisic.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_statistic/extract_features_with_statisic.cpp.i
+.PHONY : functions/extract_features/features_statistic/extract_features_with_statisic.cpp.i
+
+functions/extract_features/features_statistic/extract_features_with_statisic.s: functions/extract_features/features_statistic/extract_features_with_statisic.cpp.s
+
+.PHONY : functions/extract_features/features_statistic/extract_features_with_statisic.s
+
+# target to generate assembly for a file
+functions/extract_features/features_statistic/extract_features_with_statisic.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_statistic/extract_features_with_statisic.cpp.s
+.PHONY : functions/extract_features/features_statistic/extract_features_with_statisic.cpp.s
+
+functions/extract_features/features_subspace/extract_features_with_subspace.o: functions/extract_features/features_subspace/extract_features_with_subspace.cpp.o
+
+.PHONY : functions/extract_features/features_subspace/extract_features_with_subspace.o
+
+# target to build an object file
+functions/extract_features/features_subspace/extract_features_with_subspace.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_subspace/extract_features_with_subspace.cpp.o
+.PHONY : functions/extract_features/features_subspace/extract_features_with_subspace.cpp.o
+
+functions/extract_features/features_subspace/extract_features_with_subspace.i: functions/extract_features/features_subspace/extract_features_with_subspace.cpp.i
+
+.PHONY : functions/extract_features/features_subspace/extract_features_with_subspace.i
+
+# target to preprocess a source file
+functions/extract_features/features_subspace/extract_features_with_subspace.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_subspace/extract_features_with_subspace.cpp.i
+.PHONY : functions/extract_features/features_subspace/extract_features_with_subspace.cpp.i
+
+functions/extract_features/features_subspace/extract_features_with_subspace.s: functions/extract_features/features_subspace/extract_features_with_subspace.cpp.s
+
+.PHONY : functions/extract_features/features_subspace/extract_features_with_subspace.s
+
+# target to generate assembly for a file
+functions/extract_features/features_subspace/extract_features_with_subspace.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_subspace/extract_features_with_subspace.cpp.s
+.PHONY : functions/extract_features/features_subspace/extract_features_with_subspace.cpp.s
+
+functions/extract_features/image_reduce_dimension/pca.o: functions/extract_features/image_reduce_dimension/pca.cpp.o
+
+.PHONY : functions/extract_features/image_reduce_dimension/pca.o
+
+# target to build an object file
+functions/extract_features/image_reduce_dimension/pca.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_reduce_dimension/pca.cpp.o
+.PHONY : functions/extract_features/image_reduce_dimension/pca.cpp.o
+
+functions/extract_features/image_reduce_dimension/pca.i: functions/extract_features/image_reduce_dimension/pca.cpp.i
+
+.PHONY : functions/extract_features/image_reduce_dimension/pca.i
+
+# target to preprocess a source file
+functions/extract_features/image_reduce_dimension/pca.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_reduce_dimension/pca.cpp.i
+.PHONY : functions/extract_features/image_reduce_dimension/pca.cpp.i
+
+functions/extract_features/image_reduce_dimension/pca.s: functions/extract_features/image_reduce_dimension/pca.cpp.s
+
+.PHONY : functions/extract_features/image_reduce_dimension/pca.s
+
+# target to generate assembly for a file
+functions/extract_features/image_reduce_dimension/pca.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_reduce_dimension/pca.cpp.s
+.PHONY : functions/extract_features/image_reduce_dimension/pca.cpp.s
+
+functions/extract_features/image_transform/dft.o: functions/extract_features/image_transform/dft.cpp.o
+
+.PHONY : functions/extract_features/image_transform/dft.o
+
+# target to build an object file
+functions/extract_features/image_transform/dft.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/dft.cpp.o
+.PHONY : functions/extract_features/image_transform/dft.cpp.o
+
+functions/extract_features/image_transform/dft.i: functions/extract_features/image_transform/dft.cpp.i
+
+.PHONY : functions/extract_features/image_transform/dft.i
+
+# target to preprocess a source file
+functions/extract_features/image_transform/dft.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/dft.cpp.i
+.PHONY : functions/extract_features/image_transform/dft.cpp.i
+
+functions/extract_features/image_transform/dft.s: functions/extract_features/image_transform/dft.cpp.s
+
+.PHONY : functions/extract_features/image_transform/dft.s
+
+# target to generate assembly for a file
+functions/extract_features/image_transform/dft.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/dft.cpp.s
+.PHONY : functions/extract_features/image_transform/dft.cpp.s
+
 functions/extract_features/image_transform/wavelet.o: functions/extract_features/image_transform/wavelet.cpp.o
 
 .PHONY : functions/extract_features/image_transform/wavelet.o
@@ -348,6 +456,18 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... main"
+	@echo "... functions/extract_features/features_statistic/extract_features_with_statisic.o"
+	@echo "... functions/extract_features/features_statistic/extract_features_with_statisic.i"
+	@echo "... functions/extract_features/features_statistic/extract_features_with_statisic.s"
+	@echo "... functions/extract_features/features_subspace/extract_features_with_subspace.o"
+	@echo "... functions/extract_features/features_subspace/extract_features_with_subspace.i"
+	@echo "... functions/extract_features/features_subspace/extract_features_with_subspace.s"
+	@echo "... functions/extract_features/image_reduce_dimension/pca.o"
+	@echo "... functions/extract_features/image_reduce_dimension/pca.i"
+	@echo "... functions/extract_features/image_reduce_dimension/pca.s"
+	@echo "... functions/extract_features/image_transform/dft.o"
+	@echo "... functions/extract_features/image_transform/dft.i"
+	@echo "... functions/extract_features/image_transform/dft.s"
 	@echo "... functions/extract_features/image_transform/wavelet.o"
 	@echo "... functions/extract_features/image_transform/wavelet.i"
 	@echo "... functions/extract_features/image_transform/wavelet.s"

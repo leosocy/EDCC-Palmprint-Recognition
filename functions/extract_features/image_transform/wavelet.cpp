@@ -15,7 +15,6 @@ void WDT( const Mat &src, Mat &dst, const string &w_name, const int level )
 {
 	//int reValue = THID_ERR_NONE;
 	Mat _src = Mat_<float>( src );
-	printf( " HERE \n" );
 	dst = Mat::zeros( _src.rows, _src.cols, _src.type() ); 
     int N = _src.rows;
     int D = _src.cols;
@@ -39,8 +38,14 @@ void WDT( const Mat &src, Mat &dst, const string &w_name, const int level )
         	}
         	waveletDecompose( oneRow, oneRow, lowFilter, highFilter );
             for ( int j = 0; j < col; j++ )
-            {
-            	dst.at<float>( i, j ) = oneRow.at<float>( 0, j );
+            {	//此处需要将灰度值归一化到0-255，不然后期计算图片相似度会导致差异化减小
+		if( oneRow.at<float>( 0, j ) < 0 ) {
+            		dst.at<float>( i, j ) = 0;
+		} else if( oneRow.at<float>( 0, j ) > 1) {
+			dst.at<float>( i, j ) = 255;		
+		} else {
+			dst.at<float>( i, j ) = oneRow.at<float>( 0, j ) * 255;
+		}
             }
 		}
  
@@ -65,12 +70,7 @@ void WDT( const Mat &src, Mat &dst, const string &w_name, const int level )
                 dst.at<float>( i, j ) = oneCol.at<float>( i, 0 );
             }
         }
- 
-#if 0
-        normalize( dst, dst, 0, 255, NORM_MINMAX );
-        IplImage dstImg2 = IplImage(dst); 
-        cvSaveImage( "dst.jpg", &dstImg2 );
-#endif
+	
  
         row /= 2;
         col /= 2;
@@ -107,7 +107,7 @@ void IWDT( const Mat &src, Mat &dst, const string &w_name, const int level )
             Mat oneCol = Mat::zeros( row, 1, _src.type() );
             for ( int i = 0; i < row; i++ )
             {
-                oneCol.at<float>( i, 0 ) = _src.at<float>( i, j );
+				oneCol.at<float>( i, 0 ) = _src.at<float>( i, j );
             }
 			Mat oneCol_t = Mat::zeros( 1, row, _src.type() );
             waveletReconstruct( oneCol.t(), oneCol_t, lowFilter, highFilter );
@@ -167,11 +167,11 @@ void wavelet( const string &w_name, Mat &lowFilter, Mat &highFilter )
         lowFilter = Mat::zeros( 1, N, CV_32F );
         highFilter = Mat::zeros( 1, N, CV_32F );
         
-        lowFilter.at<float>( 0, 0 ) = 1 / sqrtf( N ); 
-        lowFilter.at<float>( 0, 1 ) = 1 / sqrtf( N ); 
+        lowFilter.at<float>( 0, 0 ) =  1.0 / sqrtf( N ); 
+        lowFilter.at<float>( 0, 1 ) = 1.0 /  sqrtf ( N ); 
  
-        highFilter.at<float>( 0, 0 ) = -1 / sqrtf( N ); 
-        highFilter.at<float>( 0, 1 ) = 1 / sqrtf( N ); 
+        highFilter.at<float>( 0, 0 ) = -1.0 / sqrtf ( N ); 
+        highFilter.at<float>( 0, 1 ) = 1.0 /  sqrtf( N ); 
     }
     if ( w_name =="sym2" )
     {
@@ -211,15 +211,13 @@ void waveletDecompose( const Mat &src, Mat &dst, const Mat &lowFilter, const Mat
     filter2D( _src, dst1, -1, _lowFilter );
     filter2D( _src, dst2, -1, _highFilter );
  
- 
     /// 下采样
     Mat downDst1 = Mat::zeros( 1, D / 2, _src.type() );
     Mat downDst2 = Mat::zeros( 1, D / 2, _src.type() );
  
     resize( dst1, downDst1, downDst1.size() );
     resize( dst2, downDst2, downDst2.size() );
- 
- 
+	
     /// 数据拼接
     for ( int i = 0; i < D / 2; i++ )
     {

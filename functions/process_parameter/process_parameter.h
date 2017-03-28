@@ -18,8 +18,12 @@
  *		(If the parameter is 'Predict', you should enter the 'PredictData' which is \
  *		a path of one picture or one video)
  * parameter2:	TrainList/TestList/PredictData
- * parameter3:	Image/Video(Type to be processed)
- * parameter4:	CameraImage/DatabaseImage(CameraImage is shotted by phone. DatabaseImage is provided by Polyu)
+ * parameter3:	DatabaseImageWithRoi/DatabaseImage/CameraImage/Video(DatabaseImageWithRoi is provided by Multispectral.   Video and CameraImage is shotted by phone. DatabaseImage is provided by Polyui
+ * 
+ * Type:	DatabaseImageWithRoi : 0
+ *			DatabaseImage        : 1
+ *			CameraImage			 : 2
+ *			Video				 : 3
  */
 
 void print_usage( void );

@@ -13,7 +13,7 @@
 void print_usage( void )
 {
 	printf("Usage: ./main	[Train/Test/Predict]	[TrainListFileName/TestListFileName/PredictDataFileName] \n \
-		[Image/Video]	'[CameraImage/Databaseimage]'\n");
+		[DatabaseImageWithRoi/DatabaseImage/CameraImage/Video\n");
 }
 
 void process( int argc, char **argv )
@@ -32,27 +32,25 @@ void process( int argc, char **argv )
 			printf( "%s is not exist.Please provide a right filename.", *( argv + 2 ) );			
 			exit( EXIT_FAILURE );
 		} else {
-			if( strcmp( para3, "Image" ) == 0 ) {
-				if( strcmp( *( argv + 4 ), "CameraImage" ) == 0 ) {
+			if( strcmp( para3, "DatabaseImageWithRoi" ) == 0 ) {
 					/*
-					 *train( filename, 0, 0 )
+					 *train( filename, 0 )
 					 * */
-				} else if( strcmp( *( argv + 4 ), "Databaseimage" ) == 0 ) {
+			} else if( strcmp( para3, "DatabaseImage" ) == 0 ) {
 					/*
-					 * train( filename, 0, 1 )
+					 * train( filename, 1 )
 					 * */
-				} else {
+			} else if( strcmp( para3, "CameraImage") == 0 ) {
+					/*
+					 * train( filename, 2 )
+					 */
+			} else if( strcmp( para3, "Video" ) == 0 ) {
+					/*
+					 *train( filename, 3 ) 
+					 */
+			} else {
 					print_usage();
 					exit( EXIT_FAILURE );
-				}
-			} else if( strcmp( para3, "Video" ) == 0 ) {
-				/*
-				 * train( filename, 1 )
-				 * */
-				
-			} else {
-				print_usage();
-				exit( EXIT_FAILURE );
 			}
 		}
 	} else if( strcmp( para1, "Test" ) == 0 ) {
@@ -60,27 +58,25 @@ void process( int argc, char **argv )
 			printf( "%s is not exist.Please provide a right filename.", *( argv + 2 ) );			
 			exit( EXIT_FAILURE );
 		} else {
-			if( strcmp( para3, "Image" ) == 0 ) {
-				if( strcmp( *( argv + 4 ), "CameraImage" ) == 0 ) {
+			if( strcmp( para3, "DatabaseImageWithRoi" ) == 0 ) {
 					/*
-					 *test( filename, 0, 0 )
+					 *test( filename, 0 )
 					 * */
-				} else if( strcmp( *( argv + 4 ), "DatabaseImage" ) == 0 ) {
+			} else if( strcmp( para3, "DatabaseImage" ) == 0 ) {
 					/*
-					 * test( filename, 0, 1 )
+					 * test( filename, 1 )
 					 * */
-				} else {
+			} else if( strcmp( para3, "CameraImage") == 0 ) {
+					/*
+					 * test( filename, 2 )
+					 */
+			} else if( strcmp( para3, "Video" ) == 0 ) {
+					/*
+					 *test( filename, 3 ) 
+					 */
+			} else {
 					print_usage();
 					exit( EXIT_FAILURE );
-				}
-			} else if( strcmp( para3, "Video" ) == 0 ) {
-				/*
-				 * test( filename, 1 )
-				 * */
-				
-			} else {
-				print_usage();
-				exit( EXIT_FAILURE );
 			}
 		}
 	} else if( strcmp( para1, "Predict" ) == 0 ) {
@@ -88,27 +84,25 @@ void process( int argc, char **argv )
 			printf( "%s is not exist.Please provide a right filename.", *( argv + 2 ) );			
 			exit( EXIT_FAILURE );
 		} else {
-			if( strcmp( para3, "Image" ) == 0 ) {
-				if( strcmp( *( argv + 4 ), "CameraImage" ) == 0 ) {
+			if( strcmp( para3, "DatabaseImageWithRoi" ) == 0 ) {
 					/*
-					 *predict( filename, 0, 0 )
+					 *predict( filename, 0 )
 					 * */
-				} else if( strcmp( *( argv + 4 ), "Databaseimage" ) == 0 ) {
+			} else if( strcmp( para3, "DatabaseImage" ) == 0 ) {
 					/*
-					 * predict( filename, 0, 1 )
+					 * predict( filename, 1 )
 					 * */
-				} else {
+			} else if( strcmp( para3, "CameraImage") == 0 ) {
+					/*
+					 * predict( filename, 2 )
+					 */
+			} else if( strcmp( para3, "Video" ) == 0 ) {
+					/*
+					 *predict( filename, 3 ) 
+					 */
+			} else {
 					print_usage();
 					exit( EXIT_FAILURE );
-				}
-			} else if( strcmp( para3, "Video" ) == 0 ) {
-				/*
-				 * predict( filename, 1 )
-				 * */
-				
-			} else {
-				print_usage();
-				exit( EXIT_FAILURE );
 			}
 		}
 	} else {

@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./main Train ./tags Image CameraImage
+./main Train ./tags DatabaseImageWithRoi
