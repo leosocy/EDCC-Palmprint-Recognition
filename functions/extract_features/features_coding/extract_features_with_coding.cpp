@@ -41,7 +41,9 @@ int train_coding( const char *trainlist )
 			Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );
 			resize(image_gray, image_gray, dsize);
 			Mat gaborResult;
-			gaborFilter( image_gray, gaborResult, 5, 18, Size( 5, 5 ), 1 );
+			GaborFilter filter;
+			filter.numOfDirections = 12;
+			filter.doBatchGaborFilter( image_gray, gaborResult, GaborFilter::GABOR_KERNEL_REAL );
 			imshow( "gabor", gaborResult );
 			waitKey();
 			/*************************extract features with WDT********************************/
