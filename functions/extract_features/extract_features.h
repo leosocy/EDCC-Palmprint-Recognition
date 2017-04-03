@@ -20,5 +20,6 @@
 
 #include "./features_statistic/extract_features_with_statisic.h"
 #include "./features_subspace/extract_features_with_subspace.h"
+#include "./features_coding/extract_features_with_conding.h"
 
 #endif /* extract_features.h */
