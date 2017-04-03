@@ -18,6 +18,7 @@ using namespace cv;
 using namespace std;
 
 #include "../../../global/global_definition.h"
+#include "../image_transform/gabor.h"
 
 typedef struct features_coding {
 	int id;

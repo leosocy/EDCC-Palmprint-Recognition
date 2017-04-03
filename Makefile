@@ -123,6 +123,33 @@ main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+functions/extract_features/features_coding/extract_features_with_coding.o: functions/extract_features/features_coding/extract_features_with_coding.cpp.o
+
+.PHONY : functions/extract_features/features_coding/extract_features_with_coding.o
+
+# target to build an object file
+functions/extract_features/features_coding/extract_features_with_coding.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_coding/extract_features_with_coding.cpp.o
+.PHONY : functions/extract_features/features_coding/extract_features_with_coding.cpp.o
+
+functions/extract_features/features_coding/extract_features_with_coding.i: functions/extract_features/features_coding/extract_features_with_coding.cpp.i
+
+.PHONY : functions/extract_features/features_coding/extract_features_with_coding.i
+
+# target to preprocess a source file
+functions/extract_features/features_coding/extract_features_with_coding.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_coding/extract_features_with_coding.cpp.i
+.PHONY : functions/extract_features/features_coding/extract_features_with_coding.cpp.i
+
+functions/extract_features/features_coding/extract_features_with_coding.s: functions/extract_features/features_coding/extract_features_with_coding.cpp.s
+
+.PHONY : functions/extract_features/features_coding/extract_features_with_coding.s
+
+# target to generate assembly for a file
+functions/extract_features/features_coding/extract_features_with_coding.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_coding/extract_features_with_coding.cpp.s
+.PHONY : functions/extract_features/features_coding/extract_features_with_coding.cpp.s
+
 functions/extract_features/features_statistic/extract_features_with_statisic.o: functions/extract_features/features_statistic/extract_features_with_statisic.cpp.o
 
 .PHONY : functions/extract_features/features_statistic/extract_features_with_statisic.o
@@ -230,6 +257,33 @@ functions/extract_features/image_transform/dft.s: functions/extract_features/ima
 functions/extract_features/image_transform/dft.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/dft.cpp.s
 .PHONY : functions/extract_features/image_transform/dft.cpp.s
+
+functions/extract_features/image_transform/gabor.o: functions/extract_features/image_transform/gabor.cpp.o
+
+.PHONY : functions/extract_features/image_transform/gabor.o
+
+# target to build an object file
+functions/extract_features/image_transform/gabor.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/gabor.cpp.o
+.PHONY : functions/extract_features/image_transform/gabor.cpp.o
+
+functions/extract_features/image_transform/gabor.i: functions/extract_features/image_transform/gabor.cpp.i
+
+.PHONY : functions/extract_features/image_transform/gabor.i
+
+# target to preprocess a source file
+functions/extract_features/image_transform/gabor.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/gabor.cpp.i
+.PHONY : functions/extract_features/image_transform/gabor.cpp.i
+
+functions/extract_features/image_transform/gabor.s: functions/extract_features/image_transform/gabor.cpp.s
+
+.PHONY : functions/extract_features/image_transform/gabor.s
+
+# target to generate assembly for a file
+functions/extract_features/image_transform/gabor.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_transform/gabor.cpp.s
+.PHONY : functions/extract_features/image_transform/gabor.cpp.s
 
 functions/extract_features/image_transform/wavelet.o: functions/extract_features/image_transform/wavelet.cpp.o
 
@@ -456,6 +510,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... main"
+	@echo "... functions/extract_features/features_coding/extract_features_with_coding.o"
+	@echo "... functions/extract_features/features_coding/extract_features_with_coding.i"
+	@echo "... functions/extract_features/features_coding/extract_features_with_coding.s"
 	@echo "... functions/extract_features/features_statistic/extract_features_with_statisic.o"
 	@echo "... functions/extract_features/features_statistic/extract_features_with_statisic.i"
 	@echo "... functions/extract_features/features_statistic/extract_features_with_statisic.s"
@@ -468,6 +525,9 @@ help:
 	@echo "... functions/extract_features/image_transform/dft.o"
 	@echo "... functions/extract_features/image_transform/dft.i"
 	@echo "... functions/extract_features/image_transform/dft.s"
+	@echo "... functions/extract_features/image_transform/gabor.o"
+	@echo "... functions/extract_features/image_transform/gabor.i"
+	@echo "... functions/extract_features/image_transform/gabor.s"
 	@echo "... functions/extract_features/image_transform/wavelet.o"
 	@echo "... functions/extract_features/image_transform/wavelet.i"
 	@echo "... functions/extract_features/image_transform/wavelet.s"

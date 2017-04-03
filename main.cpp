@@ -97,10 +97,10 @@ int main( int argc, char **argv )
 		//	imshow( "roi_g", roi_g ); 
 			char list_name_train[] = "./roi_list/Multispectral_B_Train.txt";
 			char list_name_test[] = "./roi_list/Multispectral_B_Test.txt";
-			create_predict_list( "./roi_list/Multispectral_B.txt", "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
-			predict_subspace( "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
-		/*	train_subspace( list_name_train );
-			getchar();
+		//	create_predict_list( "./roi_list/Multispectral_B.txt", "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
+		//	predict_subspace( "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
+			train_coding( list_name_train );
+		/*	getchar();
 			test_subspace( list_name_test );*/
 			/*train_statistic( list_name_train );
 			
