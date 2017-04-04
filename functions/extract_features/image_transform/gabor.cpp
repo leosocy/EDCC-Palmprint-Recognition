@@ -35,8 +35,8 @@ void GaborFilter::doBatchGaborFilter( const Mat &src, Mat &result, int kernelTyp
 	Mat dst_t;
 	// variables for filter2D  
 	Point archor( -1, -1 );
-	int ddepth = CV_64F;  
-	double delta = 0;
+	//int ddepth = CV_64F;  
+	//double delta = 0;
 
 	// filter image with gabor bank  
 	Mat totalMat;

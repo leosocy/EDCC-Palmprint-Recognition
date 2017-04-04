@@ -8,14 +8,22 @@
 #ifndef __CODING_ALGORITHM_H__
 #define __CODING_ALGORITHM_H__
 
-class DCC
+#include "../features_base.h"
+
+#include <opencv2/opencv.hpp>
+using namespace cv;
+#include <stdio.h>
+#include <cmath>
+using namespace std;
+
+class DRCC : public PRFeatures
 {
 public:
-	DCC();
-	virtual ~DCC();
-
-
-
+	DRCC();
+	~DRCC();
+	
+	int saveFeatures( const char *filename );
+	int loadFeatures( const char *filename );
 }
 
 #endif /* end of coding_algorithm */
