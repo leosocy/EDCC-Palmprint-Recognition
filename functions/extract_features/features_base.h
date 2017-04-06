@@ -28,8 +28,8 @@ public:
 	virtual int saveFeatures( const char *filename ) = 0;
 	virtual int loadFeatures( const char *filename ) = 0;
 
-	Mat features;
-	string label;
+	vector< cv::Mat> features;
+	vector< string > labels;
 };
 
 #endif /* end of features_base */

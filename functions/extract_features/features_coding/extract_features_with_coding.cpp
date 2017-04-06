@@ -40,11 +40,13 @@ int train_coding( const char *trainlist )
 			double proportion = (double)image.cols / image.rows;
 			Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );
 			resize(image_gray, image_gray, dsize);
-			Mat gaborResult;
-			GaborFilter filter;
-			filter.numOfDirections = 12;
-			filter.doBatchGaborFilter( image_gray, gaborResult, GaborFilter::GABOR_KERNEL_REAL );
-			imshow( "gabor", gaborResult );
+			//Mat gaborResult;
+			//GaborFilter filter;
+			//filter.numOfDirections = 12;
+			//filter.doBatchGaborFilter( image_gray, gaborResult, GaborFilter::GABOR_KERNEL_REAL );
+			DRCC d;
+			d.doOnceDRCC( image_gray, "1" );
+			//imshow( "gabor", gaborResult );
 			waitKey();
 			/*************************extract features with WDT********************************/
 			/*WDT( image_gray, image_gray, "haar", WAVELET_LEVEL );

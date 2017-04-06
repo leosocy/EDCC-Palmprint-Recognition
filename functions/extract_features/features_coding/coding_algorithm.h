@@ -14,6 +14,7 @@
 using namespace cv;
 #include <stdio.h>
 #include <cmath>
+#include <assert.h>
 using namespace std;
 
 class DRCC : public PRFeatures
@@ -24,6 +25,13 @@ public:
 	
 	int saveFeatures( const char *filename );
 	int loadFeatures( const char *filename );
-}
+	
+	int doBatchDRCC( const char *filename );
+	int doOnceDRCC( const Mat &src, const string &label );
+	
+
+private:
+	int getMaxGaborResponse( const Mat &src, Mat &result, int scale, int direction, int kernelType );
+};
 
 #endif /* end of coding_algorithm */

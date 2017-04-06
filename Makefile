@@ -123,6 +123,60 @@ main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+functions/extract_features/features_base.o: functions/extract_features/features_base.cpp.o
+
+.PHONY : functions/extract_features/features_base.o
+
+# target to build an object file
+functions/extract_features/features_base.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_base.cpp.o
+.PHONY : functions/extract_features/features_base.cpp.o
+
+functions/extract_features/features_base.i: functions/extract_features/features_base.cpp.i
+
+.PHONY : functions/extract_features/features_base.i
+
+# target to preprocess a source file
+functions/extract_features/features_base.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_base.cpp.i
+.PHONY : functions/extract_features/features_base.cpp.i
+
+functions/extract_features/features_base.s: functions/extract_features/features_base.cpp.s
+
+.PHONY : functions/extract_features/features_base.s
+
+# target to generate assembly for a file
+functions/extract_features/features_base.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_base.cpp.s
+.PHONY : functions/extract_features/features_base.cpp.s
+
+functions/extract_features/features_coding/DRCC.o: functions/extract_features/features_coding/DRCC.cpp.o
+
+.PHONY : functions/extract_features/features_coding/DRCC.o
+
+# target to build an object file
+functions/extract_features/features_coding/DRCC.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_coding/DRCC.cpp.o
+.PHONY : functions/extract_features/features_coding/DRCC.cpp.o
+
+functions/extract_features/features_coding/DRCC.i: functions/extract_features/features_coding/DRCC.cpp.i
+
+.PHONY : functions/extract_features/features_coding/DRCC.i
+
+# target to preprocess a source file
+functions/extract_features/features_coding/DRCC.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_coding/DRCC.cpp.i
+.PHONY : functions/extract_features/features_coding/DRCC.cpp.i
+
+functions/extract_features/features_coding/DRCC.s: functions/extract_features/features_coding/DRCC.cpp.s
+
+.PHONY : functions/extract_features/features_coding/DRCC.s
+
+# target to generate assembly for a file
+functions/extract_features/features_coding/DRCC.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_coding/DRCC.cpp.s
+.PHONY : functions/extract_features/features_coding/DRCC.cpp.s
+
 functions/extract_features/features_coding/extract_features_with_coding.o: functions/extract_features/features_coding/extract_features_with_coding.cpp.o
 
 .PHONY : functions/extract_features/features_coding/extract_features_with_coding.o
@@ -510,6 +564,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... main"
+	@echo "... functions/extract_features/features_base.o"
+	@echo "... functions/extract_features/features_base.i"
+	@echo "... functions/extract_features/features_base.s"
+	@echo "... functions/extract_features/features_coding/DRCC.o"
+	@echo "... functions/extract_features/features_coding/DRCC.i"
+	@echo "... functions/extract_features/features_coding/DRCC.s"
 	@echo "... functions/extract_features/features_coding/extract_features_with_coding.o"
 	@echo "... functions/extract_features/features_coding/extract_features_with_coding.i"
 	@echo "... functions/extract_features/features_coding/extract_features_with_coding.s"

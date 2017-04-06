@@ -15,5 +15,7 @@ add_executable( main main.cpp
 ./functions/extract_features/features_statistic/extract_features_with_statisic.cpp 
 ./functions/extract_features/features_subspace/extract_features_with_subspace.cpp 
 ./functions/extract_features/image_reduce_dimension/pca.cpp
-./functions/extract_features/features_coding/extract_features_with_coding.cpp)
+./functions/extract_features/features_coding/extract_features_with_coding.cpp
+./functions/extract_features/features_base.cpp
+./functions/extract_features/features_coding/DRCC.cpp)
 target_link_libraries( main ${OpenCV_LIBS} )
