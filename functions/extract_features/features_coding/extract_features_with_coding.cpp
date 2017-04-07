@@ -14,7 +14,6 @@ int train_coding( const char *trainlist )
 		printf( "%s Not Exist.\n", trainlist );
 		return EXIT_FAILURE;
 	}
-
 	string feature_string = "feature_string_info/CODING_FEATURES.xml";
 	FileStorage feature_file( feature_string, FileStorage::READ );
 	FileNode n;
@@ -45,6 +44,7 @@ int train_coding( const char *trainlist )
 			//filter.numOfDirections = 12;
 			//filter.doBatchGaborFilter( image_gray, gaborResult, GaborFilter::GABOR_KERNEL_REAL );
 			DRCC d;
+			imshow( "origin", image_gray );
 			d.doOnceDRCC( image_gray, "1" );
 			//imshow( "gabor", gaborResult );
 			waitKey();

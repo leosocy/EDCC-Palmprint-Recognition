@@ -31,6 +31,8 @@ public:
 	
 
 private:
+	int numOfScales;
+	int numOfDirections;
 	int getMaxGaborResponse( const Mat &src, Mat &result, int scale, int direction, int kernelType );
 };
 
