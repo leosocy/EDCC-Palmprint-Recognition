@@ -29,8 +29,8 @@ void GaborFilter::doBatchGaborFilter( const Mat &src, Mat &result, int kernelTyp
 	CV_Assert( kernelType == GaborFilter::GABOR_KERNEL_REAL || kernelType == GaborFilter::GABOR_KERNEL_IMAG || kernelType == GaborFilter::GABOR_KERNEL_MAG );
 
 	int U = 0, V = 0;
-	int UStart = 0, UEnd = this->numOfDirections;
-	int VStart = 0, VEnd = this->numOfScales;
+	int UStart = 0, UEnd = this->numOfScales;
+	int VStart = 0, VEnd = this->numOfDirections;
 
 	Mat dst_t;
 	// variables for filter2D  
@@ -47,13 +47,13 @@ void GaborFilter::doBatchGaborFilter( const Mat &src, Mat &result, int kernelTyp
 			if (V == VStart) {
 				colMat = dst_t;
 			} else{
-				vconcat( colMat, dst_t, colMat );
+				hconcat( colMat, dst_t, colMat );
 			}
 		}
 		if ( U == UStart ) {
 			totalMat = colMat;
 		} else{
-			hconcat( totalMat, colMat, totalMat );
+			vconcat( totalMat, colMat, totalMat );
 		}
 	}
 	
@@ -75,15 +75,51 @@ void GaborFilter::doOnceGaborFilter( const Mat &src, Mat &result, int scale, int
 	normalize( result, result, 0, 1, CV_MINMAX );
 }
 
+void GaborFilter::showGaborFilter( Mat &result, int kernelType )
+{
+	CV_Assert( kernelType == GaborFilter::GABOR_KERNEL_REAL || kernelType == GaborFilter::GABOR_KERNEL_IMAG || kernelType == GaborFilter::GABOR_KERNEL_MAG );
+
+	int GaborH = 69;
+	int GaborW = 69;
+	Mat gaborKernel;
+ 	int ddepth = CV_64F;
+
+	int U = 0, V = 0;
+	int UStart = 0, UEnd = this->numOfScales;
+	int VStart = 0, VEnd = this->numOfDirections;
+
+	Mat dst_t; 
+	Point archor( -1, -1 );
+	Mat totalMat;
+	for ( U = UStart; U < UEnd; U++ ) {
+		Mat colMat;
+		for ( V = VStart; V < VEnd; V++ ) {
+			getGaborKernel( gaborKernel, GaborW, GaborH, U, V, this->Kmax, this->f, this->sigma, this->ktype, kernelType );
+			normalize( gaborKernel, gaborKernel, 0, 1, CV_MINMAX );
+			if (V == VStart) {
+				colMat = gaborKernel;
+			} else{
+				hconcat( colMat, gaborKernel, colMat );
+			}
+		}
+		if ( U == UStart ) {
+			totalMat = colMat;
+		} else{
+			vconcat( totalMat, colMat, totalMat );
+		}
+	}
+	result = totalMat.clone();
+}
+
 void GaborFilter::getGaborKernel( Mat &gaborKernel, int kernelWidth, int kernelHeight, int scale, int direction, double Kmax, double f, double sigma, int ktype, int kernelType )
 {
 	CV_Assert( ktype == CV_32F || ktype == CV_64F );  
 	CV_Assert( kernelType == GaborFilter::GABOR_KERNEL_REAL || kernelType == GaborFilter::GABOR_KERNEL_IMAG || kernelType == GaborFilter::GABOR_KERNEL_MAG );
 	int half_width = kernelWidth / 2;
 	int half_height = kernelHeight / 2;
-	double Qu = CV_PI * scale / 8;
+	double Qu = CV_PI * direction / this->numOfDirections;
 	double sqsigma = sigma * sigma;
-	double Kv = Kmax / pow( f, direction );
+	double Kv = Kmax / pow( f, scale );
 	double postmean = exp( -sqsigma / 2 );
 	Mat kernel( kernelWidth, kernelHeight, ktype );
 	Mat kernel_2( kernelWidth, kernelHeight, ktype );

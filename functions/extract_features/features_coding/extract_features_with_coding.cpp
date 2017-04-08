@@ -43,6 +43,7 @@ int train_coding( const char *trainlist )
 			//GaborFilter filter;
 			//filter.numOfDirections = 12;
 			//filter.doBatchGaborFilter( image_gray, gaborResult, GaborFilter::GABOR_KERNEL_REAL );
+
 			DRCC d;
 			imshow( "origin", image_gray );
 			d.doOnceDRCC( image_gray, "1" );

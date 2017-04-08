@@ -9,6 +9,7 @@
 #define __CODING_ALGORITHM_H__
 
 #include "../features_base.h"
+#include "../../../global/global_definition.h"
 
 #include <opencv2/opencv.hpp>
 using namespace cv;
@@ -16,6 +17,7 @@ using namespace cv;
 #include <cmath>
 #include <assert.h>
 using namespace std;
+
 
 class DRCC : public PRFeatures
 {
@@ -29,11 +31,15 @@ public:
 	int doBatchDRCC( const char *filename );
 	int doOnceDRCC( const Mat &src, const string &label );
 	
-
+	double matching( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy );
 private:
 	int numOfScales;
 	int numOfDirections;
-	int getMaxGaborResponse( const Mat &src, Mat &result, int scale, int direction, int kernelType );
+
+	vector< Mat > CVector;
+	vector< Mat > CsVector;
+	vector< string > Labels;
+	int getMaxGaborResponse( const Mat &src, Mat &result, Mat &C, Mat &Cs, int scale, int direction, int kernelType );
 };
 
 #endif /* end of coding_algorithm */

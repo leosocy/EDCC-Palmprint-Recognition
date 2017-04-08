@@ -24,6 +24,7 @@ public:
 	
 	void doBatchGaborFilter( const Mat &src, Mat &result, int kernelType = GaborFilter::GABOR_KERNEL_REAL );
 	void doOnceGaborFilter( const Mat &src, Mat &result, int scale, int direction, int kernelType = GaborFilter::GABOR_KERNEL_REAL );
+	void showGaborFilter( Mat &result, int kernelType = GaborFilter::GABOR_KERNEL_REAL );
 	void getGaborKernel( Mat &gaborKernel, int kernelWidth, int kernelHeight, int scale, int direction, double Kmax, double f, double sigma, int ktype, int kernelType );	
 	
 	//Gabor parameter.Default kernelSize = ( 5, 5 ), Kmax = PI / 2, f = sqrt( 2.0 ), sigma = 2 * PI, numOfScales = 5, numOfDirections = 8, ktype = CV_64F
