@@ -42,4 +42,28 @@ private:
 	int getMaxGaborResponse( const Mat &src, Mat &result, Mat &C, Mat &Cs, int scale, int direction, int kernelType );
 };
 
+class BDRCC : public PRFeatures		//Blocking DRCC
+{
+public:
+	BDRCC();
+	~BDRCC();
+	
+	int saveFeatures( const char *filename );
+	int loadFeatures( const char *filename );
+	
+	int doBatchBDRCC( const char *filename );
+	int doOnceBDRCC( const Mat &src, const string &label );
+	
+	double matching( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy );
+private:
+	int numOfScales;
+	int numOfDirections;
+	cv::Size blockingSize;
+	cv::Size imageSize;
+
+	vector< Mat > CVector;
+	vector< Mat > CsVector;
+	vector< string > Labels;
+};
+
 #endif /* end of coding_algorithm */

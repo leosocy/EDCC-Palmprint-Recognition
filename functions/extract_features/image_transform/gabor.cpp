@@ -23,7 +23,7 @@ GaborFilter::~GaborFilter()
 {
 }
 
-void GaborFilter::doBatchGaborFilter( const Mat &src, Mat &result, int kernelType )
+void GaborFilter::doBatchGaborFilter( const Mat &src, Mat &result, int kernelType, bool bMerge )
 {
 	CV_Assert( this->kernelSize.width % 2 == 1 && this->kernelSize.height % 2 == 1 ); //kernel size(weight, height) should be odd
 	CV_Assert( kernelType == GaborFilter::GABOR_KERNEL_REAL || kernelType == GaborFilter::GABOR_KERNEL_IMAG || kernelType == GaborFilter::GABOR_KERNEL_MAG );
@@ -33,6 +33,7 @@ void GaborFilter::doBatchGaborFilter( const Mat &src, Mat &result, int kernelTyp
 	int VStart = 0, VEnd = this->numOfDirections;
 
 	Mat dst_t;
+	vector< Mat > mv;
 	// variables for filter2D  
 	Point archor( -1, -1 );
 	//int ddepth = CV_64F;  
@@ -44,6 +45,7 @@ void GaborFilter::doBatchGaborFilter( const Mat &src, Mat &result, int kernelTyp
 		Mat colMat;
 		for ( V = VStart; V < VEnd; V++ ) {
 			doOnceGaborFilter( src, dst_t, U, V, kernelType );
+			mv.push_back( dst_t.clone() );
 			if (V == VStart) {
 				colMat = dst_t;
 			} else{
@@ -56,8 +58,12 @@ void GaborFilter::doBatchGaborFilter( const Mat &src, Mat &result, int kernelTyp
 			vconcat( totalMat, colMat, totalMat );
 		}
 	}
-	
-	result = totalMat.clone();	
+
+	if( bMerge ) {
+		merge( mv, result );
+	} else {
+		result = totalMat.clone();	
+	}
 }
 
 void GaborFilter::doOnceGaborFilter( const Mat &src, Mat &result, int scale, int direction, int kernelType )

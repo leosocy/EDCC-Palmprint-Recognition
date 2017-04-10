@@ -32,9 +32,9 @@
 
 //-----------Train Test Args-------------------
 #define FEATURES_STATISTIC_TYPE "WDT"
-#define LIST_TRAIN_NUM_PER 8
-#define LIST_TEST_NUM_PER 4
-#define LIST_TRAIN_NUM_TOTAL 320
+#define LIST_TRAIN_NUM_PER 12
+#define LIST_TEST_NUM_PER 0
+#define LIST_TRAIN_NUM_TOTAL 600
 #define LIST_TEST_NUM_TOTAL 2800
 #define WAVELET_LEVEL 5
 #define WAVELET_BLOCK_SIZE 4,4

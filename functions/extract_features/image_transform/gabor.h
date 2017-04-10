@@ -22,7 +22,7 @@ public:
 	GaborFilter();
 	~GaborFilter();
 	
-	void doBatchGaborFilter( const Mat &src, Mat &result, int kernelType = GaborFilter::GABOR_KERNEL_REAL );
+	void doBatchGaborFilter( const Mat &src, Mat &result, int kernelType = GaborFilter::GABOR_KERNEL_REAL, bool bMerge = false );
 	void doOnceGaborFilter( const Mat &src, Mat &result, int scale, int direction, int kernelType = GaborFilter::GABOR_KERNEL_REAL );
 	void showGaborFilter( Mat &result, int kernelType = GaborFilter::GABOR_KERNEL_REAL );
 	void getGaborKernel( Mat &gaborKernel, int kernelWidth, int kernelHeight, int scale, int direction, double Kmax, double f, double sigma, int ktype, int kernelType );	

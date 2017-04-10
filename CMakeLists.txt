@@ -6,6 +6,7 @@ add_executable( main main.cpp
 ./functions/pretreatment/binarization.cpp 
 ./functions/pretreatment/adjust_palm.cpp 
 ./global/general_function.cpp 
+./global/general_functions.cpp
 ./functions/extract_roi/peak_valley_detect.cpp 
 ./functions/extract_roi/extract_roi.cpp 
 ./functions/process_parameter/process_parameter.cpp 
@@ -17,5 +18,6 @@ add_executable( main main.cpp
 ./functions/extract_features/image_reduce_dimension/pca.cpp
 ./functions/extract_features/features_coding/extract_features_with_coding.cpp
 ./functions/extract_features/features_base.cpp
-./functions/extract_features/features_coding/DRCC.cpp)
+./functions/extract_features/features_coding/DRCC.cpp
+./functions/extract_features/features_coding/BDRCC.cpp)
 target_link_libraries( main ${OpenCV_LIBS} )

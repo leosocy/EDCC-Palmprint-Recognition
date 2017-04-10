@@ -1,108 +1,91 @@
 /*************************************************************************
-	> File Name: DRCC.cpp
+	> File Name: BDRCC.cpp
 	> Author: Leosocy
 	> Mail: 513887568@qq.com 
-	> Created Time: 2017/04/06 22:12:08
+	> Created Time: 2017/04/10 21:01:52
  ************************************************************************/
 
 #include "coding_algorithm.h"
+#include "../../../global/general_functions.h"
 #include "../image_transform/gabor.h"
 
-DRCC::DRCC()
+BDRCC::BDRCC()
 {
-	this->numOfScales = 3;
-	this->numOfDirections = 9;
+	this->numOfScales = 1;
+	this->numOfDirections = 12;
+	this->blockingSize = Size( 25, 25 );
+	this->imageSize = Size( 125, 125 );
 }
 
-DRCC::~DRCC()
-{
 
+BDRCC::~BDRCC()
+{
 }
 
-int DRCC::getMaxGaborResponse( const Mat &src, Mat &result, Mat &C, Mat &Cs, int numOfScales, int numOfDirections, int kernelType )
+int BDRCC::doOnceBDRCC( const Mat &src, const string &label )
 {
-	assert( numOfScales >= 1 && numOfDirections >= 1 );
+	vector< Mat > blockingResult;
+	GeneralFunctions func;
+	func.blockImage( src, blockingResult, this->blockingSize );
 	GaborFilter filter;
-	Mat batchResult;
-	Mat gaborFilter;
-	filter.numOfScales = numOfScales;
-	filter.numOfDirections = numOfDirections;
-	filter.kernelSize = Size( 11, 11 );
-	filter.doBatchGaborFilter( src, batchResult, kernelType, true );
-	filter.showGaborFilter( gaborFilter, GaborFilter::GABOR_KERNEL_REAL );
-	//imshow( "gabor filter result", batchResult );
-	//imshow( "gabor filter", gaborFilter );
-	vector< Mat > mv;
+	filter.kernelSize = this->blockingSize;
+	filter.numOfScales = this->numOfScales;
+	filter.numOfDirections = this->numOfDirections;
+
+	Mat gaborFilterResult;
 	vector< Mat >::iterator iter;
-	split( batchResult, mv );
-	for( iter = mv.begin(); iter != mv.end(); ++iter ) {
-		GaussianBlur( *iter, *iter, Size( 11, 11 ), 1, 0 );
-	}
-	int height = src.rows;
-	int width = src.cols;
-	int Cleft = -1, Cright = -1;
-	//int freq[6] = { 0 };
-	result = Mat( src.size(), CV_64F );
-	C = Mat( src.size(), CV_8S );
-	Cs = Mat( src.size(), CV_8S );
-	for( int i = 0; i < height; ++i ) {
-		for( int j = 0; j < width; ++j ) {
-			double maxResponse = DBL_MIN;
-			int maxScale = -1;
-			int maxDirection = -1;
-			for( int s = 0; s < numOfScales; ++s ) {
-				for( int d = 0; d < numOfDirections; ++d ) {
-					if( mv[ s * numOfScales + d ].at<double>( i ,j ) > maxResponse ) {
-						maxResponse = mv[ s * numOfScales + d ].at<double>( i, j );
-						maxScale = s;
-						maxDirection = d;
-					}
+	Mat C( src.rows / this->blockingSize.height, src.cols / this->blockingSize.width, CV_8S );
+	Mat Cs( src.rows / this->blockingSize.height, src.cols / this->blockingSize.width, CV_8S );
+	
+	for( iter = blockingResult.begin(); iter != blockingResult.end(); ++iter ) {
+		filter.doBatchGaborFilter( *iter, gaborFilterResult, GaborFilter::GABOR_KERNEL_REAL, true );
+		vector< Mat > mv;
+		split( gaborFilterResult, mv );
+		vector< Mat >::iterator iter_mv;
+		vector< double > imageResponse;
+		for( iter_mv = mv.begin(); iter_mv != mv.end(); ++iter_mv ) {
+			double response = 0.0;
+			for( int r = 0; r < (*iter_mv).rows; ++r ) {
+				for( int c = 0; c < (*iter_mv).cols; ++c ) {
+					response += (*iter_mv).at<double>( r, c );
 				}
 			}
-			//printf( "index:%d maxScale:%d maxDirection:%d value:%lf\n", j, maxScale, maxDirection, maxResponse );
-			result.at<double>( i, j ) = maxResponse;
-	//		++freq[ maxDirection ];
-			C.at<char>( i, j ) = maxDirection;
-			if( maxDirection == numOfDirections - 1 ) {
-				Cleft = 0;
-			} else {
-				Cleft = maxDirection + 1;
-			}
-
-			if( maxDirection == 0 ) {
-				Cright = numOfDirections - 1;
-			} else {
-				Cright = maxDirection -1 ;
-			}
-			Cs.at<char>( i, j ) = mv[ maxScale * numOfScales + Cleft ].at<double>( i, j ) >= mv[ maxScale * numOfScales + Cright].at<double>( i, j )  ? 1 : 0; 
+			imageResponse.push_back( response );
 		}
-	}
-	/*for( int i = 0; i < 6; ++i ) {
-		printf( "%d:%d\n", i, freq[i] );
-	}*/
-	return EXIT_SUCCESS;
-}
-
-int DRCC::doOnceDRCC( const Mat &src, const string &label )
-{
-	Mat maxResponseResult, C, Cs;
-	this->numOfScales = 1;
-
-	getMaxGaborResponse( src, maxResponseResult, C, Cs, this->numOfScales, this->numOfDirections, GaborFilter::GABOR_KERNEL_REAL );
-	
-	for( int h = 0; h < maxResponseResult.rows; ++h ) {
-		for( int w = 0; w < maxResponseResult.cols; ++w ) {
-			maxResponseResult.at<double>( h, w ) = 1 - maxResponseResult.at<double>( h, w );
+		vector< double >::iterator response_iter;
+		double maxResponse = DBL_MIN;
+		int maxIndex = -1;
+		for( response_iter = imageResponse.begin(); response_iter != imageResponse.end(); ++response_iter ) {
+			if( *response_iter > maxResponse ) {
+				maxResponse = *response_iter;
+				maxIndex = response_iter - imageResponse.begin();
+			}
 		}
+		int Cleft = -1, Cright = -1;
+		if( maxIndex == this->numOfDirections - 1 ) {
+			Cleft = 0;
+		} else {
+			Cleft = maxIndex - 1;
+		}
+
+		if( maxIndex == 0 ) {
+			Cright = this->numOfDirections - 1;
+		} else {
+			Cright = maxIndex - 1;
+		}
+		C.at<char>( ( iter - blockingResult.begin() ) / C.rows, ( iter - blockingResult.begin() ) % C.rows ) = maxIndex;
+		printf( "\n\nMaxResponse:%d\n", maxIndex );
+		Cs.at<char>( ( iter - blockingResult.begin() ) / C.rows, ( iter - blockingResult.begin() ) % C.rows ) = ( imageResponse[Cleft] >= imageResponse[Cright] ? 1 : 0 );
 	}
-	imshow( "max response", maxResponseResult );
+
 	this->CVector.push_back( C );
 	this->CsVector.push_back( Cs );
 	this->Labels.push_back( label );
-	return EXIT_SUCCESS; 
+
+	return EXIT_SUCCESS;
 }
 
-int DRCC::doBatchDRCC( const char *filename )
+int BDRCC::doBatchBDRCC( const char *filename )
 {
 	FILE *roi_list = fopen( filename, "r" );
 	if( roi_list == NULL ) {
@@ -133,12 +116,12 @@ int DRCC::doBatchDRCC( const char *filename )
 			cvtColor( image, image_gray, CV_BGR2GRAY );
 			double proportion = (double)image.cols / image.rows;
 			Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );
-			resize(image_gray, image_gray, dsize);
+			resize( image_gray, image_gray, this->imageSize );
 			//Mat gaborResult;
 			//GaborFilter filter;
 			//filter.numOfDirections = 12;
 			//filter.doBatchGaborFilter( image_gray, gaborResult, GaborFilter::GABOR_KERNEL_REAL );
-			Mat t;	
+			/*Mat t;	
 			image_gray.convertTo( t, CV_64FC1 );
 			normalize( t, t, 0, 1, CV_MINMAX );	
 			for( int h = 0; h < image_gray.rows; ++h ) {
@@ -146,8 +129,9 @@ int DRCC::doBatchDRCC( const char *filename )
 					t.at<double>( h, w ) = 1 - t.at<double>( h, w );
 				}
 			}
-			imshow( "origin", t );
-			doOnceDRCC( t, id );
+			imshow( "origin", t );*/
+			doOnceBDRCC( image_gray, id );
+			waitKey();
 			printf( "End Write Num:%d\n\n", i );
 		} else {
 			
@@ -179,11 +163,10 @@ int DRCC::doBatchDRCC( const char *filename )
 		printf( "src1:%s  src2:%s  Score:%lf\n\n", Labels[i].c_str(), Labels[maxIndex].c_str(), score );	
 	}
 	printf( "GAR:%lf", (double)right / CVector.size() );
-
 	return EXIT_SUCCESS;
 }
-
-double DRCC::matching( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy )
+	
+double BDRCC::matching( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy )
 {
 	assert( Cx.rows == Csx.rows && Cy.rows == Csy.rows && Cx.rows == Cy.rows && Cx.cols == Csx.cols && Cy.cols == Csy.cols && Cx.cols == Cy.cols );
 	int width = Cx.cols;
@@ -193,18 +176,21 @@ double DRCC::matching( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &
 	
 	for( int i = 0; i < height; ++i ) {
 		for( int j = 0; j < width; ++j ) {
-			score += ( Cx.at<char>( i, j ) == Cy.at<char>( i, j ) ) + ( ( Cx.at<char>( i, j ) == Cy.at<char>( i, j ) ) && ~( Csx.at<char>( i, j ) ^ Csy.at<char>( i, j ) ) ); 		
+			score += ( Cx.at<char>( i, j ) == Cy.at<char>( i, j ) ) + ( ( Cx.at<char>( i, j ) == Cy.at<char>( i, j ) ) || ~( Csx.at<char>( i, j ) ^ Csy.at<char>( i, j ) ) ); 		
 		}	
 	}
 	return score / ( 2 * width * height );
+	return 0.0;
 }
 
-int DRCC::saveFeatures( const char *filename )
+int BDRCC::saveFeatures( const char *filename )
 {
+	return EXIT_SUCCESS;
 }
-
-int DRCC::loadFeatures( const char *filename )
+		
+int BDRCC::loadFeatures( const char *filename )
 {
+	return EXIT_SUCCESS;
 }
-
-
+			
+					

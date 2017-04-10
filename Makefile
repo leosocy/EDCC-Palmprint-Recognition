@@ -150,6 +150,33 @@ functions/extract_features/features_base.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_base.cpp.s
 .PHONY : functions/extract_features/features_base.cpp.s
 
+functions/extract_features/features_coding/BDRCC.o: functions/extract_features/features_coding/BDRCC.cpp.o
+
+.PHONY : functions/extract_features/features_coding/BDRCC.o
+
+# target to build an object file
+functions/extract_features/features_coding/BDRCC.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_coding/BDRCC.cpp.o
+.PHONY : functions/extract_features/features_coding/BDRCC.cpp.o
+
+functions/extract_features/features_coding/BDRCC.i: functions/extract_features/features_coding/BDRCC.cpp.i
+
+.PHONY : functions/extract_features/features_coding/BDRCC.i
+
+# target to preprocess a source file
+functions/extract_features/features_coding/BDRCC.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_coding/BDRCC.cpp.i
+.PHONY : functions/extract_features/features_coding/BDRCC.cpp.i
+
+functions/extract_features/features_coding/BDRCC.s: functions/extract_features/features_coding/BDRCC.cpp.s
+
+.PHONY : functions/extract_features/features_coding/BDRCC.s
+
+# target to generate assembly for a file
+functions/extract_features/features_coding/BDRCC.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_coding/BDRCC.cpp.s
+.PHONY : functions/extract_features/features_coding/BDRCC.cpp.s
+
 functions/extract_features/features_coding/DRCC.o: functions/extract_features/features_coding/DRCC.cpp.o
 
 .PHONY : functions/extract_features/features_coding/DRCC.o
@@ -528,6 +555,33 @@ global/general_function.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/global/general_function.cpp.s
 .PHONY : global/general_function.cpp.s
 
+global/general_functions.o: global/general_functions.cpp.o
+
+.PHONY : global/general_functions.o
+
+# target to build an object file
+global/general_functions.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/global/general_functions.cpp.o
+.PHONY : global/general_functions.cpp.o
+
+global/general_functions.i: global/general_functions.cpp.i
+
+.PHONY : global/general_functions.i
+
+# target to preprocess a source file
+global/general_functions.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/global/general_functions.cpp.i
+.PHONY : global/general_functions.cpp.i
+
+global/general_functions.s: global/general_functions.cpp.s
+
+.PHONY : global/general_functions.s
+
+# target to generate assembly for a file
+global/general_functions.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/global/general_functions.cpp.s
+.PHONY : global/general_functions.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -567,6 +621,9 @@ help:
 	@echo "... functions/extract_features/features_base.o"
 	@echo "... functions/extract_features/features_base.i"
 	@echo "... functions/extract_features/features_base.s"
+	@echo "... functions/extract_features/features_coding/BDRCC.o"
+	@echo "... functions/extract_features/features_coding/BDRCC.i"
+	@echo "... functions/extract_features/features_coding/BDRCC.s"
 	@echo "... functions/extract_features/features_coding/DRCC.o"
 	@echo "... functions/extract_features/features_coding/DRCC.i"
 	@echo "... functions/extract_features/features_coding/DRCC.s"
@@ -609,6 +666,9 @@ help:
 	@echo "... global/general_function.o"
 	@echo "... global/general_function.i"
 	@echo "... global/general_function.s"
+	@echo "... global/general_functions.o"
+	@echo "... global/general_functions.i"
+	@echo "... global/general_functions.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

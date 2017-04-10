@@ -100,9 +100,9 @@ int main( int argc, char **argv )
 		//	create_predict_list( "./roi_list/Multispectral_B.txt", "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
 		//	predict_subspace( "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
 		
-			DRCC d;
+			BDRCC d;
 		
-			d.doBatchDRCC( list_name_train );
+			d.doBatchBDRCC( list_name_train );
 			//train_coding( list_name_train );
 		/*	getchar();
 			test_subspace( list_name_test );*/
