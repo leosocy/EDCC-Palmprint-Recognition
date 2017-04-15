@@ -21,16 +21,20 @@ void binarization( const Mat &src, Mat &dst )
 
 void cvSkinOtsu( const Mat &src, Mat &dst )
 { 
-	Mat ycrcb;
-	Mat vector_mat[3];
-	cvtColor( src, ycrcb, CV_BGR2YCrCb );
-	split( ycrcb, vector_mat );
- //	cvThresholdOtsu( vector_mat + 1, dst );
-#ifdef _DEBUG_
-	//imshow( "Y", vector_mat[1] );
-#endif
-	threshold( vector_mat[1], dst, 0, 255, CV_THRESH_OTSU );
-//	cvThresholdOtsu( src, dst );
+	if( src.channels() == 3 ) {
+		Mat ycrcb;
+		Mat vector_mat[3];
+		cvtColor( src, ycrcb, CV_BGR2YCrCb );
+		split( ycrcb, vector_mat );
+	 //	cvThresholdOtsu( vector_mat + 1, dst );
+	#ifdef _DEBUG_
+		//imshow( "Y", vector_mat[1] );
+	#endif
+		threshold( vector_mat[1], dst, 0, 255, CV_THRESH_OTSU );
+	//	cvThresholdOtsu( src, dst );
+	} else {
+		threshold( src, dst, 0, 255, CV_THRESH_OTSU );
+	}
 }
 
 void cvThresholdOtsu( const Mat &frame, Mat &skinArea )

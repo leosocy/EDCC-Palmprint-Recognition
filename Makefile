@@ -285,6 +285,33 @@ functions/extract_features/features_subspace/extract_features_with_subspace.cpp.
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/features_subspace/extract_features_with_subspace.cpp.s
 .PHONY : functions/extract_features/features_subspace/extract_features_with_subspace.cpp.s
 
+functions/extract_features/image_enhance/image_enhance.o: functions/extract_features/image_enhance/image_enhance.cpp.o
+
+.PHONY : functions/extract_features/image_enhance/image_enhance.o
+
+# target to build an object file
+functions/extract_features/image_enhance/image_enhance.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_enhance/image_enhance.cpp.o
+.PHONY : functions/extract_features/image_enhance/image_enhance.cpp.o
+
+functions/extract_features/image_enhance/image_enhance.i: functions/extract_features/image_enhance/image_enhance.cpp.i
+
+.PHONY : functions/extract_features/image_enhance/image_enhance.i
+
+# target to preprocess a source file
+functions/extract_features/image_enhance/image_enhance.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_enhance/image_enhance.cpp.i
+.PHONY : functions/extract_features/image_enhance/image_enhance.cpp.i
+
+functions/extract_features/image_enhance/image_enhance.s: functions/extract_features/image_enhance/image_enhance.cpp.s
+
+.PHONY : functions/extract_features/image_enhance/image_enhance.s
+
+# target to generate assembly for a file
+functions/extract_features/image_enhance/image_enhance.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/extract_features/image_enhance/image_enhance.cpp.s
+.PHONY : functions/extract_features/image_enhance/image_enhance.cpp.s
+
 functions/extract_features/image_reduce_dimension/pca.o: functions/extract_features/image_reduce_dimension/pca.cpp.o
 
 .PHONY : functions/extract_features/image_reduce_dimension/pca.o
@@ -636,6 +663,9 @@ help:
 	@echo "... functions/extract_features/features_subspace/extract_features_with_subspace.o"
 	@echo "... functions/extract_features/features_subspace/extract_features_with_subspace.i"
 	@echo "... functions/extract_features/features_subspace/extract_features_with_subspace.s"
+	@echo "... functions/extract_features/image_enhance/image_enhance.o"
+	@echo "... functions/extract_features/image_enhance/image_enhance.i"
+	@echo "... functions/extract_features/image_enhance/image_enhance.s"
 	@echo "... functions/extract_features/image_reduce_dimension/pca.o"
 	@echo "... functions/extract_features/image_reduce_dimension/pca.i"
 	@echo "... functions/extract_features/image_reduce_dimension/pca.s"

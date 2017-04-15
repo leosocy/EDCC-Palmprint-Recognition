@@ -31,7 +31,9 @@ public:
 	int doBatchDRCC( const char *filename );
 	int doOnceDRCC( const Mat &src, const string &label );
 	
-	double matching( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy );
+	double matchingPoint2Point( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy );
+	double matchingPoint2Area( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy, const Rect &areaRect );
+	
 private:
 	int numOfScales;
 	int numOfDirections;
@@ -54,7 +56,8 @@ public:
 	int doBatchBDRCC( const char *filename );
 	int doOnceBDRCC( const Mat &src, const string &label );
 	
-	double matching( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy );
+	double matchingPoint2Point( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy );
+	double matchingPoint2Area( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy, const Rect &areaRect );
 private:
 	int numOfScales;
 	int numOfDirections;

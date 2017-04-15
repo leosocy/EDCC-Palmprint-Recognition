@@ -100,9 +100,33 @@ int main( int argc, char **argv )
 		//	create_predict_list( "./roi_list/Multispectral_B.txt", "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
 		//	predict_subspace( "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
 		
-			BDRCC d;
+			/*DRCC d;
 		
-			d.doBatchBDRCC( list_name_train );
+			d.doBatchDRCC( list_name_train );*/
+		
+			Mat image = imread(  "/home/leosocy/Desktop/PalmprintData/Multispectral/Multispectral_B/001/1_01_s.bmp", CV_LOAD_IMAGE_COLOR );
+			Mat image_gray;
+			cvtColor( image, image_gray, CV_BGR2GRAY );
+			double proportion = (double)image.cols / image.rows;
+			Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );
+			resize(image_gray, image_gray, dsize);
+			ImageEnhance enhance;
+			Mat dst;
+			Mat t;	
+			image_gray.convertTo( t, CV_64FC1 );
+			normalize( t, t, 0, 1, CV_MINMAX );	
+			/*for( int h = 0; h < image_gray.rows; ++h ) {
+				for( int w = 0; w < image_gray.cols; ++w ) {
+					t.at<double>( h, w ) = 1 - t.at<double>( h, w );
+				}
+			}*/
+			enhance.enhanceWithGamma( t, dst, 20 );
+			imshow( "enhance", dst );
+			dst.convertTo( dst, CV_8U );
+			
+			binarization( dst, dst );
+			imshow( "enhance_bi", dst );
+			waitKey();
 			//train_coding( list_name_train );
 		/*	getchar();
 			test_subspace( list_name_test );*/

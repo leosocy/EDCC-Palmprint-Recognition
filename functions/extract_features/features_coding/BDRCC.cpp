@@ -13,7 +13,7 @@ BDRCC::BDRCC()
 {
 	this->numOfScales = 1;
 	this->numOfDirections = 12;
-	this->blockingSize = Size( 25, 25 );
+	this->blockingSize = Size( 5, 5 );
 	this->imageSize = Size( 125, 125 );
 }
 
@@ -74,7 +74,7 @@ int BDRCC::doOnceBDRCC( const Mat &src, const string &label )
 			Cright = maxIndex - 1;
 		}
 		C.at<char>( ( iter - blockingResult.begin() ) / C.rows, ( iter - blockingResult.begin() ) % C.rows ) = maxIndex;
-		printf( "\n\nMaxResponse:%d\n", maxIndex );
+	//	printf( "\n\nMaxResponse:%d\n", maxIndex );
 		Cs.at<char>( ( iter - blockingResult.begin() ) / C.rows, ( iter - blockingResult.begin() ) % C.rows ) = ( imageResponse[Cleft] >= imageResponse[Cright] ? 1 : 0 );
 	}
 
@@ -121,7 +121,7 @@ int BDRCC::doBatchBDRCC( const char *filename )
 			//GaborFilter filter;
 			//filter.numOfDirections = 12;
 			//filter.doBatchGaborFilter( image_gray, gaborResult, GaborFilter::GABOR_KERNEL_REAL );
-			/*Mat t;	
+			Mat t;	
 			image_gray.convertTo( t, CV_64FC1 );
 			normalize( t, t, 0, 1, CV_MINMAX );	
 			for( int h = 0; h < image_gray.rows; ++h ) {
@@ -129,9 +129,9 @@ int BDRCC::doBatchBDRCC( const char *filename )
 					t.at<double>( h, w ) = 1 - t.at<double>( h, w );
 				}
 			}
-			imshow( "origin", t );*/
+			//imshow( "origin", t );
 			doOnceBDRCC( image_gray, id );
-			waitKey();
+		//	waitKey();
 			printf( "End Write Num:%d\n\n", i );
 		} else {
 			
@@ -150,7 +150,7 @@ int BDRCC::doBatchBDRCC( const char *filename )
 		int maxIndex = -1;
 		for( int j = 0; j < CVector.size(); ++j ) {
 			if( i != j ) {
-				score = matching( this->CVector[i], this->CsVector[i], this->CVector[j], this->CsVector[j] );
+				score = matchingPoint2Point( this->CVector[i], this->CsVector[i], this->CVector[j], this->CsVector[j] );
 				if( score > maxScore && i != j ) {
 					maxScore = score;
 					maxIndex = j;			
@@ -166,7 +166,7 @@ int BDRCC::doBatchBDRCC( const char *filename )
 	return EXIT_SUCCESS;
 }
 	
-double BDRCC::matching( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy )
+double BDRCC::matchingPoint2Point( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy )
 {
 	assert( Cx.rows == Csx.rows && Cy.rows == Csy.rows && Cx.rows == Cy.rows && Cx.cols == Csx.cols && Cy.cols == Csy.cols && Cx.cols == Cy.cols );
 	int width = Cx.cols;
@@ -176,11 +176,18 @@ double BDRCC::matching( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat 
 	
 	for( int i = 0; i < height; ++i ) {
 		for( int j = 0; j < width; ++j ) {
-			score += ( Cx.at<char>( i, j ) == Cy.at<char>( i, j ) ) + ( ( Cx.at<char>( i, j ) == Cy.at<char>( i, j ) ) || ~( Csx.at<char>( i, j ) ^ Csy.at<char>( i, j ) ) ); 		
+			score += ( Cx.at<char>( i, j ) == Cy.at<char>( i, j ) ) + ( ( Cx.at<char>( i, j ) == Cy.at<char>( i, j ) ) && ~( Csx.at<char>( i, j ) ^ Csy.at<char>( i, j ) ) ); 		
 		}	
 	}
 	return score / ( 2 * width * height );
 	return 0.0;
+}
+
+double BDRCC::matchingPoint2Area( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy, const Rect &areaRect )   //If areaRect( x, y, width, height ), Cx( i, j ) match Cy rect( i + x, j + y, width, height )
+{
+	assert( Cx.rows == Csx.rows && Cy.rows == Csy.rows && Cx.rows == Cy.rows && Cx.cols == Csx.cols && Cy.cols == Csy.cols && Cx.cols == Cy.cols && areaRect.width );
+	return 0.0;
+	
 }
 
 int BDRCC::saveFeatures( const char *filename )

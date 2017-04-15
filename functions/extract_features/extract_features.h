@@ -18,6 +18,8 @@
 
 #include "./image_reduce_dimension/pca.h"
 
+#include "./image_enhance/image_enhance.h"
+
 #include "./features_statistic/extract_features_with_statisic.h"
 #include "./features_subspace/extract_features_with_subspace.h"
 #include "./features_coding/extract_features_with_coding.h"

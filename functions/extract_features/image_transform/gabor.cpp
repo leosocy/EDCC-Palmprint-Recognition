@@ -85,8 +85,8 @@ void GaborFilter::showGaborFilter( Mat &result, int kernelType )
 {
 	CV_Assert( kernelType == GaborFilter::GABOR_KERNEL_REAL || kernelType == GaborFilter::GABOR_KERNEL_IMAG || kernelType == GaborFilter::GABOR_KERNEL_MAG );
 
-	int GaborH = 69;
-	int GaborW = 69;
+	int GaborH = this->kernelSize.height;
+	int GaborW = this->kernelSize.width;
 	Mat gaborKernel;
  	int ddepth = CV_64F;
 
@@ -180,5 +180,6 @@ void GaborFilter::getGaborKernel( Mat &gaborKernel, int kernelWidth, int kernelH
 	} else {
 		gaborKernel = kernel.clone();
 	}
+	normalize( gaborKernel, gaborKernel, 0, 1, CV_MINMAX );
 }
 

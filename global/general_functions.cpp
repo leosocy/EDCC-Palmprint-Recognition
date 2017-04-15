@@ -25,7 +25,7 @@ int GeneralFunctions::blockImage( const Mat &src, vector< Mat > &blockingResult,
 			char name[5];
 			sprintf( name, "%d_%d", ( i / blockingSize.height ),  ( j / blockingSize.width ) );
 			string n( name );
-			imshow( n, m );
+			//imshow( n, m );
 		}
 	}
 	return EXIT_SUCCESS;
