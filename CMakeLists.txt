@@ -19,5 +19,6 @@ add_executable( main main.cpp
 ./functions/extract_features/features_coding/extract_features_with_coding.cpp
 ./functions/extract_features/features_base.cpp
 ./functions/extract_features/features_coding/DRCC.cpp
-./functions/extract_features/features_coding/BDRCC.cpp)
+./functions/extract_features/features_coding/BDRCC.cpp
+./functions/extract_features/image_enhance/image_enhance.cpp)
 target_link_libraries( main ${OpenCV_LIBS} )
