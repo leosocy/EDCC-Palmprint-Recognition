@@ -1,4 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
+
+INCLUDE_DIRECTORIES(./functions)
+INCLUDE_DIRECTORIES(./functions/extract_features)
+INCLUDE_DIRECTORIES(./functions/PRML/include)
+INCLUDE_DIRECTORIES(./global)
+
 project( main )
 find_package( OpenCV REQUIRED )
 
@@ -20,5 +26,6 @@ add_executable( main main.cpp
 ./functions/extract_features/features_base.cpp
 ./functions/extract_features/features_coding/DRCC.cpp
 ./functions/extract_features/features_coding/BDRCC.cpp
-./functions/extract_features/image_enhance/image_enhance.cpp)
+./functions/extract_features/image_enhance/image_enhance.cpp
+./functions/PRML/src/PRML.cpp)
 target_link_libraries( main ${OpenCV_LIBS} )
