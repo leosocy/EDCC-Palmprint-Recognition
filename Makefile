@@ -123,6 +123,33 @@ main/fast:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/build
 .PHONY : main/fast
 
+functions/PRML/src/PRML.o: functions/PRML/src/PRML.cpp.o
+
+.PHONY : functions/PRML/src/PRML.o
+
+# target to build an object file
+functions/PRML/src/PRML.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRML.cpp.o
+.PHONY : functions/PRML/src/PRML.cpp.o
+
+functions/PRML/src/PRML.i: functions/PRML/src/PRML.cpp.i
+
+.PHONY : functions/PRML/src/PRML.i
+
+# target to preprocess a source file
+functions/PRML/src/PRML.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRML.cpp.i
+.PHONY : functions/PRML/src/PRML.cpp.i
+
+functions/PRML/src/PRML.s: functions/PRML/src/PRML.cpp.s
+
+.PHONY : functions/PRML/src/PRML.s
+
+# target to generate assembly for a file
+functions/PRML/src/PRML.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRML.cpp.s
+.PHONY : functions/PRML/src/PRML.cpp.s
+
 functions/extract_features/features_base.o: functions/extract_features/features_base.cpp.o
 
 .PHONY : functions/extract_features/features_base.o
@@ -645,6 +672,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... main"
+	@echo "... functions/PRML/src/PRML.o"
+	@echo "... functions/PRML/src/PRML.i"
+	@echo "... functions/PRML/src/PRML.s"
 	@echo "... functions/extract_features/features_base.o"
 	@echo "... functions/extract_features/features_base.i"
 	@echo "... functions/extract_features/features_base.s"

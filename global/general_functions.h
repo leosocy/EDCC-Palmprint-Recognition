@@ -8,6 +8,8 @@
 #ifndef __GENERAL_FUNCTIONS_H__
 #define __GENERAL_FUNCTIONS_H__
 
+#include "../functions/extract_features/features_base.h"
+
 #include <opencv2/opencv.hpp>
 using namespace cv;
 #include <vector>
@@ -21,7 +23,8 @@ public:
 	GeneralFunctions();
 	~GeneralFunctions();
 
-	int blockImage( const Mat &src, vector< Mat > &blockingResult, Size &blockingSize);
+	int blockImage( const Mat &src, vector< Mat > &blockingResult, const Size &blockingSize);
+	int prfeaturesVec2Mat( const PRFeatures &fea, Mat &feaMat, Mat &labMat );
 };
 
 

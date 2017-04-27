@@ -8,8 +8,8 @@
 #ifndef __CODING_ALGORITHM_H__
 #define __CODING_ALGORITHM_H__
 
-#include "../features_base.h"
-#include "../../../global/global_definition.h"
+#include "features_base.h"
+#include "global_definition.h"
 
 #include <opencv2/opencv.hpp>
 using namespace cv;
@@ -24,12 +24,19 @@ class DRCC : public PRFeatures
 public:
 	DRCC();
 	~DRCC();
-	
+	vector< Mat > CVector;
+	vector< Mat > CsVector;
+	/*--------For Parameters Tuning------------*/
+	Size imageSize;
+	int laplaceSize;
+	int gaborDirections;
+	Size gaborKernelSize;
+	/*----------------------------------------*/
 	int saveFeatures( const char *filename );
 	int loadFeatures( const char *filename );
 	
 	int doBatchDRCC( const char *filename );
-	int doOnceDRCC( const Mat &src, const string &label );
+	int doOnceDRCC( const Mat &src, int label );
 	
 	double matchingPoint2Point( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy );
 	double matchingPoint2Area( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy, const Rect &areaRect );
@@ -38,9 +45,7 @@ private:
 	int numOfScales;
 	int numOfDirections;
 
-	vector< Mat > CVector;
-	vector< Mat > CsVector;
-	vector< string > Labels;
+
 	int getMaxGaborResponse( const Mat &src, Mat &result, Mat &C, Mat &Cs, int scale, int direction, int kernelType );
 };
 
@@ -54,7 +59,7 @@ public:
 	int loadFeatures( const char *filename );
 	
 	int doBatchBDRCC( const char *filename );
-	int doOnceBDRCC( const Mat &src, const string &label );
+	int doOnceBDRCC( const Mat &src, int label );
 	
 	double matchingPoint2Point( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy );
 	double matchingPoint2Area( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy, const Rect &areaRect );
@@ -66,7 +71,6 @@ private:
 
 	vector< Mat > CVector;
 	vector< Mat > CsVector;
-	vector< string > Labels;
 };
 
 #endif /* end of coding_algorithm */

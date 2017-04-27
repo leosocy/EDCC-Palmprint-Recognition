@@ -12,28 +12,6 @@ extern Mat origin_rotate_image;
 
 double palm_adjust_angle; 
 
-/**
- * remove small connected region just save the biggest region
- * */
-int remove_small_area( const Mat &src, Mat &dst );
-
-/**
- * fill internal contours which area is smaller than area_thre 
- */
-int fill_contours( const Mat &src, Mat &dst, double area_thre );
-
-/**
- * calculate the center of gravity
- */
-
-int gravity_center( const Mat &src, cv::Point &center );
-
-/**
- * find middle finger and rotate the image make the middle finger be top of the image.
- */
-
-int find_middle_finger( const Mat &src, Mat &dst );
-
 int adjust_palm( const Mat &src, Mat &dst )
 {
 	start_timing();

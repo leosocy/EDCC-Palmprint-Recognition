@@ -22,7 +22,7 @@ BDRCC::~BDRCC()
 {
 }
 
-int BDRCC::doOnceBDRCC( const Mat &src, const string &label )
+int BDRCC::doOnceBDRCC( const Mat &src, int label )
 {
 	vector< Mat > blockingResult;
 	GeneralFunctions func;
@@ -80,7 +80,7 @@ int BDRCC::doOnceBDRCC( const Mat &src, const string &label )
 
 	this->CVector.push_back( C );
 	this->CsVector.push_back( Cs );
-	this->Labels.push_back( label );
+	this->labels.push_back( label );
 
 	return EXIT_SUCCESS;
 }
@@ -108,9 +108,9 @@ int BDRCC::doBatchBDRCC( const char *filename )
 		if( n.empty() ) {
 			printf( "Begin Write Num:%d\n", i );
 			feature_file.open( feature_string, FileStorage::APPEND );
-			char id[10];
+			int id;
 			char image_path[200];
-			fscanf( roi_list, "%s %s", id, image_path );
+			fscanf( roi_list, "%d %s", &id, image_path );
 			Mat image = imread( image_path, CV_LOAD_IMAGE_COLOR );
 			Mat image_gray;
 			cvtColor( image, image_gray, CV_BGR2GRAY );
@@ -131,7 +131,7 @@ int BDRCC::doBatchBDRCC( const char *filename )
 			}
 			//imshow( "origin", t );
 			doOnceBDRCC( image_gray, id );
-		//	waitKey();
+			waitKey();
 			printf( "End Write Num:%d\n\n", i );
 		} else {
 			
@@ -157,10 +157,10 @@ int BDRCC::doBatchBDRCC( const char *filename )
 				}	
 			}
 		}	
-		if( Labels[i] == Labels[maxIndex] ) {
+		if( this->labels[i] == this->labels[maxIndex] ) {
 			++right;		
 		}
-		printf( "src1:%s  src2:%s  Score:%lf\n\n", Labels[i].c_str(), Labels[maxIndex].c_str(), score );	
+		printf( "src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[maxIndex], score );	
 	}
 	printf( "GAR:%lf", (double)right / CVector.size() );
 	return EXIT_SUCCESS;

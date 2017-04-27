@@ -6,8 +6,9 @@
  ************************************************************************/
 
 #include <stdio.h>
-#include "functions/functions.hpp"
-#include "global/global_definition.h"
+#include "functions.hpp"
+#include "global_definition.h"
+
 
 using namespace std;
 
@@ -100,11 +101,27 @@ int main( int argc, char **argv )
 		//	create_predict_list( "./roi_list/Multispectral_B.txt", "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
 		//	predict_subspace( "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
 		
-			/*DRCC d;
+			DRCC d;
+			int direc[7] = { 6, 8, 9, 10, 12, 15, 18 };
+			int kernelSize[10] = { 3, 5, 7, 9, 11, 13, 15, 17, 19, 21 };
+			for( int i = 29; i < 125; i += 2 ) {
+				for( int j = 27; j <= i; j+= 2 ) {
+					for( int k = 0; k < 7; ++k ) {
+						for( int l = 0; l < 10 && kernelSize[l] <= i; ++l ) {
+								d.imageSize = Size( i, i );
+								d.laplaceSize = j;
+								d.gaborDirections = direc[k];
+								d.gaborKernelSize = Size( kernelSize[l], kernelSize[l] );
+								d.CVector.clear();
+								d.CsVector.clear();
+								d.labels.clear();
+								d.doBatchDRCC( list_name_train );
+						}
+					}
+				}
+			}
 		
-			d.doBatchDRCC( list_name_train );*/
-		
-			Mat image = imread(  "/home/leosocy/Desktop/PalmprintData/Multispectral/Multispectral_B/001/1_01_s.bmp", CV_LOAD_IMAGE_COLOR );
+			/*Mat image = imread(  "/home/leosocy/Desktop/PalmprintData/Multispectral/Multispectral_B/003/1_02_s.bmp", CV_LOAD_IMAGE_COLOR );
 			Mat image_gray;
 			cvtColor( image, image_gray, CV_BGR2GRAY );
 			double proportion = (double)image.cols / image.rows;
@@ -119,14 +136,17 @@ int main( int argc, char **argv )
 				for( int w = 0; w < image_gray.cols; ++w ) {
 					t.at<double>( h, w ) = 1 - t.at<double>( h, w );
 				}
-			}*/
-			enhance.enhanceWithGamma( t, dst, 20 );
+			}
+			enhance.enhanceWithLaplace( t, dst, 7  );
+			dst.convertTo( dst, CV_8U );
+			enhance.enhanceWithCanny( dst, dst, 80, 240  );
 			imshow( "enhance", dst );
 			dst.convertTo( dst, CV_8U );
 			
 			binarization( dst, dst );
+			
 			imshow( "enhance_bi", dst );
-			waitKey();
+			waitKey();*/
 			//train_coding( list_name_train );
 		/*	getchar();
 			test_subspace( list_name_test );*/

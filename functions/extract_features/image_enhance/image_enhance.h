@@ -21,6 +21,8 @@ public:
 
 	int enhanceWithHistogram( const Mat &src, Mat &dst );
 	int enhanceWithLaplace( const Mat &src, Mat &dst, int aperture_size = 3 );
+	int enhanceWithSobel( const Mat &src, Mat &dst );
+	int enhanceWithCanny( const Mat &src, Mat &dst, double threshold1, double threshold2 );
 	int enhanceWithLog( const Mat &src, Mat &dst, int v );
 	int enhanceWithGamma( const Mat &src, Mat &dst, double gamma );
 };

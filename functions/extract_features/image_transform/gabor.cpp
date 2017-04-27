@@ -180,6 +180,6 @@ void GaborFilter::getGaborKernel( Mat &gaborKernel, int kernelWidth, int kernelH
 	} else {
 		gaborKernel = kernel.clone();
 	}
-	normalize( gaborKernel, gaborKernel, 0, 1, CV_MINMAX );
+	//normalize( gaborKernel, gaborKernel, 0, 1, CV_MINMAX );
 }
 

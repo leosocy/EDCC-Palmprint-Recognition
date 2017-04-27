@@ -46,7 +46,7 @@ int train_coding( const char *trainlist )
 
 			DRCC d;
 			imshow( "origin", image_gray );
-			d.doOnceDRCC( image_gray, "1" );
+			d.doOnceDRCC( image_gray, 1 );
 			//imshow( "gabor", gaborResult );
 			waitKey();
 			/*************************extract features with WDT********************************/
