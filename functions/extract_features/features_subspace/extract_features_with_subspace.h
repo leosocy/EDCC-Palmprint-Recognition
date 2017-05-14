@@ -37,5 +37,24 @@ int test_subspace( const char *testlist );
 int predict_subspace( const char *trainlist, const char *predictlist );
 int calcu_eer_threshold_subspace( const char *calculist );
 
+class BDPCALDA
+{
+public:
+	BDPCALDA();
+	~BDPCALDA();
+	/*--------For Parameters Tuning------------*/
+	int Krow;
+	int Kcol;
+	int trainNum;
+	/*----------------------------------------*/
+	
+	int doExtractFeatures( const char *filename );
+	void doVerification( int dataSize );
+	double match( const Mat &X, const Mat &Y );
+	vector< cv::Mat> features;
+	vector< int > labels;
+	Mat U, VT, LDAEIVECTOR;
+};
+
 
 #endif /* end of extract_features_with_subspace */

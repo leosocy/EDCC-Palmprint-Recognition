@@ -5,11 +5,11 @@
 	> Created Time: 2017/04/06 22:56:01
  ************************************************************************/
 
-#include "features_base.h"
+#include "./features_base.h"
 
 PRFeatures::PRFeatures()
 {
-
+	this->methodName = PRF_BASE_METHOD_NAME;
 }
 
 PRFeatures::~PRFeatures()

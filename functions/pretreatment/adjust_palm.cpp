@@ -17,6 +17,7 @@ int adjust_palm( const Mat &src, Mat &dst )
 	start_timing();
 	fill_contours( src, dst, FILL_CONTOURS_AREA_THRE );
 	remove_small_area( dst, dst );
+	//imshow( "fill_countours and remove_small_area", dst );
 	//circle( origin_image, center1, 5, CV_RGB(0, 255, 0), -1 );
 	find_middle_finger( dst, dst );
 	fill_contours( dst, dst, FILL_CONTOURS_AREA_THRE );
@@ -94,13 +95,16 @@ int find_middle_finger( const Mat &src, Mat &dst )
 	Mat erode_img = src.clone();
 	Point center1;	/* center1 is full palm center of gravity*/
 	gravity_center( src, center1 );
-
+	Mat tmp = src.clone();
+	circle( tmp, center1, 3, CV_RGB( 255, 0, 0 ), -1 );
+	imshow( "1", tmp );
 	Mat element = getStructuringElement(MORPH_RECT, Size(2 * FINGER_ERODE_ELEMENT_SIZE + 1, 2 * FINGER_ERODE_ELEMENT_SIZE + 1 ), Point( FINGER_ERODE_ELEMENT_SIZE, FINGER_ERODE_ELEMENT_SIZE ) );
 	erode( src, erode_img, element, cv::Point( -1, -1 ), 5 );	/* time consuming */
 	
 	Point center2;	/* center2 is palm which erode finger center of gravity */
 	gravity_center( erode_img, center2 );
-	
+	circle( tmp, center2, 3, CV_RGB( 255, 0, 0 ), -1 );
+	imshow( "find_center", tmp );
 	Point v( center1.x - center2.x, -center1.y + center2.y );
 	if( ( v.y == 0 && v.x == 0 ) || ( v.x > src.cols) || v.y > src.rows ) return EXIT_FAILURE;
 

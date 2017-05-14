@@ -11,6 +11,166 @@ void calc_dis( const features_subspace_struct &test, const vector< features_subs
 void calc_dis( const features_subspace_struct &test, const vector< features_subspace_struct > &v_feature, int &correct, int &fr, int &fa, FILE *dist_out );
 void calc_eer( const features_subspace_struct &src1, const features_subspace_struct &src2, int &correct, int &fr, int &fa, double threshold );
 
+BDPCALDA::BDPCALDA()
+{
+}
+
+BDPCALDA::~BDPCALDA()
+{
+}
+
+int BDPCALDA::doExtractFeatures( const char *filename )
+{
+	FILE *roi_list = fopen( filename, "r" );
+	if( roi_list == NULL ) {
+		printf( "%s Not Exist.\n", filename );
+		return EXIT_FAILURE;
+	}
+	vector< features_subspace_struct > v_feature;
+	vector< Mat >palm_all;
+
+	
+	int count = 0;
+	int preID = 0;
+	clock_t bt = clock();
+	printf( "--------------------------------Begin Train--------------------\n" );
+	for( int i = 0; i < LIST_TRAIN_NUM_TOTAL && !feof( roi_list ); ++i ) {	
+		int id = 0;
+		char image_path[200];
+		fscanf( roi_list, "%d %s", &id, image_path );	
+		count += 1;
+		if( count > this->trainNum ) {
+			if( preID == id ) {
+				continue;
+			} else {
+				count = 1;			
+			}		
+		}
+		preID = id;
+		this->labels.push_back( id );
+		Mat image = imread( image_path, CV_LOAD_IMAGE_COLOR );
+		Mat image_gray;
+		cvtColor( image, image_gray, CV_BGR2GRAY );
+		double proportion = (double)image.cols / image.rows;
+		Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );
+		resize(image_gray, image_gray, dsize);
+		features_subspace_struct one_palm;
+		one_palm.id = id;
+		one_palm.imagepath = image_path;
+		v_feature.push_back( one_palm );
+		printf( "Push back Num:%d\n", i );
+		fflush( stdout );
+		Mat tmp;
+		image_gray.convertTo( tmp, CV_64FC1 );
+		palm_all.push_back( tmp );	
+	}
+	/*************************Reduce Dimension With BDPCA********************************/
+	Mat U, V;
+	Mat palm_pca, VT;
+	DoBDPCA( palm_all, U, V, 0.5, this->Krow, this->Kcol );
+	Mat lda_image = Mat::zeros( palm_all.size(), V.cols * U.cols, CV_64FC1 );
+	vector< int > tmp_labels;
+	vector< lda_struct > lda_record;
+	for( size_t i = 0; i < palm_all.size(); ++i ) {
+		transpose( V, VT );
+		palm_pca = VT * palm_all[i] * U;
+		v_feature[i].features = palm_pca.clone();
+		lda_struct one_lda;
+		tmp_labels.push_back( v_feature[i].id - 1 ); 
+		for( int j = 0; j < V.cols; ++j ) {
+			for( int k = 0; k < U.cols; ++k ) {
+				lda_image.at<double>( i, j * V.cols + k ) = palm_pca.at<double>( j, k );
+			}
+		}
+	}
+	this->U = U.clone();
+	this->VT = VT.clone();
+
+	printf( "Do LDA\n" );
+	LDA palm_lda = LDA( lda_image, tmp_labels );
+	printf( "End LDA\n" );
+	
+	Mat eivector = palm_lda.eigenvectors().clone();
+	cout << "The eigenvector rows:" << eivector.rows << "   cols:" << eivector.cols << endl;
+	fflush( stdout );
+	this->LDAEIVECTOR = eivector.clone();
+	
+	for( int i = 0; i < v_feature.size(); ++i ) {
+		Mat oneRow = Mat::zeros( 1, v_feature[i].features.rows * v_feature[i].features.cols, CV_64FC1 );
+		for( int j = 0; j < v_feature[i].features.rows; ++j ) {
+			for( int k = 0; k < v_feature[i].features.cols; ++k ) {
+				oneRow.at<double>( 0, j * v_feature[i].features.rows + k ) = v_feature[i].features.at<double>( j, k );
+			}
+		}
+		printf( "Begin Write Num:%d\n\n", i );	
+		this->features.push_back( oneRow * eivector );
+		printf( "End Write Num:%d\n\n", i );		
+	}
+	clock_t et = clock();
+	printf( "--------------------------End Of Train----------------------------\n\n" );
+	printf( "Total Cost Time: %lf  Per Image Cost Time: %lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL );	
+	fflush( stdout );
+	return EXIT_SUCCESS;
+}
+
+void BDPCALDA::doVerification( int dataSize )
+{
+	FILE *matchFile = fopen( "./feature_info/Multispectral_B_MatchScore_BDPCALDA.txt", "w" );
+	FILE *tuningFile = fopen( "./feature_info/Tuning_BDPCALDA.txt", "a" );
+	clock_t bt = clock(), et;
+	int gen[101] = { 0 };
+	int imp[101] = { 0 };
+	double score = 0.0;
+	int GAR = 0, FAR = 0, FRR = 0;
+	Mat scoreMat = Mat::zeros( Size( (this->features).size(), (this->features).size() ), CV_64FC1 );
+	for( int i = 0; i < (this->features).size(); ++i ) {
+		for( int j = i + 1; j < (this->features).size(); ++j ) {	
+			score = match( this->features[i], this->features[j] );
+			scoreMat.at<double>( i, j ) = score;
+			scoreMat.at<double>( j, i ) = score;
+			printf( "Cacl ---- src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[j], score );	
+			int classType = 1;
+			int index = score / 0.01;
+			if( this->labels[i] == this->labels[j] ) { 
+				classType = 0;
+				gen[index] += 1;			
+			} else {
+				imp[index] += 1;			
+			}
+			//fprintf( matchFile, "%d %d %d %lf\n", i, j , classType, score );
+		}	
+	}
+	for( int i = 0; i < 101; ++i ) {
+		fprintf( matchFile, "%.2f %lf %lf\n", i * 0.01, 100 * (double)gen[i] / ( (this->features).size() * ( this->trainNum - 1 ) ) * 2,  100 * (double)imp[i] / ( (this->features).size() * ( (this->features).size() - this->trainNum ) ) * 2 );	
+	}
+	fclose( matchFile );
+	for( int i = 0; i < scoreMat.rows; ++i ) {
+		double maxScore = -DBL_MAX;
+		int maxIndex = -1;
+		for( int j = 0; j < scoreMat.cols; ++j ) {
+			if( scoreMat.at<double>( i, j ) > maxScore ) {
+				maxScore = scoreMat.at<double>( i, j );
+				maxIndex = j;			
+			}	
+		}	
+		if( this->labels[i] == this->labels[maxIndex] ) {
+			++GAR;		
+		}
+		printf( "src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[maxIndex], maxScore );	
+	}
+	et = clock();
+	fprintf( tuningFile, "%d %d %lf\n", this->Krow, this->Kcol, (double)GAR / this->features.size() );
+	fclose( tuningFile );
+	printf( "End of Matching.Total Cost Time: %lf  Per Image Cost Time: %lf  GAR:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / (this->features).size(), (double)GAR / this->features.size() );
+}
+double BDPCALDA::match( const Mat &X, const Mat &Y )
+{
+	double M1 = cv::norm( X );
+	double M2 = cv::norm( Y );
+	double dist = X.dot ( Y ) / ( M1 * M2 );
+	return dist;
+}
+
 int train_subspace( const char *trainlist )
 {
 	FILE *roi_list = fopen( trainlist, "r" );

@@ -31,5 +31,22 @@ int test_statistic( const char *testlist );
 int calcu_eer_threshold_statistic( const char *calculist );
 int predict_statistic( const char *trainlist, const char *predictlist );
 
+class WBS
+{
+public:
+	WBS();
+	~WBS();
+	/*--------For Parameters Tuning------------*/
+	int waveletLevel;
+	Size blockSize;
+	/*----------------------------------------*/
+	
+	int doExtractFeatures( const char *filename );
+	void doVerification( int dataSize );
+	double matchingPoint2Point( const Mat &X, const Mat &Y );
+	vector< cv::Mat> features;
+	vector< int > labels;
+};
+
 
 #endif/* end of extract_features_with_statistic.h */

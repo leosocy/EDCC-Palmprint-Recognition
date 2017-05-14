@@ -5,7 +5,7 @@
 	> Created Time: 2017/04/10 21:01:52
  ************************************************************************/
 
-#include "coding_algorithm.h"
+#include "../features_base.h"
 #include "../../../global/general_functions.h"
 #include "../image_transform/gabor.h"
 
@@ -15,11 +15,22 @@ BDRCC::BDRCC()
 	this->numOfDirections = 12;
 	this->blockingSize = Size( 5, 5 );
 	this->imageSize = Size( 125, 125 );
+	setMethodName( PRF_BDRCC_METHOD_NAME );
 }
 
 
 BDRCC::~BDRCC()
 {
+}
+
+void BDRCC::setMethodName( const string &methodName )
+{
+	this->methodName = methodName;
+}
+
+string BDRCC::getMethodName()
+{
+	return this->methodName;
 }
 
 int BDRCC::doOnceBDRCC( const Mat &src, int label )

@@ -23,6 +23,7 @@ int rotate_image( const Mat &src, Mat &dst, double angle, double scale );
 
 
 int roi_list_with_multispectral( const char *dir_path, const char *output_filename );
+int roi_list_with_tongji( const char *dir_path, const char *output_filename );
 int roi_list_with_polyu( const char *dir_path, const char *output_filename );
 int roi_list_with_cameraimage( const char *dir_path, const char *output_filename );
 

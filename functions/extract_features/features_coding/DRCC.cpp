@@ -5,19 +5,20 @@
 	> Created Time: 2017/04/06 22:12:08
  ************************************************************************/
 
-#include "coding_algorithm.h"
+#include "../features_base.h"
 #include "../image_transform/gabor.h"
 #include "../image_enhance/image_enhance.h"
 
 
 DRCC::DRCC()
 {
-	this->numOfScales = 3;
-	this->numOfDirections = 9;
-	this->imageSize = Size( 25, 25 );
-	this->laplaceSize = 7;
-	this->gaborDirections = 9;
-	this->gaborKernelSize = Size( 7, 7 );
+	this->numOfScales = 1;
+	this->numOfDirections = 6;
+	this->imageSize = Size( 29, 29 );
+	this->laplaceSize = 19;
+	this->gaborDirections = 6;
+	this->gaborKernelSize = Size( 9, 9 );
+	setMethodName( PRF_DRCC_METHOD_NAME );
 }
 
 DRCC::~DRCC()
@@ -25,7 +26,17 @@ DRCC::~DRCC()
 
 }
 
-int DRCC::getMaxGaborResponse( const Mat &src, Mat &result, Mat &C, Mat &Cs, int numOfScales, int numOfDirections, int kernelType )
+void DRCC::setMethodName( const string &methodName )
+{
+	this->methodName = methodName;
+}
+
+string DRCC::getMethodName()
+{
+	return this->methodName;
+}
+
+int DRCC::getMaxGaborResponse( const Mat &src, Mat &result, Mat &C, Mat &Cs, Mat &fea, int numOfScales, int numOfDirections, int kernelType )
 {
 	assert( numOfScales >= 1 && numOfDirections >= 1 );
 	GaborFilter filter;
@@ -53,6 +64,7 @@ int DRCC::getMaxGaborResponse( const Mat &src, Mat &result, Mat &C, Mat &Cs, int
 	result = Mat( src.size(), CV_64F );
 	C = Mat( src.size(), CV_8S );
 	Cs = Mat( src.size(), CV_8S );
+	fea = Mat( src.size(), CV_32F );
 	for( int i = 0; i < height; ++i ) {
 		for( int j = 0; j < width; ++j ) {
 			double maxResponse = -DBL_MAX;
@@ -84,6 +96,7 @@ int DRCC::getMaxGaborResponse( const Mat &src, Mat &result, Mat &C, Mat &Cs, int
 				Cright = maxDirection -1 ;
 			}
 			Cs.at<char>( i, j ) = mv[ maxScale * numOfDirections + Cleft ].at<double>( i, j ) >= mv[ maxScale * numOfDirections + Cright].at<double>( i, j )  ? 1 : 0; 
+			fea.at<float>( i, j ) = Cs.at<char>( i, j ) == 1 ? maxDirection + 0.4 : maxDirection - 0.4;
 		}
 	}
 	/*for( int i = 0; i < 6; ++i ) {
@@ -94,10 +107,10 @@ int DRCC::getMaxGaborResponse( const Mat &src, Mat &result, Mat &C, Mat &Cs, int
 
 int DRCC::doOnceDRCC( const Mat &src, int label )
 {
-	Mat maxResponseResult, C, Cs;
+	Mat maxResponseResult, C, Cs, fea;
 	this->numOfScales = 1;
 	
-	getMaxGaborResponse( src, maxResponseResult, C, Cs, this->numOfScales, this->gaborDirections, GaborFilter::GABOR_KERNEL_REAL );
+	getMaxGaborResponse( src, maxResponseResult, C, Cs, fea, this->numOfScales, this->gaborDirections, GaborFilter::GABOR_KERNEL_REAL );
 	
 #if 1
 	/*for( int h = 0; h < maxResponseResult.rows; ++h ) {
@@ -109,6 +122,7 @@ int DRCC::doOnceDRCC( const Mat &src, int label )
 	this->CVector.push_back( C );
 	this->CsVector.push_back( Cs );
 	this->labels.push_back( label );
+	this->features.push_back( fea );
 #endif
 	return EXIT_SUCCESS; 
 }
@@ -178,7 +192,7 @@ int DRCC::doBatchDRCC( const char *filename )
 
 		n = feature_file[num];
 		if( n.empty() ) {
-			//printf( "Begin Write Num:%d\n", i );
+			printf( "Begin Write Num:%d\n", i );
 			feature_file.open( feature_string, FileStorage::APPEND );
 			int id;
 			char image_path[200];
@@ -204,9 +218,9 @@ int DRCC::doBatchDRCC( const char *filename )
 			
 			ImageEnhance enhance;
 			enhance.enhanceWithLaplace( t, image_gray, this->laplaceSize  );
-			//imshow( "origin", image_gray );
+			//waitKey();
 			doOnceDRCC( image_gray, id );
-			//printf( "End Write Num:%d\n\n", i );
+			printf( "End Write Num:%d\n\n", i );
 			//waitKey();
 		} else {
 			
@@ -215,10 +229,12 @@ int DRCC::doBatchDRCC( const char *filename )
 	fclose( roi_list );
 	feature_file.release();
 	clock_t et = clock();
-	//printf( "--------------------------End Of Train----------------------------\n\n" );
-	FILE *tuningResult = fopen( "./feature_info/TuningResult.txt", "a" );
+	printf( "--------------------------End Of Train----------------------------\n\n" );
+
+	
+	//FILE *tuningResult = fopen( "./feature_info/TuningResult.txt", "a" );
 	printf( "TrainEnd----->>>>>TrainCostTimeTotal:%lf\tTrainCostTimePer:%lf\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL );
-	fprintf( tuningResult, "TrainEnd----->>>>>TrainCostTimeTotal:%lf\tTrainCostTimePer:%lf\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL );
+	/*fprintf( tuningResult, "TrainEnd----->>>>>TrainCostTimeTotal:%lf\tTrainCostTimePer:%lf\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL );
 	fflush( tuningResult );
 	fflush( stdout );
 
@@ -249,7 +265,7 @@ int DRCC::doBatchDRCC( const char *filename )
 		if( this->labels[i] == this->labels[maxIndex] ) {
 			++right;		
 		}
-		//printf( "src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[maxIndex], maxScore );	
+		printf( "src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[maxIndex], maxScore );	
 	}
 	et = clock();
 	//printf( "End of Matching.Total Cost Time: %lf  Per Image Cost Time: %lf  GAR:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)right / CsVector.size() );
@@ -263,13 +279,102 @@ int DRCC::doBatchDRCC( const char *filename )
 	S2 = pow( convr2.at<double>( 0, 0 ), 2 );
 	printf( "Parameters---->>>>ImageSize:(%d, %d)\tLaplaceSize:%d\tNumOfDirections:%d\tGaborKernelSize:(%d, %d)\n", this->imageSize.width, this->imageSize.height, this->laplaceSize, this->gaborDirections, this->gaborKernelSize.width, this->gaborKernelSize.height );
 	printf( "Result------>>>>>>MatchingCostTimeTotal:%lf\tMatchingCostTimePer:%lf\tGAR:%lf\tm1:%lf\tm2:%lf\tS1:%lf\tS2:%lf\tJF:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)right / CsVector.size(), m1, m2, S1, S2, pow( fabs( m1 - m2 ), 2 ) / ( S1 + S2 ) );
-	fprintf( tuningResult, "Parameters---->>>>ImageSize:(%d, %d)\tLaplaceSize:%d\tNumOfDirections:%d\tGaborKernelSize:(%d, %d)\n", this->imageSize.width, this->imageSize.height, this->laplaceSize, this->gaborDirections, this->gaborKernelSize.width, this->gaborKernelSize.height );
-	fprintf( tuningResult, "Result------>>>>>>MatchingCostTimeTotal:%lf\tMatchingCostTimePer:%lf\tGAR:%lf\tm1:%lf\tm2:%lf\tS1:%lf\tS2:%lf\tJF:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)right / CsVector.size(), m1, m2, S1, S2, pow( fabs( m1 - m2 ), 2 ) / ( S1 + S2 ) );
+	//fprintf( tuningResult, "Parameters---->>>>ImageSize:(%d, %d)\tLaplaceSize:%d\tNumOfDirections:%d\tGaborKernelSize:(%d, %d)\n", this->imageSize.width, this->imageSize.height, this->laplaceSize, this->gaborDirections, this->gaborKernelSize.width, this->gaborKernelSize.height );
+	//fprintf( tuningResult, "Result------>>>>>>MatchingCostTimeTotal:%lf\tMatchingCostTimePer:%lf\tGAR:%lf\tm1:%lf\tm2:%lf\tS1:%lf\tS2:%lf\tJF:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)right / CsVector.size(), m1, m2, S1, S2, pow( fabs( m1 - m2 ), 2 ) / ( S1 + S2 ) );
 	fflush( tuningResult );
-	fclose( tuningResult );
+	fclose( tuningResult );*/
 	
 #endif
 	return EXIT_SUCCESS;
+}
+
+void DRCC::doVerification( int dataSize )
+{
+#if 0
+	FILE *matchFile = fopen( "./feature_info/Multispectral_R_MatchScore.txt", "w" );
+	clock_t bt = clock(), et;
+	int gen[101] = { 0 };
+	int imp[101] = { 0 };
+	double score = 0.0;
+	int GAR = 0, FAR = 0, FRR = 0;
+	Mat scoreMat = Mat::zeros( Size( dataSize, dataSize ), CV_64FC1 );
+	for( int i = 0; i < CVector.size(); ++i ) {
+		for( int j = i + 1; j < CVector.size(); ++j ) {	
+			score = matchingPoint2Point( this->CVector[i], this->CsVector[i], this->CVector[j], this->CsVector[j] );
+			scoreMat.at<double>( i, j ) = score;
+			scoreMat.at<double>( j, i ) = score;
+			printf( "Cacl ---- src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[j], score );	
+			int classType = 1;
+			int index = score / 0.01;
+			if( this->labels[i] == this->labels[j] ) { 
+				classType = 0;
+				gen[index] += 1;			
+			} else {
+				imp[index] += 1;			
+			}
+			//fprintf( matchFile, "%d %d %d %lf\n", i, j , classType, score );
+		}	
+	}
+	for( int i = 0; i < 101; ++i ) {
+		fprintf( matchFile, "%.2f %lf %lf\n", i * 0.01, 100 * (double)gen[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) ,  100 * (double)imp[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) );	
+	}
+	fclose( matchFile );
+	for( int i = 0; i < scoreMat.rows; ++i ) {
+		double maxScore = -DBL_MAX;
+		int maxIndex = -1;
+		for( int j = 0; j < scoreMat.cols; ++j ) {
+			if( scoreMat.at<double>( i, j ) > maxScore ) {
+				maxScore = scoreMat.at<double>( i, j );
+				maxIndex = j;			
+			}	
+		}	
+		if( this->labels[i] == this->labels[maxIndex] ) {
+			++GAR;		
+		}
+		printf( "src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[maxIndex], maxScore );	
+	}
+	et = clock();
+	printf( "End of Matching.Total Cost Time: %lf  Per Image Cost Time: %lf  GAR:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)GAR / CsVector.size() );
+#endif
+#if 1
+	FILE *recordFile = fopen( "./feature_info/Multispectral_G_GAR_FAR_FRR.txt", "w" );
+	clock_t bt = clock(), et;
+	double score = 0.0;
+	Mat scoreMat = Mat::zeros( Size( dataSize, dataSize ), CV_64FC1 );
+	for( int i = 0; i < CVector.size(); ++i ) {
+		for( int j = i + 1; j < CVector.size(); ++j ) {	
+			score = matchingPoint2Point( this->CVector[i], this->CsVector[i], this->CVector[j], this->CsVector[j] );
+			scoreMat.at<double>( i, j ) = score;
+			scoreMat.at<double>( j, i ) = score;
+			printf( "Cacl ---- src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[j], score );	
+		}	
+	}
+	int GAR = 0, FAR = 0, FRR = 0;
+	double threshold = 0.2;
+	for( threshold = 0.00; threshold <= 1.00; threshold += 0.01 ) {
+		GAR = 0, FAR = 0, FRR = 0;
+		for( int i = 0; i < scoreMat.rows; ++i ) {
+			for( int j = i + 1; j < scoreMat.cols; ++j ) {
+				if( this->labels[i] == this->labels[j] ) {
+					if( scoreMat.at<double>( i, j ) >= threshold ) {
+						GAR += 1;
+					} else {
+						FRR += 1;				
+					}
+				} else {
+					if( scoreMat.at<double>( i, j ) >= threshold ) {
+						FAR += 1;
+					}			
+				}
+			}	
+		}
+		printf( "Threshold:%lf GAR:%lf FAR:%lf FRR:%lf\n", threshold, ((double)GAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) )) * 2, ((double)FAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) )) * 2, ((double)FRR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) )) * 2);
+		fprintf( recordFile, "%lf %lf %lf %lf\n",threshold, (double)GAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2, (double)FAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) * 2, (double)FRR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2);
+	}
+	et = clock();
+	fclose( recordFile );
+	//printf( "End of Matching.Total Cost Time: %lf  Per Image Cost Time: %lf  GAR:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)GAR / CsVector.size() );
+#endif
 }
 
 double DRCC::matchingPoint2Point( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy )

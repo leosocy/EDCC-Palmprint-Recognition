@@ -30,28 +30,55 @@ int main( int argc, char **argv )
 	process( argc, argv );
 	
 	/*Open Video*/
-	//VideoCapture video( "../TestVideo/2016-12-25 184700.mp4" );
+#if 0
+	VideoCapture video( "../PalmprintData/2016-12-14 162959.mp4" );
 	 
-	/*if( !video.isOpened() ) {
+	if( !video.isOpened() ) {
 		printf( "No Video Data!" );
 		exit( EXIT_FAILURE );
-	}*/
+	}
 
-	/*double rate = video.get( CV_CAP_PROP_FPS );
-	bool stop( false );*/
-	//Mat image;
-	//int delay = 1000 / rate;
-	/*video.read( image );
-	double proportion = (double)image.cols / image.rows;
-	Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );*/
+	double rate = video.get( CV_CAP_PROP_FPS );
+	bool stop( false );
+	Mat image;
+	int delay = 1000 / rate;
+	while( !stop ) {
+		
+		if( !video.read( image ) ) break;
+		image = imread( "../PalmprintData/palm_rotate.jpg", CV_LOAD_IMAGE_COLOR );
+		double proportion = (double)image.cols / image.rows;
+		Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );
 	
+		origin_image_without_scale = image.clone();
+		image_scale = (double)IMAGE_HEIGHT / image.rows;
+		resize(image, image, dsize);
+		origin_image = image.clone();
+		Mat dst;
+		dst = Mat::zeros( image.rows, image.cols, CV_8U);
+		binarization( image, dst );
+		//imshow( "Binarization", dst );
+		adjust_palm( dst, dst );
+		//imshow( "Adjust", dst );
+		imshow( "Origin", origin_image );
+		
+	
+	//start_timing();
+		Mat roi;
+		if( extract_roi( dst, roi ) == EXIT_SUCCESS ) {
+			//resize( roi, roi, Size( 256, 256 ) );
+		
+			imshow( "roi", roi ); 
+		}
+		waitKey();
+	}
 	int successful_count = 0;
 	int sum = 0;
-	
+#endif
 	FILE *list_multispectral_B = fopen( "./roi_list/Multispectral_B.txt", "r" );
 	FILE *list_multispectral_G = fopen( "./roi_list/Multispectral_G.txt", "r" );
 	FILE *list_multispectral_I = fopen( "./roi_list/Multispectral_I.txt", "r" );
 	FILE *list_multispectral_R = fopen( "./roi_list/Multispectral_R.txt", "r" );
+	FILE *list_tongji = fopen( "./roi_list/Tongji.txt", "r" );
 	if( list_multispectral_B == NULL ) {
 		roi_list_with_multispectral( "/home/leosocy/Desktop/PalmprintData/Multispectral/Multispectral_B/", "./roi_list/Multispectral_B.txt" );
 	}
@@ -63,6 +90,9 @@ int main( int argc, char **argv )
 	}
 	if( list_multispectral_R == NULL ) {
 		roi_list_with_multispectral( "/home/leosocy/Desktop/PalmprintData/Multispectral/Multispectral_R/", "./roi_list/Multispectral_R.txt" );
+	}
+	if( list_tongji == NULL ) {
+		roi_list_with_tongji( "/home/leosocy/Desktop/PalmprintData/Tongji/", "./roi_list/Tongji.txt" );	
 	}
 	FILE *list_to_deal = list_multispectral_G;
 	const char *list_to_deal_ch = "./roi_list/Multispectral_B.txt";
@@ -95,14 +125,17 @@ int main( int argc, char **argv )
 		//	Mat roi_g;
 		//	cvtColor( image, roi_g, CV_BGR2GRAY );
 		//	binarization( roi, roi_d );
-		//	imshow( "roi_g", roi_g ); 
+		//	imshow( "roi_g", roi_g ); 		
+
 			char list_name_train[] = "./roi_list/Multispectral_B_Train.txt";
 			char list_name_test[] = "./roi_list/Multispectral_B_Test.txt";
-		//	create_predict_list( "./roi_list/Multispectral_B.txt", "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
+			create_predict_list( "./roi_list/Multispectral_B.txt", "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
+printf("Here\n");
+		fflush( stdout );
 		//	predict_subspace( "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
-		
-			DRCC d;
-			int direc[7] = { 6, 8, 9, 10, 12, 15, 18 };
+#if 1
+			DRCC t;
+			/*int direc[7] = { 6, 8, 9, 10, 12, 15, 18 };
 			int kernelSize[10] = { 3, 5, 7, 9, 11, 13, 15, 17, 19, 21 };
 			for( int i = 29; i < 125; i += 2 ) {
 				for( int j = 27; j <= i; j+= 2 ) {
@@ -119,34 +152,70 @@ int main( int argc, char **argv )
 						}
 					}
 				}
-			}
+			}*/
+			t.doBatchDRCC( "./roi_list/Multispectral_G.txt" );
+			t.doVerification( 6000 );
+
+			/*DRCC p;
+			p.doBatchDRCC( "./roi_list/Multispectral_B_Predict_Test.txt" );
+
+			PRMLEDRCC ml( 0.464633, 1 );
+			
+			PRVerify ver;
+			ver.trainFeatures = &t;
+			ver.predictFeatures = &p;
+			ver.doPRML( &ml );*/
+#endif
+		/*	WBS w;
+			w.waveletLevel = 4;
+			w.blockSize = Size( 8, 8 );
+			w.doExtractFeatures( "./roi_list/Multispectral_B.txt" );
+			w.doVerification( 6000 );*/
+			/*BDPCALDA b;
+			b.trainNum = 12;
 		
-			/*Mat image = imread(  "/home/leosocy/Desktop/PalmprintData/Multispectral/Multispectral_B/003/1_02_s.bmp", CV_LOAD_IMAGE_COLOR );
+			b.Krow = 25;
+			b.Kcol = 25;
+			
+			b.doExtractFeatures( "./roi_list/Multispectral_B.txt" );
+			b.doVerification( 6000 );*/
+			
+#if 0
+			Mat image = imread(  "/home/leosocy/Desktop/PalmprintData/ForPreprocessTest.jpg", CV_LOAD_IMAGE_COLOR );
 			Mat image_gray;
 			cvtColor( image, image_gray, CV_BGR2GRAY );
 			double proportion = (double)image.cols / image.rows;
 			Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );
 			resize(image_gray, image_gray, dsize);
-			ImageEnhance enhance;
+			origin_image_without_scale = image.clone();
+			image_scale = (double)IMAGE_HEIGHT / image.rows;
+			resize( image, image, dsize );
+			origin_image = image.clone();
 			Mat dst;
+			dst = Mat::zeros( image.rows, image.cols, CV_8U);
+			binarization( image, dst );
+			imshow( "Binarization", dst );
+			adjust_palm( dst, dst );
+			imshow( "Adjust", dst );
+			imshow( "Origin", origin_image );
+		
+	
+		//start_timing();
+			Mat roi;
+			if( extract_roi( dst, roi ) == EXIT_SUCCESS ) {
+				resize( roi, roi, Size( 256, 256 ) );		
+				imshow( "roi", roi ); 
+			}
+			waitKey();
+			/*ImageEnhance enhance;
 			Mat t;	
 			image_gray.convertTo( t, CV_64FC1 );
 			normalize( t, t, 0, 1, CV_MINMAX );	
-			/*for( int h = 0; h < image_gray.rows; ++h ) {
-				for( int w = 0; w < image_gray.cols; ++w ) {
-					t.at<double>( h, w ) = 1 - t.at<double>( h, w );
-				}
-			}
-			enhance.enhanceWithLaplace( t, dst, 7  );
-			dst.convertTo( dst, CV_8U );
-			enhance.enhanceWithCanny( dst, dst, 80, 240  );
+			enhance.enhanceWithLaplace( t, dst, 23 );
+			normalize( dst, dst, 0, 1, CV_MINMAX );
 			imshow( "enhance", dst );
-			dst.convertTo( dst, CV_8U );
-			
-			binarization( dst, dst );
-			
-			imshow( "enhance_bi", dst );
 			waitKey();*/
+#endif
 			//train_coding( list_name_train );
 		/*	getchar();
 			test_subspace( list_name_test );*/

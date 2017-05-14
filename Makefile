@@ -150,6 +150,141 @@ functions/PRML/src/PRML.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRML.cpp.s
 .PHONY : functions/PRML/src/PRML.cpp.s
 
+functions/PRML/src/PRMLEDRCC.o: functions/PRML/src/PRMLEDRCC.cpp.o
+
+.PHONY : functions/PRML/src/PRMLEDRCC.o
+
+# target to build an object file
+functions/PRML/src/PRMLEDRCC.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLEDRCC.cpp.o
+.PHONY : functions/PRML/src/PRMLEDRCC.cpp.o
+
+functions/PRML/src/PRMLEDRCC.i: functions/PRML/src/PRMLEDRCC.cpp.i
+
+.PHONY : functions/PRML/src/PRMLEDRCC.i
+
+# target to preprocess a source file
+functions/PRML/src/PRMLEDRCC.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLEDRCC.cpp.i
+.PHONY : functions/PRML/src/PRMLEDRCC.cpp.i
+
+functions/PRML/src/PRMLEDRCC.s: functions/PRML/src/PRMLEDRCC.cpp.s
+
+.PHONY : functions/PRML/src/PRMLEDRCC.s
+
+# target to generate assembly for a file
+functions/PRML/src/PRMLEDRCC.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLEDRCC.cpp.s
+.PHONY : functions/PRML/src/PRMLEDRCC.cpp.s
+
+functions/PRML/src/PRMLKNearest.o: functions/PRML/src/PRMLKNearest.cpp.o
+
+.PHONY : functions/PRML/src/PRMLKNearest.o
+
+# target to build an object file
+functions/PRML/src/PRMLKNearest.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLKNearest.cpp.o
+.PHONY : functions/PRML/src/PRMLKNearest.cpp.o
+
+functions/PRML/src/PRMLKNearest.i: functions/PRML/src/PRMLKNearest.cpp.i
+
+.PHONY : functions/PRML/src/PRMLKNearest.i
+
+# target to preprocess a source file
+functions/PRML/src/PRMLKNearest.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLKNearest.cpp.i
+.PHONY : functions/PRML/src/PRMLKNearest.cpp.i
+
+functions/PRML/src/PRMLKNearest.s: functions/PRML/src/PRMLKNearest.cpp.s
+
+.PHONY : functions/PRML/src/PRMLKNearest.s
+
+# target to generate assembly for a file
+functions/PRML/src/PRMLKNearest.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLKNearest.cpp.s
+.PHONY : functions/PRML/src/PRMLKNearest.cpp.s
+
+functions/PRML/src/PRMLNBayes.o: functions/PRML/src/PRMLNBayes.cpp.o
+
+.PHONY : functions/PRML/src/PRMLNBayes.o
+
+# target to build an object file
+functions/PRML/src/PRMLNBayes.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLNBayes.cpp.o
+.PHONY : functions/PRML/src/PRMLNBayes.cpp.o
+
+functions/PRML/src/PRMLNBayes.i: functions/PRML/src/PRMLNBayes.cpp.i
+
+.PHONY : functions/PRML/src/PRMLNBayes.i
+
+# target to preprocess a source file
+functions/PRML/src/PRMLNBayes.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLNBayes.cpp.i
+.PHONY : functions/PRML/src/PRMLNBayes.cpp.i
+
+functions/PRML/src/PRMLNBayes.s: functions/PRML/src/PRMLNBayes.cpp.s
+
+.PHONY : functions/PRML/src/PRMLNBayes.s
+
+# target to generate assembly for a file
+functions/PRML/src/PRMLNBayes.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLNBayes.cpp.s
+.PHONY : functions/PRML/src/PRMLNBayes.cpp.s
+
+functions/PRML/src/PRMLSVM.o: functions/PRML/src/PRMLSVM.cpp.o
+
+.PHONY : functions/PRML/src/PRMLSVM.o
+
+# target to build an object file
+functions/PRML/src/PRMLSVM.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLSVM.cpp.o
+.PHONY : functions/PRML/src/PRMLSVM.cpp.o
+
+functions/PRML/src/PRMLSVM.i: functions/PRML/src/PRMLSVM.cpp.i
+
+.PHONY : functions/PRML/src/PRMLSVM.i
+
+# target to preprocess a source file
+functions/PRML/src/PRMLSVM.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLSVM.cpp.i
+.PHONY : functions/PRML/src/PRMLSVM.cpp.i
+
+functions/PRML/src/PRMLSVM.s: functions/PRML/src/PRMLSVM.cpp.s
+
+.PHONY : functions/PRML/src/PRMLSVM.s
+
+# target to generate assembly for a file
+functions/PRML/src/PRMLSVM.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRML/src/PRMLSVM.cpp.s
+.PHONY : functions/PRML/src/PRMLSVM.cpp.s
+
+functions/PRVerify/src/PRVerify.o: functions/PRVerify/src/PRVerify.cpp.o
+
+.PHONY : functions/PRVerify/src/PRVerify.o
+
+# target to build an object file
+functions/PRVerify/src/PRVerify.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRVerify/src/PRVerify.cpp.o
+.PHONY : functions/PRVerify/src/PRVerify.cpp.o
+
+functions/PRVerify/src/PRVerify.i: functions/PRVerify/src/PRVerify.cpp.i
+
+.PHONY : functions/PRVerify/src/PRVerify.i
+
+# target to preprocess a source file
+functions/PRVerify/src/PRVerify.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRVerify/src/PRVerify.cpp.i
+.PHONY : functions/PRVerify/src/PRVerify.cpp.i
+
+functions/PRVerify/src/PRVerify.s: functions/PRVerify/src/PRVerify.cpp.s
+
+.PHONY : functions/PRVerify/src/PRVerify.s
+
+# target to generate assembly for a file
+functions/PRVerify/src/PRVerify.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/functions/PRVerify/src/PRVerify.cpp.s
+.PHONY : functions/PRVerify/src/PRVerify.cpp.s
+
 functions/extract_features/features_base.o: functions/extract_features/features_base.cpp.o
 
 .PHONY : functions/extract_features/features_base.o
@@ -675,6 +810,21 @@ help:
 	@echo "... functions/PRML/src/PRML.o"
 	@echo "... functions/PRML/src/PRML.i"
 	@echo "... functions/PRML/src/PRML.s"
+	@echo "... functions/PRML/src/PRMLEDRCC.o"
+	@echo "... functions/PRML/src/PRMLEDRCC.i"
+	@echo "... functions/PRML/src/PRMLEDRCC.s"
+	@echo "... functions/PRML/src/PRMLKNearest.o"
+	@echo "... functions/PRML/src/PRMLKNearest.i"
+	@echo "... functions/PRML/src/PRMLKNearest.s"
+	@echo "... functions/PRML/src/PRMLNBayes.o"
+	@echo "... functions/PRML/src/PRMLNBayes.i"
+	@echo "... functions/PRML/src/PRMLNBayes.s"
+	@echo "... functions/PRML/src/PRMLSVM.o"
+	@echo "... functions/PRML/src/PRMLSVM.i"
+	@echo "... functions/PRML/src/PRMLSVM.s"
+	@echo "... functions/PRVerify/src/PRVerify.o"
+	@echo "... functions/PRVerify/src/PRVerify.i"
+	@echo "... functions/PRVerify/src/PRVerify.s"
 	@echo "... functions/extract_features/features_base.o"
 	@echo "... functions/extract_features/features_base.i"
 	@echo "... functions/extract_features/features_base.s"

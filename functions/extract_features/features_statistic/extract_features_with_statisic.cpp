@@ -51,7 +51,7 @@ int train_statistic( const char *trainList )
 			/*************************extract features with WDT********************************/
 			WDT( image_gray, image_gray, "haar", WAVELET_LEVEL );
 			Mat features;
-			Size block( WAVELET_BLOCK_SIZE );
+			Size block( WAVELET_BLOCK_SIZE, WAVELET_BLOCK_SIZE );
 			get_features( image_gray, FEATURES_STATISTIC_TYPE, features, block, i );
 
 			//v_feature.push_back( features );
@@ -72,12 +72,116 @@ int train_statistic( const char *trainList )
 	printf( "Total Cost Time: %lf  Per Image Cost Time: %lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL );
 	
 	fflush( stdout );
-	//calc_dis( v_feature );
-	/************************************end of WDT************************************/
-
-	/*************************extract features with DFT********************************/
-	/************************************end of DFT************************************/
 	return EXIT_SUCCESS;
+}
+
+WBS::WBS()
+{
+}
+
+WBS::~WBS()
+{
+}
+
+int WBS::doExtractFeatures( const char *filename )
+{
+	FILE *roi_list = fopen( filename, "r" );
+	if( roi_list == NULL ) {
+		printf( "%s Not Exist.\n", filename );
+		return EXIT_FAILURE;
+	}
+	vector< Mat >v_feature;
+	clock_t bt = clock();
+	printf( "--------------------------------Begin Train--------------------\n" );
+
+	for( int i = 0; i < LIST_TRAIN_NUM_TOTAL && !feof( roi_list ); ++i ) {
+		printf( "Begin Write Num:%d\n", i );
+		int id = 0;
+		char image_path[200];
+		fscanf( roi_list, "%d %s", &id, image_path );
+		Mat image = imread( image_path, CV_LOAD_IMAGE_COLOR );
+		Mat image_gray;
+		cvtColor( image, image_gray, CV_BGR2GRAY );
+		double proportion = (double)image.cols / image.rows;
+		Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );
+		resize(image_gray, image_gray, dsize);
+		/************************extract features with WDT********************************/
+		WDT( image_gray, image_gray, "haar", this->waveletLevel );
+		Mat features;
+		get_features( image_gray, FEATURES_STATISTIC_TYPE, features, this->blockSize, i );
+
+		this->features.push_back( features );
+		this->labels.push_back( id );
+			
+		printf( "End Write Num:%d\n\n", i );
+	}
+	clock_t et = clock();
+	printf( "--------------------------End Of Train----------------------------\n\n" );
+	printf( "Total Cost Time: %lf  Per Image Cost Time: %lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL );
+	
+	fflush( stdout );
+	return EXIT_SUCCESS;
+}
+
+void WBS::doVerification( int dataSize )
+{
+	FILE *matchFile = fopen( "./feature_info/Multispectral_B_MatchScore_WBS.txt", "w" );
+	FILE *tuningFile = fopen( "./feature_info/Tuning_WBS.txt", "a" );
+	clock_t bt = clock(), et;
+	int gen[71] = { 0 };
+	int imp[71] = { 0 };
+	double score = 0.0;
+	int GAR = 0, FAR = 0, FRR = 0;
+	Mat scoreMat = Mat::zeros( Size( dataSize, dataSize ), CV_64FC1 );
+	for( int i = 0; i < (this->features).size(); ++i ) {
+		for( int j = i + 1; j < (this->features).size(); ++j ) {	
+			score = matchingPoint2Point( this->features[i], this->features[j] );
+			scoreMat.at<double>( i, j ) = score;
+			scoreMat.at<double>( j, i ) = score;
+			printf( "Cacl ---- src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[j], score );	
+			int classType = 1;
+			int index = score / 0.001 - 930;
+			if( this->labels[i] == this->labels[j] ) { 
+				classType = 0;
+				gen[index] += 1;			
+			} else {
+				imp[index] += 1;			
+			}
+			//fprintf( matchFile, "%d %d %d %lf\n", i, j , classType, score );
+		}	
+	}
+	for( int i = 0; i < 71; ++i ) {
+		fprintf( matchFile, "%.3f %lf %lf\n", i * 0.001 + 0.93, 100 * (double)gen[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2,  100 * (double)imp[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) * 2 );	
+	}
+	fclose( matchFile );
+	for( int i = 0; i < scoreMat.rows; ++i ) {
+		double maxScore = -DBL_MAX;
+		int maxIndex = -1;
+		for( int j = 0; j < scoreMat.cols; ++j ) {
+			if( scoreMat.at<double>( i, j ) > maxScore ) {
+				maxScore = scoreMat.at<double>( i, j );
+				maxIndex = j;			
+			}	
+		}	
+		if( this->labels[i] == this->labels[maxIndex] ) {
+			++GAR;		
+		}
+		printf( "src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[maxIndex], maxScore );	
+	}
+	et = clock();
+	//fprintf( tuningFile, "%d %d %lf", this->waveletLevel, this->blockSize.width, (double)GAR / this->features.size() );
+	fclose( tuningFile );
+	printf( "End of Matching.Total Cost Time: %lf  Per Image Cost Time: %lf  GAR:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)GAR / this->features.size() );
+}
+
+
+double WBS::matchingPoint2Point( const Mat &X, const Mat &Y )
+{
+	assert( X.rows == Y.rows && X.cols == Y.cols );
+	double M1 = cv::norm( X );
+	double M2 = cv::norm( Y );
+	double dist = X.dot ( Y ) / ( M1 * M2 );
+	return dist;
 }
 
 int test_statistic( const char *testList )
@@ -127,7 +231,7 @@ int test_statistic( const char *testList )
 		/*************************extract features with WDT********************************/
 		WDT( image_gray, image_gray, "haar", WAVELET_LEVEL );
 		Mat features;
-		Size block( WAVELET_BLOCK_SIZE );
+		Size block( WAVELET_BLOCK_SIZE, WAVELET_BLOCK_SIZE );
 		get_features( image_gray, FEATURES_STATISTIC_TYPE, features, block, i );
 
 		fs.features = features.clone();
@@ -258,7 +362,7 @@ int predict_statistic( const char *trainlist, const char *predictlist )
 		resize(image_gray, image_gray, dsize);
 		WDT( image_gray, image_gray, "haar", WAVELET_LEVEL );
 		Mat features;
-		Size block( WAVELET_BLOCK_SIZE );
+		Size block( WAVELET_BLOCK_SIZE, WAVELET_BLOCK_SIZE );
 		get_features( image_gray, FEATURES_STATISTIC_TYPE, features, block, i );
 
 		fs.features = features.clone();

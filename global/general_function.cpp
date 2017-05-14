@@ -77,6 +77,23 @@ int roi_list_with_multispectral( const char *dir_path, const char *output_filena
 	return EXIT_SUCCESS;
 }
 
+int roi_list_with_tongji( const char *dir_path, const char *output_filename )
+{
+	FILE *tongji_roi_list = fopen( output_filename, "w" );
+	if( tongji_roi_list == NULL ) {
+		perror( "Create OutputFIle Failed!\n" );
+		return EXIT_FAILURE;
+	}
+	for( int i = 1; i <= 600; ++i ) {
+		for( int j = 1; j <= 10; ++j ) {
+			fprintf( tongji_roi_list, "%d %ssession1/%05d.bmp\n", i, dir_path, ( i - 1 ) * 10 + j );
+			fprintf( tongji_roi_list, "%d %ssession2/%05d.bmp\n", i, dir_path, ( i - 1 ) * 10 + j );		
+		}	
+	}
+	fclose( tongji_roi_list );
+	return EXIT_SUCCESS;
+}
+
 int roi_list_with_polyu( const char *dir_path, const char *output_filename )
 {
 	return EXIT_SUCCESS;
@@ -132,25 +149,30 @@ int create_predict_list(  const char *alllist, const char *output_trainlist, con
 				char tmp[200];
 				fgets( tmp, 200, inputFile );
 				fputs( tmp, output_train );
-				//fflush( output_train );
+				fflush( output_train );
 			}
 			for( int k = PREDICT_TRAIN_PER_PEOPLE_NUMBER_OF_IMAGE; k < ALL_PER_PEOPLE_NUMBER_OF_IMAGE && !feof( inputFile ); k++ ) {
 				char tmp[200];
 				fgets( tmp, 200, inputFile );
 				fputs( tmp, output_predict );
-			//fflush( output_test );
+				fflush( output_predict );
 			}
 		} else {
 			for( int k = 0; k < ALL_PER_PEOPLE_NUMBER_OF_IMAGE && !feof( inputFile ); k++ ) {
 				char tmp[200];	
 				int id = 0;
 				fscanf( inputFile, "%d %s", &id, tmp );
-				fprintf( output_predict, "%d %s\n", -1, tmp );
-				//fflush( output_train );
+				fprintf( output_predict, "%d %s", -1, tmp );
+				if( !feof( inputFile ) ) {
+					fprintf( output_predict, "\n" );
+				} else {
+					return 0;
+				}
+				fflush( output_predict );
 			}		
 		}
 	}
-	fflush( output_train );
-	fflush( output_predict );
+	//fflush( output_train );
+	//fflush( output_predict );
 }
 

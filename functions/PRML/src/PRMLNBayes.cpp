@@ -10,12 +10,23 @@ PRMLNBayes::PRMLNBayes()
 {
 	this->bayes = new CvNormalBayesClassifier;
 	this->genFunc = new GeneralFunctions;
+	setMethodName( PRML_NBAYES_METHOD_NAME );
 }
 
 PRMLNBayes::~PRMLNBayes()
 {
 	delete( this->bayes );
 	delete( this->genFunc );
+}
+
+void PRMLNBayes::setMethodName( const string &methodName )
+{
+	this->methodName = methodName;
+}
+
+string PRMLNBayes::getMethodName()
+{
+	return this->methodName;
 }
 
 bool PRMLNBayes::prTrain( const PRFeatures &trainFeatures )
@@ -33,7 +44,7 @@ float PRMLNBayes::prPredict( const PRFeatures &predictFeatures, vector< int > &l
 	float ret = 0.0;
 	ret = bayes->predict( predictData, &responses );
 	for( int r = 0; r < responses.rows; ++r ) {
-		labels.push_back( responses.at<int>( r, 0 ) );
+		labels.push_back( (int)responses.at<float>( r, 0 ) );
 	}
 	return ret;
 }

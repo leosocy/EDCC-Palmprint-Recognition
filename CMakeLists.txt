@@ -27,5 +27,10 @@ add_executable( main main.cpp
 ./functions/extract_features/features_coding/DRCC.cpp
 ./functions/extract_features/features_coding/BDRCC.cpp
 ./functions/extract_features/image_enhance/image_enhance.cpp
-./functions/PRML/src/PRML.cpp)
+./functions/PRML/src/PRML.cpp
+./functions/PRML/src/PRMLNBayes.cpp
+./functions/PRML/src/PRMLKNearest.cpp
+./functions/PRML/src/PRMLSVM.cpp
+./functions/PRML/src/PRMLEDRCC.cpp
+./functions/PRVerify/src/PRVerify.cpp)
 target_link_libraries( main ${OpenCV_LIBS} )
