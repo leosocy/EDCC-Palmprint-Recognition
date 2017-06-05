@@ -65,10 +65,10 @@ int roi_list_with_multispectral( const char *dir_path, const char *output_filena
 	}
 
 	for( int i = 1; i <= 500; i++ ) {
-		for( int j = 1; j <= 2; j++ ) {
-			for( int k = 1; k <= 6; k++ ) {
-				printf( "%d %s%03d/%d_%02d_s.bmp\n", i, dir_path, i, j, k );
-				fprintf( multispectral_roi_list, "%d %s%03d/%d_%02d_s.bmp\n", i, dir_path, i, j, k );
+		for( int j = 1; j <= 6; j++ ) {
+			for( int k = 1; k <= 2; k++ ) {
+				printf( "%d %s%03d/%d_%02d_s.bmp\n", i, dir_path, i, k, j );
+				fprintf( multispectral_roi_list, "%d %s%03d/%d_%02d_s.bmp\n", i, dir_path, i, k, j );
 				
 			}
 		}
@@ -133,46 +133,33 @@ int split_roi_list( const char *input_filename, const char *output_trainlist, co
 	return EXIT_SUCCESS;
 }
 
-int create_predict_list(  const char *alllist, const char *output_trainlist, const char *output_predictlist )
+int create_predict_list(  const char *all_list, const char *output_trainlist, const char *output_testlist, int perNum, int trainNum, int testNum )
 {
-	FILE *inputFile = fopen( alllist, "r" );
+	CV_Assert( trainNum + testNum == perNum );
+	FILE *inputFile = fopen( all_list, "r" );
 	FILE *output_train = fopen( output_trainlist, "w" );
-	FILE *output_predict = fopen( output_predictlist, "w" );
+	FILE *output_predict = fopen( output_testlist, "w" );
 
 	if( inputFile == NULL ) {
-		printf( "%s Not Exist!", alllist );
+		printf( "%s Not Exist!", all_list );
 		return EXIT_FAILURE;
 	}
-	for( int i = 0, j = 0; !feof( inputFile ); i += ALL_PER_PEOPLE_NUMBER_OF_IMAGE, ++j ) {
-		if( j < PREDICT_TRAIN_NUMBER_OF_PEOPLE ) {
-			for( int k = 0; k < PREDICT_TRAIN_PER_PEOPLE_NUMBER_OF_IMAGE && !feof( inputFile ); k++ ) {
-				char tmp[200];
-				fgets( tmp, 200, inputFile );
-				fputs( tmp, output_train );
-				fflush( output_train );
-			}
-			for( int k = PREDICT_TRAIN_PER_PEOPLE_NUMBER_OF_IMAGE; k < ALL_PER_PEOPLE_NUMBER_OF_IMAGE && !feof( inputFile ); k++ ) {
-				char tmp[200];
-				fgets( tmp, 200, inputFile );
-				fputs( tmp, output_predict );
-				fflush( output_predict );
-			}
+	for( int i = 0; i < LIST_TRAIN_NUM_TOTAL && !feof( inputFile ); ++i ) {
+		char tmp[200];
+		fgets( tmp, 200, inputFile );
+		if( i % perNum < trainNum ) {
+			fputs( tmp, output_train );
+			//fflush( output_train );
 		} else {
-			for( int k = 0; k < ALL_PER_PEOPLE_NUMBER_OF_IMAGE && !feof( inputFile ); k++ ) {
-				char tmp[200];	
-				int id = 0;
-				fscanf( inputFile, "%d %s", &id, tmp );
-				fprintf( output_predict, "%d %s", -1, tmp );
-				if( !feof( inputFile ) ) {
-					fprintf( output_predict, "\n" );
-				} else {
-					return 0;
-				}
-				fflush( output_predict );
-			}		
+			fputs( tmp, output_predict );
+			//fflush( output_predict );
 		}
 	}
-	//fflush( output_train );
-	//fflush( output_predict );
+	fflush( output_train );
+	fflush( output_predict );
+	fclose( inputFile );
+	fclose( output_train );
+	fclose( output_predict );
+	
 }
 

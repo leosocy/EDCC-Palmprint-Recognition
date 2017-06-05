@@ -46,10 +46,13 @@ public:
 	int Krow;
 	int Kcol;
 	int trainNum;
+	int trainTotalNum;
+	bool bIsBDPCALDA;
 	/*----------------------------------------*/
 	
 	int doExtractFeatures( const char *filename );
 	void doVerification( int dataSize );
+	void doIdentification( const char *trainFileName, const char *testFileName, int peopleNum, int trainNum, int testNum, const char *resultFileName );
 	double match( const Mat &X, const Mat &Y );
 	vector< cv::Mat> features;
 	vector< int > labels;

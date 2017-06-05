@@ -18,6 +18,8 @@ DRCC::DRCC()
 	this->laplaceSize = 19;
 	this->gaborDirections = 6;
 	this->gaborKernelSize = Size( 9, 9 );
+	this->bIsEDCC = 1;
+	this->trainTotalNum = LIST_TRAIN_NUM_TOTAL;
 	setMethodName( PRF_DRCC_METHOD_NAME );
 }
 
@@ -185,7 +187,7 @@ int DRCC::doBatchDRCC( const char *filename )
 
 	clock_t bt = clock();
 	//printf( "--------------------------------Begin Coding Train--------------------\n" );
-	for( int i = 0; i < LIST_TRAIN_NUM_TOTAL && !feof( roi_list ); ++i ) {
+	for( int i = 0; i < this->trainTotalNum && !feof( roi_list ); ++i ) {
 		char num[10];
 		sprintf( num, "%c%d", '_', i );
 		const string s_num( num );
@@ -219,7 +221,11 @@ int DRCC::doBatchDRCC( const char *filename )
 			ImageEnhance enhance;
 			enhance.enhanceWithLaplace( t, image_gray, this->laplaceSize  );
 			//waitKey();
-			doOnceDRCC( image_gray, id );
+			if( this->bIsEDCC ) {
+				doOnceDRCC( image_gray, id );
+			} else {
+				doOnceDRCC( t, id );			
+			}
 			printf( "End Write Num:%d\n\n", i );
 			//waitKey();
 		} else {
@@ -233,7 +239,7 @@ int DRCC::doBatchDRCC( const char *filename )
 
 	
 	//FILE *tuningResult = fopen( "./feature_info/TuningResult.txt", "a" );
-	printf( "TrainEnd----->>>>>TrainCostTimeTotal:%lf\tTrainCostTimePer:%lf\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL );
+	printf( "TrainEnd----->>>>>TrainCostTimeTotal:%lf\tTrainCostTimePer:%lf\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / this->trainTotalNum );
 	/*fprintf( tuningResult, "TrainEnd----->>>>>TrainCostTimeTotal:%lf\tTrainCostTimePer:%lf\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL );
 	fflush( tuningResult );
 	fflush( stdout );
@@ -290,8 +296,8 @@ int DRCC::doBatchDRCC( const char *filename )
 
 void DRCC::doVerification( int dataSize )
 {
-#if 0
-	FILE *matchFile = fopen( "./feature_info/Multispectral_R_MatchScore.txt", "w" );
+#if 1
+	FILE *matchFile = fopen( "./feature_info/EDCC/Tongji_MatchScore.txt", "w" );
 	clock_t bt = clock(), et;
 	int gen[101] = { 0 };
 	int imp[101] = { 0 };
@@ -316,7 +322,7 @@ void DRCC::doVerification( int dataSize )
 		}	
 	}
 	for( int i = 0; i < 101; ++i ) {
-		fprintf( matchFile, "%.2f %lf %lf\n", i * 0.01, 100 * (double)gen[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) ,  100 * (double)imp[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) );	
+		fprintf( matchFile, "%.2f %lf %lf\n", i * 0.01, 100 * (double)gen[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2,  100 * (double)imp[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) * 2 );	
 	}
 	fclose( matchFile );
 	for( int i = 0; i < scoreMat.rows; ++i ) {
@@ -336,8 +342,13 @@ void DRCC::doVerification( int dataSize )
 	et = clock();
 	printf( "End of Matching.Total Cost Time: %lf  Per Image Cost Time: %lf  GAR:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)GAR / CsVector.size() );
 #endif
-#if 1
-	FILE *recordFile = fopen( "./feature_info/Multispectral_G_GAR_FAR_FRR.txt", "w" );
+#if 0
+	FILE *recordFile = NULL;
+	if( this->bIsEDCC ) {
+		recordFile = fopen( "./feature_info/EDCC/Tongji_GAR_FAR_FRR_EDCC.txt", "w" );
+	} else {
+		recordFile = fopen( "./feature_info/DCC/Tongji_GAR_FAR_FRR_DCC.txt", "w" );	
+	}
 	clock_t bt = clock(), et;
 	double score = 0.0;
 	Mat scoreMat = Mat::zeros( Size( dataSize, dataSize ), CV_64FC1 );
@@ -351,7 +362,7 @@ void DRCC::doVerification( int dataSize )
 	}
 	int GAR = 0, FAR = 0, FRR = 0;
 	double threshold = 0.2;
-	for( threshold = 0.00; threshold <= 1.00; threshold += 0.01 ) {
+	for( threshold = 0.000; threshold <= 1.000; threshold += 0.001 ) {
 		GAR = 0, FAR = 0, FRR = 0;
 		for( int i = 0; i < scoreMat.rows; ++i ) {
 			for( int j = i + 1; j < scoreMat.cols; ++j ) {
@@ -368,13 +379,50 @@ void DRCC::doVerification( int dataSize )
 				}
 			}	
 		}
-		printf( "Threshold:%lf GAR:%lf FAR:%lf FRR:%lf\n", threshold, ((double)GAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) )) * 2, ((double)FAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) )) * 2, ((double)FRR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) )) * 2);
-		fprintf( recordFile, "%lf %lf %lf %lf\n",threshold, (double)GAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2, (double)FAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) * 2, (double)FRR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2);
+		printf( "Threshold:%lf GAR:%lf FAR:%lf FRR:%lf\n", threshold, 100 * ((double)GAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) )) * 2, 100 * ((double)FAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) )) * 2, 100 * ((double)FRR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) )) * 2);
+		fprintf( recordFile, "%lf %lf %lf %lf\n",threshold, 100 * (double)GAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2, 100 * (double)FAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) * 2, 100 * (double)FRR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2);
 	}
 	et = clock();
 	fclose( recordFile );
 	//printf( "End of Matching.Total Cost Time: %lf  Per Image Cost Time: %lf  GAR:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)GAR / CsVector.size() );
 #endif
+}
+
+void DRCC::doIdentification( const char *trainFileName, const char *testFileName, int peopleNum, int trainNum, int testNum, const char *resultFileName )
+{
+	FILE *resultFile = fopen( resultFileName, "a" );
+	CV_Assert( trainNum + testNum == LIST_TRAIN_NUM_PER );
+	this->trainTotalNum = peopleNum * trainNum;
+	doBatchDRCC( trainFileName );
+	clock_t bt = clock(), et;
+	this->trainTotalNum = peopleNum * testNum;
+	double extract_cost_time_per = 0.0, match_cost_time_per = 0.0;
+	doBatchDRCC( testFileName );
+	et = clock();
+	printf( "%lu\n", this->CVector.size() );
+	extract_cost_time_per = ( ( double )et - bt ) / CLOCKS_PER_SEC * 1000 / ( peopleNum * testNum );
+	CV_Assert( peopleNum * (trainNum + testNum ) == this->CVector.size() );
+	int error = 0;
+	bt = clock();
+	for( int i = peopleNum * trainNum; i < (this->CVector).size(); ++i ) {
+		double maxScore = -DBL_MAX;
+		int maxIndex = -1;
+		for( int j = 0; j < peopleNum * trainNum; ++j ) {	
+			double score = matchingPoint2Point( this->CVector[i], this->CsVector[i], this->CVector[j], this->CsVector[j] );
+			if( score > maxScore ) {
+				maxScore = score;
+				maxIndex = j;			
+			}
+		}	
+		printf( "test:%d  Match	train:%d  Score:%lf\n\n", this->labels[i], this->labels[maxIndex], maxScore );	
+		if( this->labels[i] != this->labels[maxIndex] ) error += 1;
+	}
+	et = clock();
+	match_cost_time_per = ( ( double )et - bt ) / CLOCKS_PER_SEC * 1000 / ( peopleNum * testNum );
+	printf( "%d %.3lf %.3lf %.3lf\n", trainNum, 100 * (double)error / ( peopleNum * testNum ), extract_cost_time_per, match_cost_time_per );
+	fprintf( resultFile, "%d %.3lf %.3lf %.3lf %s\n", trainNum, 100 * (double)error / ( peopleNum * testNum ), extract_cost_time_per, match_cost_time_per, this->bIsEDCC ? "EDCC": "DCC" );	
+	fflush( resultFile );	
+	fclose( resultFile );
 }
 
 double DRCC::matchingPoint2Point( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy )

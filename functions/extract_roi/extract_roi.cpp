@@ -8,7 +8,7 @@
 #include "extract_roi.h"
 
 #define CIRCLE_FINGER_PROPORTION 0.13	/*Use to position the maximum inscribed circle up to the palm*/
-#define CIRCLE_WIDTH_PROPORTION 0.01	/*Use to reduce slightly the maximum inscribed circle*/
+#define CIRCLE_WIDTH_PROPORTION 0.04	/*Use to reduce slightly the maximum inscribed circle*/
 #define CIRCLE_RADIUS_WIDTH_PROPORTION 0.22	/*Use to judge wthether the circle compliance with standards*/
 
 extern int peak_valley_detect( const Mat &src, vector< cv::Point > &peak, vector< cv::Point > &valley );
@@ -41,7 +41,7 @@ int extract_roi( const Mat &src, Mat &roi )
 	distanceTransform( s_r, dist_img, CV_DIST_L2, 5 );
 	Mat dist_show = dist_img.clone();
 	normalize( dist_show, dist_show, 0, 1, CV_MINMAX );
-	imshow( "DistImage", dist_show );
+	//imshow( "DistImage", dist_show );
 	int temp = 0, R = 0, px = 0, py = 0;
 	int left = peak[1].x - left_x, right = MIN( s_r.cols, 2 * ( peak[2].x - left_x ) - ( peak[0].x - left_x ) ), top = valley[0].y - top_y, bottom = MIN( s_r.rows, 2 * ( valley[0].y - top_y ) - ( peak[0].y - top_y ) );
 	//int left = 0, right = s_r.cols, top = 0, bottom = s_r.rows;
@@ -71,7 +71,7 @@ int extract_roi( const Mat &src, Mat &roi )
 
 
 	/* Normalizes the postion of the inscribd circle */
-	printf( "%lf\n", (double)( py - R - valley[1].y + top_y ) / ( valley[1].y - peak[0].y ));
+	//printf( "%lf\n", (double)( py - R - valley[1].y + top_y ) / ( valley[1].y - peak[0].y ));
 	if( (double)R / ( right_x - left_x ) < CIRCLE_RADIUS_WIDTH_PROPORTION ) return EXIT_FAILURE;
 	R -= ( right_x - left_x ) * CIRCLE_WIDTH_PROPORTION;
 	Point basePoint( valley[1].x - left_x, valley[1].y - top_y );
@@ -80,8 +80,8 @@ int extract_roi( const Mat &src, Mat &roi )
 
 	circle( s_r, center, R, CV_COLOR_BLACK, 1 );
 	circle( s_r, center, 3, CV_COLOR_BLACK, -1 );
-	printf( "Distance : %d    %lf\n", right_x - left_x, (double)R / ( right_x - left_x ) );
-	imshow( "Binary_Roate", s_r );
+	//printf( "Distance : %d    %lf\n", right_x - left_x, (double)R / ( right_x - left_x ) );
+	//imshow( "Binary_Roate", s_r );
 	double radian = acos( (double)sub.y / sqrt( sub.x * sub.x + sub.y * sub.y ) );
 	if( sub.x < 0 ) radian *= -1;
 	/* reset circle center */
@@ -89,7 +89,7 @@ int extract_roi( const Mat &src, Mat &roi )
 	//center.y = basePoint.y + ( R + DIST_BETWEEN_CENTER_VALLEY ) * cos( radian );
 	circle( origin_rotate_image, Point( center.x + left_x, center.y + top_y ), R, CV_COLOR_BLACK, 1 );
 	circle( origin_rotate_image, Point( center.x + left_x, center.y + top_y ), 3, CV_COLOR_BLACK, -1 );
-	imshow("Origin_Rotate", origin_rotate_image);
+	imshow("指尖谷点检测+最大内切圆", origin_rotate_image);
 	sub.x = basePoint.x - center.x;
 	sub.y = basePoint.y - center.y;
 	if( sqrt( ( (double)valley[0].x - left_x - center.x ) * ( valley[0].x - left_x - center.x ) + ( valley[0].y - top_y - center.y ) * ( valley[0].y - top_y - center.y ) ) < R ) return EXIT_FAILURE;
@@ -105,6 +105,7 @@ int extract_roi( const Mat &src, Mat &roi )
 
 	Point roi_sub( oBasePoint.x - oCenter.x, -oBasePoint.y + oCenter.y );
 	double roi_angle = acos( (double)roi_sub.y / sqrt( (double)roi_sub.x * roi_sub.x + roi_sub.y * roi_sub.y ) ) / CV_PI * 180.0;
+	if( roi_sub.x < 0 ) roi_angle *= -1;
 	Mat roi_rotate;
 	rotate_image( roi_rect_mat, roi_rotate, roi_angle, 1.0 );
 //	Rect rect( roi_rotate.cols / 2 - 0.707 * oR, roi_rotate.rows / 2 - 0.707 * oR, 1.414 * oR, 1.414 * oR );
@@ -123,7 +124,7 @@ int extract_roi( const Mat &src, Mat &roi )
 	Rect rect( roi_rect_center.x - oR, roi_rect_center.y - oR, 2 * oR, 2 * oR );
 	roi = Mat( maskImage, rect );
 //	rectangle( roi, Point( roi.cols / 2 - 0.707 * oR, roi.rows / 2 - 0.707 * oR ), Point( roi.cols / 2 + 0.707 * oR, roi.rows / 2 + 0.707 * oR ), CV_COLOR_BLACK, 1 );
-	imshow( "roi", roi );
+	//imshow( "感兴趣区域", roi );
 	/*for( int i = 0; i < roi.rows; i++ ) {
 		for( int j = 0; j < roi.cols; j++ ) {
 			printf( "%d ", roi.at< cv::Vec3b >( j, i )[0] );
@@ -131,7 +132,7 @@ int extract_roi( const Mat &src, Mat &roi )
 		printf( "\n" );
 	}*/
 #endif
-	printf( "extract roi cost time : %lf \n", stop_timing() );	
+	//printf( "extract roi cost time : %lf \n", stop_timing() );	
 	return EXIT_SUCCESS;
 }
 

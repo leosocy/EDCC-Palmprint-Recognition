@@ -77,6 +77,8 @@ int train_statistic( const char *trainList )
 
 WBS::WBS()
 {
+	this->trainNum = LIST_TRAIN_NUM_PER;
+	this->trainTotalNum = LIST_TRAIN_NUM_TOTAL;
 }
 
 WBS::~WBS()
@@ -94,11 +96,21 @@ int WBS::doExtractFeatures( const char *filename )
 	clock_t bt = clock();
 	printf( "--------------------------------Begin Train--------------------\n" );
 
-	for( int i = 0; i < LIST_TRAIN_NUM_TOTAL && !feof( roi_list ); ++i ) {
+	int count = 0;
+	int preID = 0;
+	for( int i = 0; i < this->trainTotalNum && !feof( roi_list ); ++i ) {
 		printf( "Begin Write Num:%d\n", i );
 		int id = 0;
 		char image_path[200];
 		fscanf( roi_list, "%d %s", &id, image_path );
+		/*if( count > this->trainNum ) {
+			if( preID == id ) {
+				continue;
+			} else {
+				count = 1;			
+			}		
+		}
+		preID = id;*/
 		Mat image = imread( image_path, CV_LOAD_IMAGE_COLOR );
 		Mat image_gray;
 		cvtColor( image, image_gray, CV_BGR2GRAY );
@@ -117,19 +129,21 @@ int WBS::doExtractFeatures( const char *filename )
 	}
 	clock_t et = clock();
 	printf( "--------------------------End Of Train----------------------------\n\n" );
-	printf( "Total Cost Time: %lf  Per Image Cost Time: %lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL );
+	printf( "Total Cost Time: %lf  Per Image Cost Time: %lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / this->trainTotalNum );
 	
 	fflush( stdout );
+	fclose( roi_list );
 	return EXIT_SUCCESS;
 }
 
 void WBS::doVerification( int dataSize )
 {
-	FILE *matchFile = fopen( "./feature_info/Multispectral_B_MatchScore_WBS.txt", "w" );
-	FILE *tuningFile = fopen( "./feature_info/Tuning_WBS.txt", "a" );
+#if 1
+	FILE *matchFile = fopen( "./feature_info/WBS/Multispectral_B_MatchScore_WBS.txt", "w" );
+	//FILE *tuningFile = fopen( "./feature_info/Tuning_WBS.txt", "a" );
 	clock_t bt = clock(), et;
-	int gen[71] = { 0 };
-	int imp[71] = { 0 };
+	int gen[1001] = { 0 };
+	int imp[1001] = { 0 };
 	double score = 0.0;
 	int GAR = 0, FAR = 0, FRR = 0;
 	Mat scoreMat = Mat::zeros( Size( dataSize, dataSize ), CV_64FC1 );
@@ -140,7 +154,7 @@ void WBS::doVerification( int dataSize )
 			scoreMat.at<double>( j, i ) = score;
 			printf( "Cacl ---- src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[j], score );	
 			int classType = 1;
-			int index = score / 0.001 - 930;
+			int index = score / 0.001;
 			if( this->labels[i] == this->labels[j] ) { 
 				classType = 0;
 				gen[index] += 1;			
@@ -150,8 +164,8 @@ void WBS::doVerification( int dataSize )
 			//fprintf( matchFile, "%d %d %d %lf\n", i, j , classType, score );
 		}	
 	}
-	for( int i = 0; i < 71; ++i ) {
-		fprintf( matchFile, "%.3f %lf %lf\n", i * 0.001 + 0.93, 100 * (double)gen[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2,  100 * (double)imp[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) * 2 );	
+	for( int i = 0; i < 1001; ++i ) {
+		fprintf( matchFile, "%.3f %lf %lf\n", i * 0.001, 100 * (double)gen[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2,  100 * (double)imp[i] / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) * 2 );	
 	}
 	fclose( matchFile );
 	for( int i = 0; i < scoreMat.rows; ++i ) {
@@ -170,8 +184,89 @@ void WBS::doVerification( int dataSize )
 	}
 	et = clock();
 	//fprintf( tuningFile, "%d %d %lf", this->waveletLevel, this->blockSize.width, (double)GAR / this->features.size() );
-	fclose( tuningFile );
+	//fclose( tuningFile );
 	printf( "End of Matching.Total Cost Time: %lf  Per Image Cost Time: %lf  GAR:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)GAR / this->features.size() );
+#endif
+#if 0
+	FILE *recordFile = fopen( "./feature_info/WBS/Tongji_GAR_FAR_FRR_WBS.txt", "w" );
+	clock_t bt = clock(), et;
+	double score = 0.0;
+	Mat scoreMat = Mat::zeros( Size( dataSize, dataSize ), CV_64FC1 );
+	for( int i = 0; i < (this->features).size(); ++i ) {
+		for( int j = i + 1; j < (this->features).size(); ++j ) {
+			score = matchingPoint2Point( this->features[i], this->features[j] );
+			scoreMat.at<double>( i, j ) = score;
+			scoreMat.at<double>( j, i ) = score;
+			printf( "Cacl ---- src1:%d  src2:%d  Score:%lf\n\n", this->labels[i], this->labels[j], score );	
+		}	
+	}
+	int GAR = 0, FAR = 0, FRR = 0;
+	double threshold = 0.00;
+	for( threshold = 0.000; threshold <= 1.000; threshold += 0.001 ) {
+		GAR = 0, FAR = 0, FRR = 0;
+		for( int i = 0; i < scoreMat.rows; ++i ) {
+			for( int j = i + 1; j < scoreMat.cols; ++j ) {
+				if( this->labels[i] == this->labels[j] ) {
+					if( scoreMat.at<double>( i, j ) >= threshold ) {
+						GAR += 1;
+					} else {
+						FRR += 1;				
+					}
+				} else {
+					if( scoreMat.at<double>( i, j ) >= threshold ) {
+						FAR += 1;
+					}			
+				}
+			}	
+		}
+		printf( "Threshold:%lf GAR:%lf FAR:%lf FRR:%lf\n", threshold, 100 * ((double)GAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) )) * 2, 100 * ((double)FAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) )) * 2, ((double)FRR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) )) * 2);
+		fprintf( recordFile, "%lf %lf %lf %lf\n",threshold, 100 * (double)GAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2, 100 * (double)FAR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_TOTAL - LIST_TRAIN_NUM_PER ) ) * 2, 100 * (double)FRR / ( LIST_TRAIN_NUM_TOTAL * ( LIST_TRAIN_NUM_PER - 1 ) ) * 2);
+	}
+	et = clock();
+	fclose( recordFile );
+	//printf( "End of Matching.Total Cost Time: %lf  Per Image Cost Time: %lf  GAR:%lf\n\n", ( (double)( et ) - bt ) / CLOCKS_PER_SEC, ( ( ( double )et - bt ) / CLOCKS_PER_SEC ) / LIST_TRAIN_NUM_TOTAL, (double)GAR / CsVector.size() );
+#endif
+}
+
+void WBS::doIdentification( const char *trainFileName, const char *testFileName, int peopleNum, int trainNum, int testNum,const char *resultFileName )
+{
+	FILE *resultFile = fopen( resultFileName, "a" );
+	CV_Assert( trainNum + testNum == LIST_TRAIN_NUM_PER );
+	this->trainTotalNum = ( peopleNum * trainNum );
+	doExtractFeatures( trainFileName );
+	clock_t bt = clock(), et;
+	double extract_cost_time_per = 0.0, match_cost_time_per = 0.0;
+	this->trainTotalNum = ( peopleNum * testNum );
+	doExtractFeatures( testFileName );
+	et = clock();
+	extract_cost_time_per = ( ( double )et - bt ) / CLOCKS_PER_SEC * 1000 / ( peopleNum * testNum );
+	CV_Assert( peopleNum * (trainNum + testNum ) == this->features.size() );
+	int error = 0;
+	bt = clock();
+	for( int i = peopleNum * trainNum; i < (this->features).size(); ++i ) {
+		double maxScore = -DBL_MAX;
+		int maxIndex = -1;
+		for( int j = 0; j < peopleNum * trainNum; ++j ) {
+				
+			double score = matchingPoint2Point( this->features[i], this->features[j] );
+			if( score > maxScore ) {
+				maxScore = score;
+				maxIndex = j;			
+			}
+		}	
+		printf( "src1:%d  Match	src2:%d  Score:%lf\n\n", this->labels[i], this->labels[maxIndex], maxScore );	
+		if( this->labels[i] != this->labels[maxIndex] ) error += 1;
+	}
+	et = clock();
+	match_cost_time_per = ( ( double )et - bt ) / CLOCKS_PER_SEC * 1000 / ( peopleNum * testNum );
+	printf( "%d %.3lf %.3lf %.3lf\n", trainNum, 100 * (double)error / ( peopleNum * testNum ), extract_cost_time_per, match_cost_time_per );
+	fprintf( resultFile, "%d %.3lf %.3lf %.3lf WBS\n", trainNum, 100 * (double)error / ( peopleNum * testNum ), extract_cost_time_per, match_cost_time_per );
+	fclose( resultFile );
+}
+
+void WBS::complexity( const char *imageName, int computeTime )
+{
+	
 }
 
 
@@ -181,7 +276,7 @@ double WBS::matchingPoint2Point( const Mat &X, const Mat &Y )
 	double M1 = cv::norm( X );
 	double M2 = cv::norm( Y );
 	double dist = X.dot ( Y ) / ( M1 * M2 );
-	return dist;
+	return fabs(dist);
 }
 
 int test_statistic( const char *testList )

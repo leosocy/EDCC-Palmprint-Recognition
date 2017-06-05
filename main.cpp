@@ -31,7 +31,7 @@ int main( int argc, char **argv )
 	
 	/*Open Video*/
 #if 0
-	VideoCapture video( "../PalmprintData/2016-12-14 162959.mp4" );
+	VideoCapture video( "../PalmprintData/2017-06-02 232612.mp4" );
 	 
 	if( !video.isOpened() ) {
 		printf( "No Video Data!" );
@@ -45,7 +45,8 @@ int main( int argc, char **argv )
 	while( !stop ) {
 		
 		if( !video.read( image ) ) break;
-		image = imread( "../PalmprintData/palm_rotate.jpg", CV_LOAD_IMAGE_COLOR );
+		clock_t bt = clock(), et;
+		//image = imread( "../PalmprintData/palm_rotate.jpg", CV_LOAD_IMAGE_COLOR );
 		double proportion = (double)image.cols / image.rows;
 		Size dsize = Size( IMAGE_HEIGHT * proportion, IMAGE_HEIGHT );
 	
@@ -59,16 +60,20 @@ int main( int argc, char **argv )
 		//imshow( "Binarization", dst );
 		adjust_palm( dst, dst );
 		//imshow( "Adjust", dst );
-		imshow( "Origin", origin_image );
+		imshow( "原始图片", origin_image );
 		
 	
 	//start_timing();
 		Mat roi;
 		if( extract_roi( dst, roi ) == EXIT_SUCCESS ) {
-			//resize( roi, roi, Size( 256, 256 ) );
-		
-			imshow( "roi", roi ); 
+			resize( roi, roi, Size( 256, 256 ) );
+			et = clock();
+			imshow( "感兴趣区域", roi ); 
+			printf( "Extract ROI successful!\tCost Time : %lfms\n",  ( ( double )et - bt ) / CLOCKS_PER_SEC * 1000 );
+		} else {
+			printf( "Bad Image.Can't extract ROI!\n" );		
 		}
+		
 		waitKey();
 	}
 	int successful_count = 0;
@@ -94,11 +99,11 @@ int main( int argc, char **argv )
 	if( list_tongji == NULL ) {
 		roi_list_with_tongji( "/home/leosocy/Desktop/PalmprintData/Tongji/", "./roi_list/Tongji.txt" );	
 	}
-	FILE *list_to_deal = list_multispectral_G;
+	/*FILE *list_to_deal = list_multispectral_G;
 	const char *list_to_deal_ch = "./roi_list/Multispectral_B.txt";
 #if INIT_TRAIN_TEST_LIST
-	split_roi_list( list_to_deal_ch, "./roi_list/Multispectral_B_Train.txt", "./roi_list/Multispectral_B_Test.txt", LIST_TRAIN_NUM_PER + LIST_TEST_NUM_PER, LIST_TRAIN_NUM_PER );
-#endif
+	split_roi_list( list_to_deal_ch, "./roi_list/Multispectral_B_Train.txt", "./roi_list/Multispectral_B_Test.txt", LIST_TRAIN_NUM_PER + LIST_TEST_NUM_PER, LIST_TRAIN_NUM_PER );*/
+
 
 	//while( !feof(list_to_deal) ) {
 	//	int image_num = 0;
@@ -127,14 +132,10 @@ int main( int argc, char **argv )
 		//	binarization( roi, roi_d );
 		//	imshow( "roi_g", roi_g ); 		
 
-			char list_name_train[] = "./roi_list/Multispectral_B_Train.txt";
-			char list_name_test[] = "./roi_list/Multispectral_B_Test.txt";
-			create_predict_list( "./roi_list/Multispectral_B.txt", "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
-printf("Here\n");
-		fflush( stdout );
+			
 		//	predict_subspace( "./roi_list/Multispectral_B_Predict_Train.txt",  "./roi_list/Multispectral_B_Predict_Test.txt" );
 #if 1
-			DRCC t;
+			
 			/*int direc[7] = { 6, 8, 9, 10, 12, 15, 18 };
 			int kernelSize[10] = { 3, 5, 7, 9, 11, 13, 15, 17, 19, 21 };
 			for( int i = 29; i < 125; i += 2 ) {
@@ -153,8 +154,9 @@ printf("Here\n");
 					}
 				}
 			}*/
-			t.doBatchDRCC( "./roi_list/Multispectral_G.txt" );
-			t.doVerification( 6000 );
+			
+			
+			
 
 			/*DRCC p;
 			p.doBatchDRCC( "./roi_list/Multispectral_B_Predict_Test.txt" );
@@ -166,20 +168,53 @@ printf("Here\n");
 			ver.predictFeatures = &p;
 			ver.doPRML( &ml );*/
 #endif
-		/*	WBS w;
-			w.waveletLevel = 4;
-			w.blockSize = Size( 8, 8 );
-			w.doExtractFeatures( "./roi_list/Multispectral_B.txt" );
-			w.doVerification( 6000 );*/
-			/*BDPCALDA b;
-			b.trainNum = 12;
+
+#if 1
+			const char *list_all = "./roi_list/Multispectral_I.txt";
+			const char *list_train = "./roi_list/Multispectral_I_Train.txt";
+			const char *list_test = "./roi_list/Multispectral_I_Test.txt";
+			const char *resultFile = "./feature_info/Identification/Identification_NIR.txt";
+			for( int i = 1; i < 7; ++i ) {
+				create_predict_list( list_all, list_train, list_test, 12, i, 12 - i );
+				DRCC t1;
+				t1.bIsEDCC = true;
+				t1.doIdentification( list_train, list_test, 500, i, 12 - i, resultFile );
+				DRCC t2;
+				t2.bIsEDCC = false;
+				t2.doIdentification( list_train, list_test, 500, i, 12 - i, resultFile );
+				WBS w;
+				w.waveletLevel = 4;
+				w.blockSize = Size( 8, 8 );
+				w.doIdentification( list_train, list_test, 500, i, 12 - i, resultFile );
+				BDPCALDA b;
+				b.Krow = 25;
+				b.Kcol = 25;
+				b.doIdentification( list_train, list_test, 500, i, 12 - i, resultFile );
+			}
+#endif 
+			
+#if 0
+				DRCC t;
+				t.bIsEDCC = true;
+				t.doBatchDRCC( "./roi_list/Multispectral_B.txt" );
+				//t.doVerification( 6000 );
+				//t.doIdentification( list_train, list_test, 500, 4, 8, );
+				/*WBS w;
+				w.waveletLevel = 4;
+				w.blockSize = Size( 8, 8 );
+				//w.doExtractFeatures( "./roi_list/Multispectral_B.txt" );
+				//w.doVerification( 6000 );
+				w.doIdentification( list_train, list_test, 500, 1, 11 );*/
+				/*BDPCALDA b;
+				b.trainNum = 12;
 		
-			b.Krow = 25;
-			b.Kcol = 25;
-			
-			b.doExtractFeatures( "./roi_list/Multispectral_B.txt" );
-			b.doVerification( 6000 );*/
-			
+				b.Krow = 25;
+				b.Kcol = 25;
+				b.doIdentification( list_train, list_test, 500, 4, 8, "./feature_info/Identification/Identification_Red.txt" );*/
+				//./roi_list/Tongji.txt
+				//b.doExtractFeatures( "./roi_list/Multispectral_B.txt" );
+				//b.doVerification( 6000 );
+#endif
 #if 0
 			Mat image = imread(  "/home/leosocy/Desktop/PalmprintData/ForPreprocessTest.jpg", CV_LOAD_IMAGE_COLOR );
 			Mat image_gray;

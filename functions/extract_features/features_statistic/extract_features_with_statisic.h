@@ -39,10 +39,14 @@ public:
 	/*--------For Parameters Tuning------------*/
 	int waveletLevel;
 	Size blockSize;
+	int trainNum;
+	int trainTotalNum;
 	/*----------------------------------------*/
 	
 	int doExtractFeatures( const char *filename );
 	void doVerification( int dataSize );
+	void doIdentification( const char *trainFileName, const char *testFileName, int peopleNum, int trainNum, int testNum, const char *resultFileName );
+	void complexity( const char *imageName, int computeTime );
 	double matchingPoint2Point( const Mat &X, const Mat &Y );
 	vector< cv::Mat> features;
 	vector< int > labels;

@@ -54,6 +54,8 @@ public:
 	int laplaceSize;
 	int gaborDirections;
 	Size gaborKernelSize;
+	bool bIsEDCC;
+	int trainTotalNum;
 	/*----------------------------------------*/
 	virtual int saveFeatures( const char *filename );
 	virtual int loadFeatures( const char *filename );
@@ -65,8 +67,7 @@ public:
 	int doOnceDRCC( const Mat &src, int label );
 
 	void doVerification( int dataSize );
-	void doIndentification( int trainNum, int testNum );
-	
+	void doIdentification( const char *trainFileName, const char *testFileName, int peopleNum, int trainNum, int testNum, const char *resultFileName );
 	double matchingPoint2Point( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy );
 	double matchingPoint2Area( const Mat &Cx, const Mat &Csx, const Mat &Cy, const Mat &Csy, const Rect &areaRect );
 	
