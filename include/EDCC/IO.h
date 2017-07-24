@@ -17,7 +17,11 @@ namespace EDCC
 	 */
 
 	class IO {
-	
+		public:
+			static void loadConfig( const char *configFileName );
+			static void loadPalmprintGroup( const char *groupFileName );
+			static void loadPalmprintFeatureData( const char *dataFileName );
+			static void savePalmprintFeatureData( const char *dataFileName, vector< Core > data );
 	};
 	//=========================================================
 }
