@@ -3,9 +3,9 @@
 ### IO
 
 - 加载EDCC算法的配置文件`loadConfig`
-- 加载掌纹图像类别-路径列表`loadList`
-- 加载掌纹训练集特征库`loadPRFeaData`
-- 保存掌纹训练集特征库`savePRFeaData`
+- 加载掌纹图像类别-路径列表`loadPalmprintGroup`
+- 加载掌纹训练集特征库`loadPalmprintFeatureData`
+- 保存掌纹训练集特征库`savePalmprintFeatureData`
 
 
 ### Check
