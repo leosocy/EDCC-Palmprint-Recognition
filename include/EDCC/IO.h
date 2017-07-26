@@ -9,6 +9,9 @@
 #define __IO_h__
 #include <opencv2/opencv.hpp>
 #include <fstream>
+#include <vector>
+#include <map>
+#include <string>
 namespace EDCC
 {
 	//=========================================================
@@ -18,10 +21,10 @@ namespace EDCC
 
 	class IO {
 		public:
-			static void loadConfig( const char *configFileName );
-			static void loadPalmprintGroup( const char *groupFileName );
-			static void loadPalmprintFeatureData( const char *dataFileName );
-			static void savePalmprintFeatureData( const char *dataFileName, vector< Core > data );
+			static void loadConfig( ifstream &in, vector< std::map< string, string > > configVec )
+			static void loadPalmprintGroup( ifstream &in, vector< std::map< string, string > > groupVec );
+			static void loadPalmprintFeatureData( ifstream &in  );
+			static void savePalmprintFeatureData( ofstream &out );
 	};
 	//=========================================================
 }
