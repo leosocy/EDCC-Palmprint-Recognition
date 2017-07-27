@@ -1,9 +1,14 @@
-#include <include/EDCC/IO.h>
+/*************************************************************************
+	> File Name: IO..cc
+	> Author: Leosocy
+	> Mail: 513887568@qq.com 
+	> Created Time: 2017/07/26 21:29:10
+ ************************************************************************/
+#include <EDCC/IO.h>
 #include <iostream>
 #include <assert.h>
 using namespace EDCC;
-using namespace std;
-using namespace cv;
+
 
 void loadConfig( ifstream &in, vector< std::map< string, string > > configVec )
 {
@@ -20,4 +25,11 @@ void loadPalmprintGroup( ifstream &in, vector< std::map< string, string > > grou
 {
 
 }
-    
+
+static void loadPalmprintFeatureData( ifstream &in  )
+{
+}
+
+static void savePalmprintFeatureData( ofstream &out )
+{
+}
