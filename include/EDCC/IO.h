@@ -12,6 +12,8 @@
 #include <vector>
 #include <map>
 #include <string>
+using namespace std;
+using namespace cv;
 namespace EDCC
 {
 	//=========================================================
@@ -21,7 +23,7 @@ namespace EDCC
 
 	class IO {
 		public:
-			static void loadConfig( ifstream &in, vector< std::map< string, string > > configVec )
+			static void loadConfig( ifstream &in, vector< std::map< string, string > > configVec );
 			static void loadPalmprintGroup( ifstream &in, vector< std::map< string, string > > groupVec );
 			static void loadPalmprintFeatureData( ifstream &in  );
 			static void savePalmprintFeatureData( ofstream &out );
