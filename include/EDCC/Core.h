@@ -6,8 +6,10 @@
  ************************************************************************/
 #ifndef __CORE_H__
 #define __CORE_H__
+#include <EDCC/IO.h>
 #include <string>
 #include <opencv2/opencv.hpp>
+#include <cmath>
 namespace EDCC
 {
 	class Palmprint {
@@ -17,16 +19,20 @@ namespace EDCC
 			string identity;
 			string imagePath;
 			void setPalmprintInfo( string identity, string imgPath );
+			cv::Mat& generateImage();
+			void releaseImage();
 		private:
 			cv::Mat *image;
 	};
 
 	class PalmprintCode {
 		public:
-			Palmprint palmprint;
-
-			void encodePalmprint( );
+			Palmprint *palmprint;
+			void encodePalmprint();
+			cv::Mat& generateCoding();
+			void releaseCoding(); 
 		private:
+			cv::Mat *coding;		
 			void enhanceImage( const cv::Mat &src, cv::Mat &dst );
 			void doGaborFilter( const cv::Mat &src, cv::Mat &dst );
 	};
@@ -35,7 +41,7 @@ namespace EDCC
 		public:
 			void doGaborFilter( const cv::Mat &src, cv::Mat &dst );
 		private:
-			getGaborKernel();
+			void getGaborKernel( cv::Mat &gaborKernel, int kernelWidth, int kernelHeight, int dimension, int direction, int kernelType, double Kmax = CV_PI / 2, double f = sqrt( 2.0 ), double sigma = 2 * CV_PI, int ktype = CV_64F );
 	};
 }
 
