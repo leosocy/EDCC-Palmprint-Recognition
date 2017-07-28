@@ -1,0 +1,6 @@
+{
+	"imageSize" : {
+		"default" : 25,
+		"desc" : "Input Palmprint Image Size"
+	}
+}

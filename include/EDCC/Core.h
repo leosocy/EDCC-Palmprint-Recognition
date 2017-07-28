@@ -39,7 +39,15 @@ namespace EDCC
 
 	class GaborFilter {
 		public:
-			void doGaborFilter( const cv::Mat &src, cv::Mat &dst );
+			GaborFilter( const cv::Size &kernelSize, int dimension, int direction, int kernelType );
+			~GaborFilter();
+			void doGaborFilter( const cv::Mat &src, cv::Mat &dst  );
+			
+			enum type{
+				GABOR_KERNEL_REAL = 0, 
+				GABOR_KERNEL_IMAG, 
+				GABOR_KERNEL_MAG
+			};
 		private:
 			void getGaborKernel( cv::Mat &gaborKernel, int kernelWidth, int kernelHeight, int dimension, int direction, int kernelType, double Kmax = CV_PI / 2, double f = sqrt( 2.0 ), double sigma = 2 * CV_PI, int ktype = CV_64F );
 	};
