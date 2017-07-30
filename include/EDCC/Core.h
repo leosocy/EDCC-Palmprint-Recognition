@@ -6,49 +6,62 @@
  ************************************************************************/
 #ifndef __CORE_H__
 #define __CORE_H__
-#include <EDCC/IO.h>
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <cmath>
+using namespace std;
+using namespace cv;
 namespace EDCC
 {
 	class Palmprint {
 		public:
-			Palmprint( string identity, string imagePath );
-			~Palmprint()
+			Palmprint();
+			Palmprint( const string &identity, const string &imagePath );
+			~Palmprint();
 			string identity;
 			string imagePath;
-			void setPalmprintInfo( string identity, string imgPath );
-			cv::Mat& generateImage();
-			void releaseImage();
+			Palmprint& operator =( const Palmprint &src );
+			void setPalmprintInfo( const string &identity, const string &imagePath );
+			cv::Mat& genOriImg();
+			cv::Mat& genSpecImg( const cv::Size &imgSize, bool isGray = true );
 		private:
-			cv::Mat *image;
+			cv::Mat image;
 	};
-
+	
+	class EDCCoding {
+		public:
+			Mat C;
+			Mat Cs;
+	};
+	
 	class PalmprintCode {
 		public:
-			Palmprint *palmprint;
-			void encodePalmprint();
-			cv::Mat& generateCoding();
-			void releaseCoding(); 
+			PalmprintCode( const Palmprint &oneInstance );
+			~PalmprintCode();
+			void setPalmprint( const Palmprint &oneInstance );
+			void encodePalmprint( const cv::Size &imgSize, const cv::Size &gabKerSize, int numOfDirections, const cv::Size &lapKerSize );
+			EDCCoding& genCoding();
 		private:
-			cv::Mat *coding;		
-			void enhanceImage( const cv::Mat &src, cv::Mat &dst );
-			void doGaborFilter( const cv::Mat &src, cv::Mat &dst );
+			EDCCoding coding;		
+			Palmprint instance;
+			void enhanceImage( const cv::Mat &src, cv::Mat &dst, const cv::Size &lapKerSize );
 	};
 
 	class GaborFilter {
 		public:
-			GaborFilter( const cv::Size &kernelSize, int dimension, int direction, int kernelType );
+			GaborFilter( const cv::Size &kernelSize, int numOfDirections, int kernelType );
 			~GaborFilter();
-			void doGaborFilter( const cv::Mat &src, cv::Mat &dst  );
+			void doGaborFilter( const cv::Mat &src, cv::Mat &dstMerge );
 			
-			enum type{
+			enum {
 				GABOR_KERNEL_REAL = 0, 
 				GABOR_KERNEL_IMAG, 
 				GABOR_KERNEL_MAG
 			};
 		private:
+			cv::Size kernelSize;
+			int numOfDirections;
+			int kernelType;
 			void getGaborKernel( cv::Mat &gaborKernel, int kernelWidth, int kernelHeight, int dimension, int direction, int kernelType, double Kmax = CV_PI / 2, double f = sqrt( 2.0 ), double sigma = 2 * CV_PI, int ktype = CV_64F );
 	};
 }

@@ -9,34 +9,33 @@
 #include <assert.h>
 using namespace EDCC;
 
+#define PALMPRINT_GROUP_FORMAT  "{\n\
+\"identity\" : [\n\
+	\"path1\"\n\
+	\"path2\"\n\
+	]\n\
+}"
 
-int IO::loadConfig( ifstream &in, std::map< string, int > &configMap )
+int IO::loadConfig( ifstream &in, map< string, int > &configMap )
 {
 	assert( in.is_open() );
 	Json::Value value;
 	Json::Reader reader;
-	Json::Value::iterator iter;
 	Json::Value::Members members;
 
 	if( !reader.parse( in, value ) ) {
-		cerr << "Parse config.json filed, please confirm the format." << endl;
+		cerr << "Parse config.json failed, please confirm the format." << endl;
 		return LOAD_CONFIG_FAILURE;
 	}
 	members = value.getMemberNames();
 	for( Json::Value::Members::iterator it = members.begin(); 
 			it != members.end(); ++it ) {
-		Json::Value::Members membersSub = value[*it].getMemberNames();
-		Json::Value::Members::iterator itSub;
-		for( itSub = membersSub.begin(); itSub != membersSub.end(); ++itSub ) {
-			if( *itSub == "default" ) {
-				configMap.insert( map< string, int >::value_type( *it, value[*it]["default"].asInt() ) );
-				break;
-			}
-		}
-		if( itSub == membersSub.end() ) { 
-			cerr << "Parse config.json failed, you can only change the \"default\" \
-				label in this file." << endl;
+		if( value[*it]["default"].isNull() ) {
+			cerr << "Parse config.json failed, you can only change the value\
+ of \"default\" label in this file." << endl;
 			return LOAD_CONFIG_FAILURE;
+		} else {
+			configMap.insert( map< string, int >::value_type( *it, value[*it]["default"].asInt() ) );
 		}
 	}
 
@@ -47,12 +46,36 @@ int IO::loadConfig( ifstream &in, std::map< string, int > &configMap )
 	return LOAD_CONFIG_SUCCESS;
 }
 
-#if 0
-void loadPalmprintGroup( ifstream &in, vector< std::map< string, string > > groupVec )
+int IO::loadPalmprintGroup( ifstream &in, vector< Palmprint > &groupVec )
 {
+	assert( in.is_open() );
+	Json::Value value;
+	Json::Reader reader;
+	Json::Value::Members members;
 
+	if( !reader.parse( in, value ) ) {
+		cerr << "Parse json failed. Don't change the json format. You need to confirm the format like this." << endl;
+		cerr << PALMPRINT_GROUP_FORMAT << endl;
+		return LOAD_PALMPRINT_GROUP_FAILURE;
+	}
+	members = value.getMemberNames();
+	for( Json::Value::Members::iterator it = members.begin(); 
+			it != members.end(); ++it ) {
+		if( !value[*it].isArray() ) {
+			cerr << "Don't change the json format. You need to confirm the format like this." << endl;
+			cerr << PALMPRINT_GROUP_FORMAT << endl;
+			return LOAD_PALMPRINT_GROUP_FAILURE;
+		}
+		Json::Value imageList = value[*it];
+		for( int imageIndex = 0; imageIndex < imageList.size(); ++imageIndex ) {
+			Palmprint newOne( *it, imageList[imageIndex].asString() );
+			groupVec.push_back( newOne );
+		}
+	}
+	return LOAD_PALMPRINT_GROUP_SUCCESS;
 }
 
+#if 0
 static void loadPalmprintFeatureData( ifstream &in  )
 {
 }
