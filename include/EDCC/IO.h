@@ -13,6 +13,7 @@
 #include <map>
 #include <string>
 #include <json/json.h>
+#include <EDCC/Core.h>
 using namespace std;
 using namespace cv;
 
@@ -34,12 +35,11 @@ namespace EDCC
 	/*
 	 *Input & Output Module 
 	 */
-//	class Palmprint;
 //	class PalmprintCode;
 	class IO {
 		public:
 			static int loadConfig( ifstream &in, std::map< string, int > &configMap );
-//			static void loadPalmprintGroup( ifstream &in, vector< Palmprint > &groupVec );
+			static int loadPalmprintGroup( ifstream &in, vector< EDCC::Palmprint > &groupVec );
 //			static void loadPalmprintFeatureData( ifstream &in, vector< PalmprintCode > data );
 //			static void savePalmprintFeatureData( ofstream &out, vector< PalmprintCode > data );
 	};
