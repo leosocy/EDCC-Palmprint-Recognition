@@ -35,13 +35,12 @@ namespace EDCC
 	/*
 	 *Input & Output Module 
 	 */
-//	class PalmprintCode;
 	class IO {
 		public:
-			static int loadConfig( ifstream &in, std::map< string, int > &configMap );
-			static int loadPalmprintGroup( ifstream &in, vector< EDCC::Palmprint > &groupVec );
-//			static void loadPalmprintFeatureData( ifstream &in, vector< PalmprintCode > data );
-//			static void savePalmprintFeatureData( ofstream &out, vector< PalmprintCode > data );
+			static int loadConfig( const ifstream &in, std::map< string, int > &configMap );
+			static int loadPalmprintGroup( const ifstream &in, vector< Palmprint > &groupVec );
+			static int loadPalmprintFeatureData( const ifstream &in, vector< PalmprintCode > &data );
+			static int savePalmprintFeatureData( ofstream &out, const vector< PalmprintCode > &data );
 	};
 	//=========================================================
 }
