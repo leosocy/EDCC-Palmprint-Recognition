@@ -16,7 +16,7 @@ using namespace EDCC;
 	]\n\
 }"
 
-int IO::loadConfig( ifstream &in, map< string, int > &configMap )
+int IO::loadConfig( const ifstream &in, map< string, int > &configMap )
 {
 	assert( in.is_open() );
 	Json::Value value;
@@ -46,7 +46,7 @@ int IO::loadConfig( ifstream &in, map< string, int > &configMap )
 	return LOAD_CONFIG_SUCCESS;
 }
 
-int IO::loadPalmprintGroup( ifstream &in, vector< Palmprint > &groupVec )
+int IO::loadPalmprintGroup( const ifstream &in, vector< Palmprint > &groupVec )
 {
 	assert( in.is_open() );
 	Json::Value value;
@@ -75,13 +75,20 @@ int IO::loadPalmprintGroup( ifstream &in, vector< Palmprint > &groupVec )
 	return LOAD_PALMPRINT_GROUP_SUCCESS;
 }
 
-#if 0
-static void loadPalmprintFeatureData( ifstream &in  )
+int IO::loadPalmprintFeatureData( const ifstream &in, vector< PalmprintCode > &data  )
 {
+	assert( in.is_open() );
+	Json::Value value;
+	Json::Reader reader;
+	Json::Value::Members members;
+
+	if( !reader.parse( in, value ) ) {
+		cerr << "Parse json failed. Don't change the trainData.json format." << endl;
+		return LOAD_PALMPRINT_FEATURE_DATA_FAILURE;
+	}
+
 }
 
-static void savePalmprintFeatureData( ofstream &out )
+int IO::savePalmprintFeatureData( ofstream &out, const vector< PalmprintCode > &data )
 {
 }
-
-#endif
