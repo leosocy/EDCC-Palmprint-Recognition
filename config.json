@@ -33,7 +33,7 @@
 		}
 	},
 	"gaborDirections" : {
-		"default" : 8,
+		"default" : 12,
 		"desc" : {
 			"en-US" : "The number of gabor directions",
 			"zh-CN" : "对图像进行2DGabor小波变换使用方向个数"

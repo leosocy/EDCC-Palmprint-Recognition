@@ -37,11 +37,12 @@ namespace EDCC
 	
 	class PalmprintCode {
 		public:
-			PalmprintCode( const Palmprint &oneInstance );
+			PalmprintCode( const Palmprint &onePalmprint );
 			~PalmprintCode();
 			void encodePalmprint( const cv::Size &imgSize, const cv::Size &gabKerSize, int numOfDirections, const cv::Size &lapKerSize );
+			void encodePalmprint( const map< string, int > &configMap );
 			EDCCoding coding;		
-			Palmprint instance;
+			Palmprint palmprint;
 		private:
 			void enhanceImage( const cv::Mat &src, cv::Mat &dst, const cv::Size &lapKerSize );
 	};

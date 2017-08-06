@@ -60,20 +60,33 @@ cv::Mat& Palmprint::genSpecImg( const cv::Size &imgSize, bool isGray )
 
 //---------------------------------PalmprintCode--------------------------------
 
-PalmprintCode::PalmprintCode( const Palmprint &oneInstance )
+PalmprintCode::PalmprintCode( const Palmprint &onePalmprint )
 {
-	this->instance = oneInstance;
+	this->palmprint = onePalmprint;
 }
 
 PalmprintCode::~PalmprintCode()
 {
 }
 
+void PalmprintCode::encodePalmprint( const map< string, int > &configMap )
+{
+	assert( configMap.find( "imageSize" ) != configMap.end() );
+	assert( configMap.find( "laplaceKernelSize" ) != configMap.end() );
+	assert( configMap.find( "gaborKernelSize" ) != configMap.end() );
+	assert( configMap.find( "gaborDirections" ) != configMap.end() );
+
+	encodePalmprint( Size( configMap.at( "imageSize" ), configMap.at( "imageSize" ) ), 
+					Size( configMap.at( "gaborKernelSize" ), configMap.at( "gaborKernelSize" ) ), 
+					configMap.at("gaborDirections"), 
+					Size( configMap.at("laplaceKernelSize"), configMap.at("laplaceKernelSize") ) );
+}
+
 void PalmprintCode::encodePalmprint( const cv::Size &imgSize, const cv::Size &gabKerSize, int numOfDirections, const cv::Size &lapKerSize ) 
 {
 	assert( lapKerSize.width % 2 == 1 && lapKerSize.width == lapKerSize.height );
 	GaborFilter filter( gabKerSize, numOfDirections, GaborFilter::GABOR_KERNEL_REAL );
-	Mat palmprintImage = this->instance.genSpecImg( imgSize );
+	Mat palmprintImage = this->palmprint.genSpecImg( imgSize );
 	Mat gaborResult;
 	enhanceImage( palmprintImage, palmprintImage, lapKerSize );
 	filter.doGaborFilter( palmprintImage, gaborResult );

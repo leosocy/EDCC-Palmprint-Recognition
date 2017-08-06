@@ -10,22 +10,25 @@ int main(int argc, const char **argv)
 {
 	ifstream configIn; 
 	configIn.open("config.json");
-	IO configIO;
-	configIO.loadConfig( configIn  );
-/*
+	IO trainIO;
+	trainIO.loadConfig( configIn  );
 
 	ifstream groupIn;
 	groupIn.open("palmprintTrainGroup.json");
 	vector< Palmprint > groupVec;
-	IO::loadPalmprintGroup( groupIn, groupVec );
+	vector< PalmprintCode > data;
+	trainIO.loadPalmprintGroup( groupIn, groupVec );
 	for( int index = 0; index < groupVec.size(); ++index ) {
-		PalmprintCode instance( groupVec[index] );
-		instance.encodePalmprint( Size( config["imageSize"], config["imageSize"]), 
-				Size( config["gaborKernelSize"], config["gaborKernelSize"] ), 
-				config["gaborDirections"], 
-				Size( config["laplaceKernelSize"], config["laplaceKernelSize"] ) );
-		int i =  instance.genCoding().C.at<char>( 0, 5 );
-		cout << i << endl;
-	}*/
+		PalmprintCode one( groupVec[index] );
+		one.encodePalmprint( trainIO.paramsMap );
+		//data.push_back( one );
+	}
+
+	ifstream dataOut;
+	dataOut.open( "traintrain.json" );
+	trainIO.loadPalmprintFeatureData( dataOut, data );
+	for( int index = 0; index < data.size(); ++index ) {
+		cout << data[index].palmprint.identity << endl;
+	}
 	return 0;
 }
