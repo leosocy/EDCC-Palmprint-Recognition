@@ -10,8 +10,9 @@ int main(int argc, const char **argv)
 {
 	ifstream configIn; 
 	configIn.open("config.json");
-	map< string, int >config;
-	IO::loadConfig( configIn, config );
+	IO configIO;
+	configIO.loadConfig( configIn  );
+/*
 
 	ifstream groupIn;
 	groupIn.open("palmprintTrainGroup.json");
@@ -25,6 +26,6 @@ int main(int argc, const char **argv)
 				Size( config["laplaceKernelSize"], config["laplaceKernelSize"] ) );
 		int i =  instance.genCoding().C.at<char>( 0, 5 );
 		cout << i << endl;
-	}
+	}*/
 	return 0;
 }

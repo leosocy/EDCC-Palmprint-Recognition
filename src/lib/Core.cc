@@ -69,11 +69,6 @@ PalmprintCode::~PalmprintCode()
 {
 }
 
-void PalmprintCode::setPalmprint( const Palmprint &oneInstance )
-{
-	this->instance = oneInstance;
-}
-
 void PalmprintCode::encodePalmprint( const cv::Size &imgSize, const cv::Size &gabKerSize, int numOfDirections, const cv::Size &lapKerSize ) 
 {
 	assert( lapKerSize.width % 2 == 1 && lapKerSize.width == lapKerSize.height );
@@ -119,11 +114,6 @@ void PalmprintCode::encodePalmprint( const cv::Size &imgSize, const cv::Size &ga
 	}
 }
 
-EDCCoding& PalmprintCode::genCoding()
-{
-	return this->coding;
-}
-
 void PalmprintCode::enhanceImage( const cv::Mat &src, cv::Mat &dst, const cv::Size &lapKerSize )
 {
 	Mat gaussian;
@@ -134,7 +124,12 @@ void PalmprintCode::enhanceImage( const cv::Mat &src, cv::Mat &dst, const cv::Si
 
 //---------------------------------EDCCoding------------------------------------
 
-
+EDCCoding& EDCCoding::operator=( const EDCCoding &coding )
+{
+	this->C = coding.C.clone();
+	this->Cs = coding.Cs.clone();
+	return *this;
+}
 
 //---------------------------------GaborFilter-----------------------------------
 

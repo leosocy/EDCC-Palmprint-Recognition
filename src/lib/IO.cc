@@ -15,8 +15,15 @@ using namespace EDCC;
 	\"path2\"\n\
 	]\n\
 }"
+IO::IO()
+{
+	paramsSet.insert( "imageSize" );
+	paramsSet.insert( "laplaceKernelSize" );
+	paramsSet.insert( "gaborKernelSize" );
+	paramsSet.insert( "gaborDirections" );
+}
 
-int IO::loadConfig( const ifstream &in, map< string, int > &configMap )
+int IO::loadConfig( ifstream &in  )
 {
 	assert( in.is_open() );
 	Json::Value value;
@@ -35,18 +42,23 @@ int IO::loadConfig( const ifstream &in, map< string, int > &configMap )
  of \"default\" label in this file." << endl;
 			return LOAD_CONFIG_FAILURE;
 		} else {
-			configMap.insert( map< string, int >::value_type( *it, value[*it]["default"].asInt() ) );
+			if( paramsSet.find( *it ) != paramsSet.end() ) {
+				paramsMap.insert( map< string, int >::value_type( *it, value[*it]["default"].asInt() ) ); 
+			} else {
+				cerr << "Ilegal configuration parameters." << endl;
+				return LOAD_CONFIG_FAILURE;
+			}
 		}
 	}
 
-	for( map< string, int >::iterator it = configMap.begin(); it != configMap.end();
+	for( map< string, int >::iterator it = paramsMap.begin(); it != paramsMap.end();
 			++it ) {
 		cout << (*it).first << ":" << (*it).second << endl;
 	}
 	return LOAD_CONFIG_SUCCESS;
 }
 
-int IO::loadPalmprintGroup( const ifstream &in, vector< Palmprint > &groupVec )
+int IO::loadPalmprintGroup( ifstream &in, vector< Palmprint > &groupVec )
 {
 	assert( in.is_open() );
 	Json::Value value;
@@ -75,7 +87,7 @@ int IO::loadPalmprintGroup( const ifstream &in, vector< Palmprint > &groupVec )
 	return LOAD_PALMPRINT_GROUP_SUCCESS;
 }
 
-int IO::loadPalmprintFeatureData( const ifstream &in, vector< PalmprintCode > &data  )
+int IO::loadPalmprintFeatureData( ifstream &in, vector< PalmprintCode > &data  )
 {
 	assert( in.is_open() );
 	Json::Value value;
@@ -86,9 +98,70 @@ int IO::loadPalmprintFeatureData( const ifstream &in, vector< PalmprintCode > &d
 		cerr << "Parse json failed. Don't change the trainData.json format." << endl;
 		return LOAD_PALMPRINT_FEATURE_DATA_FAILURE;
 	}
+	for( set< string >::iterator it = paramsSet.begin(); it != paramsSet.end(); ++it ) {
+		if( value[*it].isNull() || !value[*it].isInt() ) {
+			cerr << "Parse json failed. Don't change the trainData.json format." << endl;
+			return LOAD_PALMPRINT_FEATURE_DATA_FAILURE;
+		}
+	}
+	members = value.getMemberNames();
+	for( Json::Value::Members::iterator it = members.begin(); 
+			it != members.end(); ++it ) {
+		if( paramsSet.find( *it ) != paramsSet.end() ) {
+			paramsMap.insert( map< string, int >::value_type( *it, value[*it]["default"].asInt() ) ); 
+		} else {
+			loadOneIdentityAllPalmprintFeatureData( *it, value[*it], data );	
+		}
+	}
 
 }
 
 int IO::savePalmprintFeatureData( ofstream &out, const vector< PalmprintCode > &data )
 {
+	return SAVE_PALMPRINT_FEATURE_DATA_SUCCESS;
+}
+
+int IO::loadOneIdentityAllPalmprintFeatureData( const string &identity, const Json::Value &value, vector< PalmprintCode > &data )
+{
+	Json::Value::Members imagePathMembers;
+	imagePathMembers = value.getMemberNames();
+	for( Json::Value::Members::iterator it = imagePathMembers.begin(); 
+			it != imagePathMembers.end(); ++it ) {
+		Palmprint instance( identity, *it );
+		EDCCoding coding;
+		genEDCCoding( value[*it], coding );
+		PalmprintCode instanceCode( instance );
+		instanceCode.coding = coding;
+		data.push_back( instanceCode );
+	}
+}
+
+void IO::genEDCCoding( const Json::Value &value, EDCCoding &coding )
+{
+	assert( !value.isNull() );
+	Mat C( paramsMap["imageSize"], paramsMap["imageSize"], CV_64F );
+	Mat Cs( paramsMap["imageSize"], paramsMap["imageSize"], CV_64F );
+	Json::Value cValue = value["C"];
+	Json::Value csValue = value["Cs"];
+
+	assert( cValue.size() == paramsMap["imageSize"] );
+	assert( csValue.size() == paramsMap["imageSize"] );
+	jsonArray2Mat( cValue, C );
+	jsonArray2Mat( csValue, Cs );
+
+	coding.C = C.clone();
+	coding.Cs = Cs.clone();
+}
+
+int IO::jsonArray2Mat( const Json::Value &value, Mat &dst )
+{
+	assert( !value.isNull() && value.isArray() );
+	for( int row = 0; row < value.size(); ++row ) {
+		Json::Value colValue = value[row];
+		assert( colValue.size() == paramsMap["imageSize"] );
+		for( int col = 0; col < colValue.size(); ++col ) {
+			dst.at<double>( row, col ) = colValue[col].asDouble();
+		}
+	}
+	return EXIT_SUCCESS;
 }
