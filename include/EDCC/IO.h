@@ -11,6 +11,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <set>
 #include <string>
 #include <json/json.h>
 #include <EDCC/Core.h>
@@ -37,10 +38,19 @@ namespace EDCC
 	 */
 	class IO {
 		public:
-			static int loadConfig( const ifstream &in, std::map< string, int > &configMap );
-			static int loadPalmprintGroup( const ifstream &in, vector< Palmprint > &groupVec );
-			static int loadPalmprintFeatureData( const ifstream &in, vector< PalmprintCode > &data );
-			static int savePalmprintFeatureData( ofstream &out, const vector< PalmprintCode > &data );
+			map< string, int > paramsMap;
+			set< string > paramsSet;
+			
+			IO();
+
+			int loadConfig( ifstream &in  );
+			int loadPalmprintGroup( ifstream &in, vector< Palmprint > &groupVec );
+			int loadPalmprintFeatureData( ifstream &in, vector< PalmprintCode > &data );
+			int savePalmprintFeatureData( ofstream &out, const vector< PalmprintCode > &data );
+		private:
+			int loadOneIdentityAllPalmprintFeatureData( const string &identity, const Json::Value &value, vector< PalmprintCode > &data );
+			void genEDCCoding( const Json::Value &value, EDCCoding &coding );
+			int jsonArray2Mat( const Json::Value &value, Mat &dst );
 	};
 	//=========================================================
 }
