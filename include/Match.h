@@ -7,7 +7,7 @@
 #ifndef __MATCH_H__
 #define __MATCH_H__
 #include <opencv2/opencv.hpp>
-#include <EDCC/Core.h>
+#include <Core.h>
 using namespace std;
 using namespace cv;
 
