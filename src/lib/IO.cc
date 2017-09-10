@@ -4,7 +4,7 @@
 	> Mail: 513887568@qq.com 
 	> Created Time: 2017/07/26 21:29:10
  ************************************************************************/
-#include <EDCC/IO.h>
+#include <IO.h>
 #include <iostream>
 #include <assert.h>
 using namespace EDCC;
@@ -17,111 +17,105 @@ using namespace EDCC;
 }"
 IO::IO()
 {
-	paramsSet.insert( "imageSize" );
-	paramsSet.insert( "laplaceKernelSize" );
-	paramsSet.insert( "gaborKernelSize" );
-	paramsSet.insert( "gaborDirections" );
+	paramsSet.insert("imageSize");
+	paramsSet.insert("laplaceKernelSize");
+	paramsSet.insert("gaborKernelSize");
+	paramsSet.insert("gaborDirections");
 }
 
-int IO::loadConfig( ifstream &in  )
+int IO::loadConfig(ifstream &in)
 {
-	assert( in.is_open() );
 	Json::Value root;
 	Json::Reader reader;
 	Json::Value::Members members;
-
-	if( !reader.parse( in, root ) ) {
+	if(!reader.parse(in, root)) {
 		cerr << "Parse config.json failed, please confirm the format." << endl;
 		return LOAD_CONFIG_FAILURE;
 	}
 	members = root.getMemberNames();
-	for( Json::Value::Members::iterator it = members.begin(); 
-			it != members.end(); ++it ) {
-		if( root[*it]["default"].isNull() ) {
+	for(Json::Value::Members::iterator it = members.begin(); 
+			it != members.end(); ++it) {
+		if(root[*it]["default"].isNull()) {
 			cerr << "Parse config.json failed, you can only change the value\
  of \"default\" label in this file." << endl;
 			return LOAD_CONFIG_FAILURE;
 		} else {
-			if( paramsSet.find( *it ) != paramsSet.end() ) {
-				paramsMap.insert( map< string, int >::value_type( *it, root[*it]["default"].asInt() ) ); 
+			if(paramsSet.find(*it) != paramsSet.end()) {
+				paramsMap.insert(map<string, int>::value_type(*it, root[*it]["default"].asInt())); 
 			} else {
-				cerr << "Ilegal configuration parameters." << endl;
+				cerr << "Illegal configuration parameters." << endl;
 				return LOAD_CONFIG_FAILURE;
 			}
 		}
 	}
 
-	for( map< string, int >::iterator it = paramsMap.begin(); it != paramsMap.end();
-			++it ) {
+	for(map<string, int>::iterator it = paramsMap.begin(); it != paramsMap.end(); ++it) {
 		cout << (*it).first << ":" << (*it).second << endl;
 	}
 	return LOAD_CONFIG_SUCCESS;
 }
 
-int IO::loadPalmprintGroup( ifstream &in, vector< Palmprint > &groupVec )
+int IO::loadPalmprintGroup(ifstream &in, vector<PalmprintCode> &groupVec)
 {
-	assert( in.is_open() );
 	Json::Value root;
 	Json::Reader reader;
 	Json::Value::Members members;
 
-	if( !reader.parse( in, root ) ) {
+	if(!reader.parse(in, root)) {
 		cerr << "Parse json failed. Don't change the json format. You need to confirm the format like this." << endl;
 		cerr << PALMPRINT_GROUP_FORMAT << endl;
 		return LOAD_PALMPRINT_GROUP_FAILURE;
 	}
 	members = root.getMemberNames();
-	for( Json::Value::Members::iterator it = members.begin(); 
-			it != members.end(); ++it ) {
-		if( !root[*it].isArray() ) {
+	for(Json::Value::Members::iterator it = members.begin(); 
+			it != members.end(); ++it) {
+		if(!root[*it].isArray()) {
 			cerr << "Don't change the json format. You need to confirm the format like this." << endl;
 			cerr << PALMPRINT_GROUP_FORMAT << endl;
 			return LOAD_PALMPRINT_GROUP_FAILURE;
 		}
 		Json::Value imageList = root[*it];
-		for( int imageIndex = 0; imageIndex < imageList.size(); ++imageIndex ) {
-			Palmprint newOne( *it, imageList[imageIndex].asString() );
-			groupVec.push_back( newOne );
+		for(int imageIndex = 0; imageIndex < imageList.size(); ++imageIndex) {
+			PalmprintCode newOne((*it).c_str(), imageList[imageIndex].asString().c_str());
+			groupVec.push_back(newOne);
 		}
 	}
 	return LOAD_PALMPRINT_GROUP_SUCCESS;
 }
 
-int IO::loadPalmprintFeatureData( ifstream &in, vector< PalmprintCode > &data  )
+int IO::loadPalmprintFeatureData(ifstream &in, vector<PalmprintCode> &data)
 {
-	assert( in.is_open() );
 	Json::Value root;
 	Json::Reader reader;
 	Json::Value::Members members;
-
-	if( !reader.parse( in, root ) ) {
+	if(!reader.parse(in, root)) {
 		cerr << "Parse json failed. Don't change the trainData.json format." << endl;
 		return LOAD_PALMPRINT_FEATURE_DATA_FAILURE;
 	}
-	for( set< string >::iterator it = paramsSet.begin(); it != paramsSet.end(); ++it ) {
-		if( root[*it].isNull() || !root[*it].isInt() ) {
+	for(set<string>::iterator it = paramsSet.begin(); it != paramsSet.end(); ++it) {
+		if(root[*it].isNull() || !root[*it].isInt()) {
 			cerr << "Parse json failed. Don't change the trainData.json format." << endl;
 			return LOAD_PALMPRINT_FEATURE_DATA_FAILURE;
 		}
 	}
 	members = root.getMemberNames();
-	for( Json::Value::Members::iterator it = members.begin(); 
-			it != members.end(); ++it ) {
-		if( paramsSet.find( *it ) != paramsSet.end() ) {
-			paramsMap.insert( map< string, int >::value_type( *it, root[*it].asInt() ) ); 
+	for(Json::Value::Members::iterator it = members.begin(); 
+			it != members.end(); ++it) {
+		if(paramsSet.find(*it) != paramsSet.end()) {
+			paramsMap.insert(map<string, int>::value_type(*it, root[*it].asInt())); 
 		} else {
-			loadOneIdentityAllPalmprintFeatureData( *it, root[*it], data );	
+			loadOneIdentityAllPalmprintFeatureData(*it, root[*it], data);	
 		}
 	}
 
 }
 
-int IO::savePalmprintFeatureData( ofstream &out, vector< PalmprintCode > &data )
+int IO::savePalmprintFeatureData(ofstream &out, vector<PalmprintCode> &data)
 {
-	assert( out.is_open() );
+	assert(out.is_open());
 	Json::Value root;
-	for( set< string >::iterator it = paramsSet.begin(); it != paramsSet.end(); ++it ) {
-		if( paramsMap.find( *it ) == paramsMap.end() ) {
+	for(set<string>::iterator it = paramsSet.begin(); it != paramsSet.end(); ++it) {
+		if(paramsMap.find(*it) == paramsMap.end()) {
 			cerr << "If you want to train/predict, load config.json first.Or if you want incremental training/prediction, load trainData.json first." << endl;
 			return SAVE_PALMPRINT_FEATURE_DATA_FAILURE;
 		} else {
@@ -129,90 +123,53 @@ int IO::savePalmprintFeatureData( ofstream &out, vector< PalmprintCode > &data )
 		}
 	}
 
-	for( vector< PalmprintCode >::iterator it = data.begin(); it != data.end(); ++it ) {
-		insert2JsonValue( *it, root );
+	for(vector<PalmprintCode>::iterator it = data.begin(); it != data.end(); ++it) {
+		insert2JsonValue(*it, root);
 	}
 	out << root.toStyledString();
 	return SAVE_PALMPRINT_FEATURE_DATA_SUCCESS;
 }
 
-int IO::loadOneIdentityAllPalmprintFeatureData( const string &identity, const Json::Value &value, vector< PalmprintCode > &data )
+int IO::loadOneIdentityAllPalmprintFeatureData(const string &identity, 
+                                                                const Json::Value &value, 
+                                                                vector<PalmprintCode> &data)
 {
 	Json::Value::Members imagePathMembers;
 	imagePathMembers = value.getMemberNames();
-	for( Json::Value::Members::iterator it = imagePathMembers.begin(); 
-			it != imagePathMembers.end(); ++it ) {
-		Palmprint palmprint( identity, *it );
-		EDCCoding coding;
-		genEDCCoding( value[*it], coding );
-		PalmprintCode instanceCode( palmprint );
-		instanceCode.coding = coding;
-		data.push_back( instanceCode );
+	for(Json::Value::Members::iterator it = imagePathMembers.begin(); 
+			it != imagePathMembers.end(); ++it) {
+        PalmprintCode instanceCode(identity.c_str(), (*it).c_str());
+		genEDCCoding(value[*it], instanceCode);
+	    data.push_back(instanceCode);
 	}
 }
 
-void IO::genEDCCoding( const Json::Value &value, EDCCoding &coding )
+void IO::genEDCCoding(const Json::Value &value, PalmprintCode &coding)
 {
-	assert( !value.isNull() );
-	Mat C( paramsMap.at("imageSize"), paramsMap.at("imageSize"), CV_8S );
-	Mat Cs( paramsMap.at("imageSize"), paramsMap.at("imageSize"), CV_8S );
-	Json::Value cValue = value["C"];
-	Json::Value csValue = value["Cs"];
-
-	assert( cValue.size() == paramsMap.at("imageSize") );
-	assert( csValue.size() == paramsMap.at("imageSize") );
-	jsonArray2Mat( cValue, C );
-	jsonArray2Mat( csValue, Cs );
-
-	coding.C = C.clone();
-	coding.Cs = Cs.clone();
+	assert(!value.isNull());
+	Mat C(paramsMap.at("imageSize"), paramsMap.at("imageSize"), CV_8S);
+	Mat Cs(paramsMap.at("imageSize"), paramsMap.at("imageSize"), CV_8S);
+    coding.zipCodingC = value["C"].asString();
+    coding.zipCodingCs = value["Cs"].asString();
 }
 
-void IO::jsonArray2Mat( const Json::Value &value, Mat &dst )
+bool IO::insert2JsonValue(PalmprintCode &code, Json::Value &value)
 {
-	assert( !value.isNull() && value.isArray() );
-	for( int row = 0; row < value.size(); ++row ) {
-		Json::Value colValue = value[row];
-		assert( colValue.size() == paramsMap.at("imageSize") );
-		for( int col = 0; col < colValue.size(); ++col ) {
-			dst.at<char>( row, col ) = colValue[col].asInt();
-		}
-	}
-}
-
-bool IO::insert2JsonValue( PalmprintCode &code, Json::Value &value )
-{
-	string identity = code.palmprint.identity;
-	string imagePath = code.palmprint.imagePath;
-	if( !value[identity].isNull() && !value[identity][imagePath].isNull() ) {
+	string identity = code.identity;
+	string imagePath = code.imagePath;
+	if(!value[identity].isNull() && !value[identity][imagePath].isNull()) {
 		cerr << "identity: " << identity << "\timagepath: " << imagePath 
 			<< "\tis already exists." << endl;
 		return false;
 	}
 	Json::Value codeValue;
-	setEDCCoding( code.coding, codeValue );
+	setEDCCoding(code, codeValue);
 	value[identity][imagePath] = codeValue;
 }
 
-void IO::setEDCCoding( const EDCCoding &coding, Json::Value &value )
+void IO::setEDCCoding(PalmprintCode &coding, Json::Value &value)
 {
 	Json::Value cValue, csValue;
-	Mat2jsonArray( coding.C, cValue );
-	Mat2jsonArray( coding.Cs, csValue );
-	value["C"] = cValue;
-	value["Cs"] = csValue;
-}
-
-void IO::Mat2jsonArray( const Mat &src, Json::Value &value )
-{
-	assert( src.rows == paramsMap["imageSize"] );
-	assert( src.type() == CV_8S );
-
-	for( int row = 0; row < src.rows; ++row ) {
-		Json::Value rowValue;
-		for( int col = 0; col < src.cols; ++col ) {
-			rowValue.append( src.at<char>( row, col ) );
-		}
-		value.append( rowValue );
-	}
+    value["C"] = coding.zipCodingC;
+    value["Cs"] = coding.zipCodingCs;
 }

@@ -39,8 +39,8 @@
 			"zh-CN" : "对图像进行2DGabor小波变换使用方向个数"
 		},
 		"regulation" : {
-			"en-US" : "Suggest in range[6, 18]",
-			"zh-CN" : "建议在6-18之间"
+			"en-US" : "In range[4, 16]",
+			"zh-CN" : "在4-16之间"
 		}
 	}
 }
