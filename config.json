@@ -6,8 +6,8 @@
 			"zh-CN" : "输入掌纹图像的尺寸"
 		},
 		"regulation" : {
-			"en-US" : "Should not be too large, will affect the size of the palm print code.Too large size will increase the size of the feature matrix and the cost time of recognition.",
-			"zh-CN" : "不宜过大，会影响掌纹的编码大小，过大的尺寸会增加特征矩阵的大小，增加识别耗时"
+			"en-US" : "29 is Experience, should bigger than this.Should not be too large, will affect the size of the palm print code.Too large size will increase the size of the feature matrix and the cost time of recognition.",
+			"zh-CN" : "29是经验值，需要大于等于此值。不宜过大，会影响掌纹的编码大小，过大的尺寸会增加特征矩阵的大小，增加识别耗时"
 		}
 	},
 	"laplaceKernelSize" : {

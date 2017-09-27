@@ -9,6 +9,7 @@
 
 #include "IO.h"
 #include "Core.h"
-//#include "Check.h"
+#include "Check.h"
 
 #endif 
+
