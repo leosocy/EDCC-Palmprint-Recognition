@@ -10,11 +10,15 @@ file(GLOB jsoncpp_files
 ${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp/src/*.cpp
 )
 
+file(GLOB_RECURSE src_files
+${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
+${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
+)
+
 add_executable( palmprint_recognition
 	${jsoncpp_files}
-	${CMAKE_CURRENT_SOURCE_DIR}/src/exe/palmprint_recognition.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/lib/Core.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/lib/IO.cc
+	${src_files}
 	)
 
 target_link_libraries( palmprint_recognition  ${OpenCV_LIBS} )
