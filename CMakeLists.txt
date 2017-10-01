@@ -1,7 +1,7 @@
 cmake_minimum_required( VERSION 2.8 )
 
 set(PROJECT_NAME palmprint_recognition)
-project( PROJECT_NAME )
+project( ${PROJECT_NAME} )
 
 find_package( OpenCV REQUIRED )
 
@@ -21,10 +21,10 @@ file(GLOB_RECURSE src_files
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
 )
 
-add_executable( PROJECT_NAME
+add_executable( ${PROJECT_NAME}
 	${jsoncpp_files}
 	${src_files}
 	${headers}
 	)
 
-target_link_libraries( PROJECT_NAME  ${OpenCV_LIBS} )
+target_link_libraries( ${PROJECT_NAME}  ${OpenCV_LIBS} )

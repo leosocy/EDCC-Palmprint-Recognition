@@ -48,7 +48,7 @@ namespace EDCC
             int savePalmprintFeatureData(ofstream &out, vector<PalmprintCode> &data);
         private:
             set< string > paramsSet;
-            int loadOneIdentityAllPalmprintFeatureData(const string &identity, const Json::Value &value, vector<PalmprintCode> &data);			
+            void loadOneIdentityAllPalmprintFeatureData(const string &identity, const Json::Value &value, vector<PalmprintCode> &data);			
             void genEDCCoding(const Json::Value &value, PalmprintCode &coding);
             bool insert2JsonValue(PalmprintCode &code, Json::Value &value);
             void setEDCCoding(PalmprintCode &coding, Json::Value &value);
