@@ -223,9 +223,9 @@ void GaborFilter::doGaborFilter(const cv::Mat &src, cv::Mat &dstMerge)
 }
 
 void GaborFilter::getGaborKernel(cv::Mat &gaborKernel, int kernelWidth, int kernelHeight,
-                                    int dimension, int direction, 
-                                    int kernelType, double Kmax, double f,
-                                    double sigma, int ktype)
+                                 int dimension, int direction,
+                                 int kernelType, double Kmax, double f,
+                                 double sigma, int ktype)
 {
     assert(ktype == CV_32F || ktype == CV_64F);  
     int halfWidth = kernelWidth / 2;

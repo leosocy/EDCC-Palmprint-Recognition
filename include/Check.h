@@ -28,6 +28,7 @@ namespace EDCC
             bool checkPalmprintGroupValid(const vector<PalmprintCode> &data);
             bool checkPalmprintFeatureData(const vector<PalmprintCode> &data);
             bool checkCodingC(const string &codingC);
+
             int imageSize;
             int gaborKernelSize;
             int gaborDirections;

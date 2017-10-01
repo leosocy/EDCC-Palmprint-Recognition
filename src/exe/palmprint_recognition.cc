@@ -24,11 +24,11 @@ int main(int argc, const char **argv)
     IO trainIO;
     vector<PalmprintCode> data;
     ifstream dataOut;
-    dataOut.open( "trainData.json" );
+    dataOut.open( "../trainData.json" );
     trainIO.loadPalmprintFeatureData(dataOut, data);
     Check checkHanler;
     checkHanler.checkValid(trainIO.configMap, data);
-    for(int index = 0; index < data.size(); ++index) {
+    for(size_t index = 0; index < data.size(); ++index) {
         cout << data[index].zipCodingCs << endl;
     }
     return 0;

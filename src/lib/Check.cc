@@ -97,7 +97,7 @@ bool Check::checkPalmprintFeatureData(const vector<PalmprintCode> &data)
 
 bool Check::checkCodingC(const string &codingC)
 {
-    for(int i = 0; 
+    for(size_t i = 0; 
         i < codingC.length() 
         && gaborDirections < CONFIG_VALID_GABOR_DIRECTIONS_MAX;
         ++i) {

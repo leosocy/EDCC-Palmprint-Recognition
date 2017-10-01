@@ -75,7 +75,7 @@ int IO::loadPalmprintGroup(ifstream &in, vector<PalmprintCode> &groupVec)
             return LOAD_PALMPRINT_GROUP_FAILURE;
         }
         Json::Value imageList = root[*it];
-        for(int imageIndex = 0; imageIndex < imageList.size(); ++imageIndex) {
+        for(size_t imageIndex = 0; imageIndex < imageList.size(); ++imageIndex) {
             PalmprintCode newOne((*it).c_str(), imageList[imageIndex].asString().c_str());
             groupVec.push_back(newOne);
         }
@@ -107,6 +107,7 @@ int IO::loadPalmprintFeatureData(ifstream &in, vector<PalmprintCode> &data)
         }
     }
 
+    return LOAD_PALMPRINT_FEATURE_DATA_SUCCESS;
 }
 
 int IO::savePalmprintFeatureData(ofstream &out, vector<PalmprintCode> &data)
@@ -126,12 +127,13 @@ int IO::savePalmprintFeatureData(ofstream &out, vector<PalmprintCode> &data)
         insert2JsonValue(*it, root);
     }
     out << root.toStyledString();
+
     return SAVE_PALMPRINT_FEATURE_DATA_SUCCESS;
 }
 
-int IO::loadOneIdentityAllPalmprintFeatureData(const string &identity, 
-                                                                const Json::Value &value, 
-                                                                vector<PalmprintCode> &data)
+void IO::loadOneIdentityAllPalmprintFeatureData(const string &identity,
+                                                const Json::Value &value,
+                                                vector<PalmprintCode> &data)
 {
     Json::Value::Members imagePathMembers;
     imagePathMembers = value.getMemberNames();
@@ -165,6 +167,8 @@ bool IO::insert2JsonValue(PalmprintCode &code, Json::Value &value)
     Json::Value codeValue;
     setEDCCoding(code, codeValue);
     value[identity][imagePath] = codeValue;
+
+    return true;
 }
 
 void IO::setEDCCoding(PalmprintCode &coding, Json::Value &value)
