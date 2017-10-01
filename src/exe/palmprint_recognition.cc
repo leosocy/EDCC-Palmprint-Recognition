@@ -27,7 +27,11 @@ int main(int argc, const char **argv)
     dataOut.open( "../trainData.json" );
     trainIO.loadPalmprintFeatureData(dataOut, data);
     Check checkHanler;
-    checkHanler.checkValid(trainIO.configMap, data);
+    bool bValid = false;
+    bValid = checkHanler.checkValid(trainIO.configMap, data);
+    if(!bValid) {
+        return EXIT_FAILURE;
+    }
     for(size_t index = 0; index < data.size(); ++index) {
         cout << data[index].zipCodingCs << endl;
     }
