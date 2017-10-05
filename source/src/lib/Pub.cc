@@ -1,8 +1,8 @@
 /*************************************************************************
-> File Name: Pub.cc
-> Author: Leosocy
-> Mail: 513887568@qq.com
-> Created Time: 2017/10/5 11:12:26
+    > File Name: Pub.cc
+    > Author: Leosocy
+    > Mail: 513887568@qq.com
+    > Created Time: 2017/10/5 11:12:26
 ************************************************************************/
 #include <Pub.h>
 using namespace EDCC;
