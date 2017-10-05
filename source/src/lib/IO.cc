@@ -75,7 +75,7 @@ int EDCC::IO::loadPalmprintGroup(ifstream &in, vector<PalmprintCode> &groupVec)
         }
         Json::Value imageList = root[*it];
         for(size_t imageIndex = 0; imageIndex < imageList.size(); ++imageIndex) {
-            PalmprintCode newOne((*it).c_str(), imageList[(int)imageIndex].asString().c_str());
+            PalmprintCode newOne((*it).c_str(), imageList[(unsigned)imageIndex].asString().c_str());
             groupVec.push_back(newOne);
         }
     }

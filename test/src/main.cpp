@@ -1,11 +1,9 @@
-#include <EDCC.h>
 #include <iostream>
-#include <vector>
+#include <gtest/gtest.h>
 using namespace std;
 
-int main(int argc, const char **argv)
+int main(int argc, char **argv)
 {
-    parse_cmd(argc, argv);
-
-    return 0;
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
