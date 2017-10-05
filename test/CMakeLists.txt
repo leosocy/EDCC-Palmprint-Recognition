@@ -13,9 +13,11 @@ message(STATUS "DIR : " ${CMAKE_BINARY_DIR})
 message(STATUS "——————————————————————————————————————")
 
 add_subdirectory(${EDCC_ROOT} ${CMAKE_BINARY_DIR}/EDCC)
+add_subdirectory(${GTEST_ROOT} ${CMAKE_BINARY_DIR}/gtest)
 
 include_directories(${EDCC_PUB_HEADER})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${GTEST_ROOT}/include)
 
 file(GLOB_RECURSE test_include_files 
 	${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
@@ -31,8 +33,18 @@ if(MSVC)
 	source_group(src FILES ${test_src_files}) 
 endif()
 
+if(MSVC)
+	add_compile_options("/MTd")
+elseif (UNIX)
+endif()
+
 add_executable(${PROJECT_NAME} ${test_include_files} ${test_src_files})
 
 #FIND_LIBRARY(LIB_GTEST gtest.a ${CMAKE_BINARY_DIR} NO_DEFAULT_PATH)
 link_directories(${CMAKE_BINARY_DIR})
-target_link_libraries(${PROJECT_NAME} EDCC)
+target_link_libraries(${PROJECT_NAME} EDCC gtest)
+
+enable_testing()
+add_test(NAME ${PROJECT_NAME} 
+				CONFIGURATIONS  Debug
+				COMMAND ${PROJECT_NAME})
