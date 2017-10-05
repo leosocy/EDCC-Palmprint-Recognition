@@ -196,6 +196,11 @@ void PalmprintCode::genEDCCoding(const vector<cv::Mat> &filterResult,
     }
 }
 
+double PalmprintCode::matchWith(const PalmprintCode &cmp)
+{
+    Match matchHandler;
+    return matchHandler.matchP2P(*this, cmp);
+}
 
 //---------------------------------GaborFilter-----------------------------------
 

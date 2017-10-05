@@ -10,6 +10,7 @@
 #include <opencv2/opencv.hpp>
 #include <cmath>
 #include <Pub.h>
+#include <Match.h>
 using namespace std;
 using namespace cv;
 
@@ -55,6 +56,7 @@ namespace EDCC
                                         int numOfDirections,
                                         const cv::Size &lapKerSize);
             bool encodePalmprint(const map<string, int> &configMap);
+            double matchWith(const PalmprintCode &cmp);
         private:
             void enhanceImage(const cv::Mat &src, cv::Mat &dst, const cv::Size &lapKerSize);
             void genEDCCoding(const vector<cv::Mat> &filterResult, 

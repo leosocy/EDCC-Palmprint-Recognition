@@ -4,9 +4,13 @@
     > Mail: 513887568@qq.com 
     > Created Time: 2017/07/26 21:27:26
  ************************************************************************/
+#include <IO.h>
+#include <Core.h>
+#include <Check.h>
 #include <EDCC.h>
 using namespace EDCC;
-int main(int argc, const char **argv)
+
+int parse_cmd(int argc, const char **argv)
 {
     /*ifstream configIn; 
     configIn.open("../config.json");
@@ -27,7 +31,7 @@ int main(int argc, const char **argv)
     IO trainIO;
     vector<PalmprintCode> data;
     ifstream dataOut;
-    dataOut.open( "../trainData.json" );
+    dataOut.open( "../example/trainData.json" );
     trainIO.loadPalmprintFeatureData(dataOut, data);
     Check checkHanler;
     bool bValid = true;
@@ -38,20 +42,18 @@ int main(int argc, const char **argv)
     if(!bValid) {
         return EXIT_FAILURE;
     }
-
-    Match matchHandler;
     for(size_t inner = 0; inner < data.size(); ++inner) {
         double maxScore = -DBL_MAX;
         size_t maxIndex = -1;
         for(size_t outter = 0; outter < data.size(); ++outter) {
-            if(matchHandler.matchP2P(data[inner], data[outter]) > maxScore && inner != outter) {
-                maxScore = matchHandler.matchP2P(data[inner], data[outter]);
+            if(data[inner].matchWith(data[outter]) > maxScore && inner != outter) {
+                maxScore = data[inner].matchWith(data[outter]);
                 maxIndex = outter;
             }
         }
         cout << "--------------------------------------------" << endl;
         cout << "instance_1 : " << data[inner].imagePath << endl << "Match : " << data[maxIndex].imagePath << endl;
-        cout << "score: " << matchHandler.matchP2P(data[inner], data[maxIndex]) << endl;
+        cout << "score: " << maxScore << endl;
         cout << "--------------------------------------------" << endl << endl;
     }
 

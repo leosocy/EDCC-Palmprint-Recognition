@@ -7,10 +7,6 @@
 #ifndef __EDCC_H__
 #define __EDCC_H__
 
-#include "IO.h"
-#include "Core.h"
-#include "Check.h"
-#include "Match.h"
+int parse_cmd(int argc, const char **argv);
 
-#endif 
-
+#endif

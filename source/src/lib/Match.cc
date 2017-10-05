@@ -5,6 +5,7 @@
 > Created Time: 2017/10/1 23:50:15
 ************************************************************************/
 #include <Match.h>
+#include <Core.h>
 using namespace EDCC;
 
 double Match::matchP2P(const PalmprintCode &instance1, const PalmprintCode &instance2)
