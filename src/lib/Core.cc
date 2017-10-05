@@ -17,10 +17,15 @@ Palmprint::Palmprint()
 
 Palmprint::Palmprint(const char *identity, const char *imagePath)
 {
+    if(identity == NULL || imagePath == NULL) {
+        cerr << "Identity or imagePath can't be null!" << endl;
+        return ;
+    }
+
     bool bRet = false;
     bRet = setPalmprintInfo(identity, imagePath);
     if(bRet == false) {
-        return;
+        return ;
     }
 }
 
@@ -93,6 +98,10 @@ void EDCCoding::compressCoding()
             --csCount;
         }
     }
+    if(csCount != 3) {
+        ssZipCs << hexArray[comCodingCs];
+    }
+
     zipCodingC = ssZipC.str();
     zipCodingCs = ssZipCs.str();
 }

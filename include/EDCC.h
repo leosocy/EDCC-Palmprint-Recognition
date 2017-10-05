@@ -10,6 +10,7 @@
 #include "IO.h"
 #include "Core.h"
 #include "Check.h"
+#include "Match.h"
 
 #endif 
 

@@ -12,7 +12,10 @@ using namespace std;
 using namespace cv;
 
 namespace EDCC {
-
+    class Match {
+        public:
+            double matchP2P(const PalmprintCode &instance1, const PalmprintCode &instance2);
+    };
 }
 
 #endif 

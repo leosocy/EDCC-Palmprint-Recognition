@@ -8,16 +8,6 @@
 #include <Check.h>
 using namespace EDCC;
 
-bool Check::checkValid(const map<string, int> &configMap, const vector<PalmprintCode> &data)
-{
-    bool bRet = true;
-    bRet = bRet && checkConfigValid(configMap);
-    bRet = bRet && checkPalmprintGroupValid(data);
-    bRet = bRet && checkPalmprintFeatureData(data);
-
-    return bRet;
-}
-
 bool Check::checkConfigValid(const map<string, int> &configMap)
 {
     if(configMap.find("imageSize") == configMap.end() 
@@ -85,7 +75,7 @@ bool Check::checkPalmprintFeatureData(const vector<PalmprintCode> &data)
             cerr << "EDCCoding C format error!" << endl;
             return false;
         }
-        if((dataIte->zipCodingCs).length() != imageSize * imageSize / 8 + 1) {
+        if((dataIte->zipCodingCs).length() != (imageSize * imageSize / 4 + 1)) {
             cerr << "EDCCoding Cs format error!" << endl;
             return false;
         }
@@ -95,13 +85,14 @@ bool Check::checkPalmprintFeatureData(const vector<PalmprintCode> &data)
     return true;
 }
 
-bool Check::checkCodingC(const string &codingC)
+bool Check::checkCodingC(const string &zipCodingC)
 {
     for(size_t i = 0; 
-        i < codingC.length() 
+        i < zipCodingC.length()
         && gaborDirections < CONFIG_VALID_GABOR_DIRECTIONS_MAX;
         ++i) {
-        if(codingC.at(i) >= hexArray[gaborDirections]) {
+        if(zipCodingC[i] >= hexArray[gaborDirections]) {
+            cout << zipCodingC << endl;
             return false;
         }
     }

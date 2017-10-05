@@ -12,6 +12,7 @@
 #include <map>
 #include <vector>
 #include <Core.h>
+#include <Pub.h>
 using namespace std;
 
 #define CONFIG_IMAGE_SIZE_MIN 29
@@ -22,12 +23,11 @@ namespace EDCC
 {
     class Check {
         public:
-            bool checkValid(const map<string, int> &configMap, const vector<PalmprintCode> &data);
-        private:
             bool checkConfigValid(const map<string, int> &configMap);
             bool checkPalmprintGroupValid(const vector<PalmprintCode> &data);
             bool checkPalmprintFeatureData(const vector<PalmprintCode> &data);
-            bool checkCodingC(const string &codingC);
+        private:
+            bool checkCodingC(const string &zipCodingC);
 
             int imageSize;
             int gaborKernelSize;
