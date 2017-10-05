@@ -9,13 +9,9 @@
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <cmath>
+#include <Pub.h>
 using namespace std;
 using namespace cv;
-
-static const char hexArray[16] = {'0', '1', '2', '3',
-                                  '4', '5', '6', '7',
-                                  '8', '9', 'A', 'B',
-                                  'C', 'D', 'E', 'F'};
 
 namespace EDCC
 {
@@ -42,9 +38,9 @@ namespace EDCC
             string zipCodingCs;
             void compressCoding();
             bool decompressCoding(const char *codingC, const char *codingCs);
+        protected:
             Mat C;
             Mat Cs;
-            protected:
     };
     
     class PalmprintCode : public Palmprint, public EDCCoding
@@ -74,8 +70,8 @@ namespace EDCC
             void doGaborFilter(const cv::Mat &src, cv::Mat &dstMerge);
             
             enum {
-                GABOR_KERNEL_REAL = 0, 
-                GABOR_KERNEL_IMAG, 
+                GABOR_KERNEL_REAL = 0,
+                GABOR_KERNEL_IMAG,
                 GABOR_KERNEL_MAG
             };
         private:
@@ -91,4 +87,3 @@ namespace EDCC
 }
 
 #endif
-

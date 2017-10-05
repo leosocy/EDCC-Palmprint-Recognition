@@ -9,17 +9,20 @@ using namespace EDCC;
 int main(int argc, const char **argv)
 {
     /*ifstream configIn; 
-    configIn.open("config.json");
+    configIn.open("../config.json");
     IO trainIO;
-    trainIO.loadConfig(configIn );
+    trainIO.loadConfig(configIn);
 
     ifstream groupIn;
-    groupIn.open("palmprintTrainGroup.json");
+    groupIn.open("../palmprintTrainGroup.json");
     vector<PalmprintCode> data;
     trainIO.loadPalmprintGroup(groupIn, data);
-    for(int index = 0; index < data.size(); ++index) {
-        data[index].encodePalmprint(trainIO.paramsMap);
-    }*/
+    for(size_t index = 0; index < data.size(); ++index) {
+        data[index].encodePalmprint(trainIO.configMap);
+    }
+    ofstream dataOut;
+    dataOut.open("../trainData.json");
+    trainIO.savePalmprintFeatureData(dataOut, data);*/
 
     IO trainIO;
     vector<PalmprintCode> data;
@@ -27,14 +30,31 @@ int main(int argc, const char **argv)
     dataOut.open( "../trainData.json" );
     trainIO.loadPalmprintFeatureData(dataOut, data);
     Check checkHanler;
-    bool bValid = false;
-    bValid = checkHanler.checkValid(trainIO.configMap, data);
+    bool bValid = true;
+    bValid = bValid && checkHanler.checkConfigValid(trainIO.configMap);
+    bValid = bValid && checkHanler.checkPalmprintGroupValid(data);
+    bValid = bValid && checkHanler.checkPalmprintFeatureData(data);
+
     if(!bValid) {
         return EXIT_FAILURE;
     }
-    for(size_t index = 0; index < data.size(); ++index) {
-        cout << data[index].zipCodingCs << endl;
+
+    Match matchHandler;
+    for(size_t inner = 0; inner < data.size(); ++inner) {
+        double maxScore = -DBL_MAX;
+        size_t maxIndex = -1;
+        for(size_t outter = 0; outter < data.size(); ++outter) {
+            if(matchHandler.matchP2P(data[inner], data[outter]) > maxScore && inner != outter) {
+                maxScore = matchHandler.matchP2P(data[inner], data[outter]);
+                maxIndex = outter;
+            }
+        }
+        cout << "--------------------------------------------" << endl;
+        cout << "instance_1 : " << data[inner].imagePath << endl << "Match : " << data[maxIndex].imagePath << endl;
+        cout << "score: " << matchHandler.matchP2P(data[inner], data[maxIndex]) << endl;
+        cout << "--------------------------------------------" << endl << endl;
     }
+
     return 0;
 }
 
