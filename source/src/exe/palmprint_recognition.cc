@@ -10,7 +10,7 @@
 #include <EDCC.h>
 using namespace EDCC;
 
-int parse_cmd(int argc, const char **argv)
+int Adapter::parse_cmd(int argc, const char **argv)
 {
     /*ifstream configIn; 
     configIn.open("../config.json");

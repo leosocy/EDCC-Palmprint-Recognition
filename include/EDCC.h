@@ -9,9 +9,10 @@
 
 namespace EDCC {
     class Adapter {
-
+        public:
+            int parse_cmd(int argc, const char **argv);
     };
 }
-int parse_cmd(int argc, const char **argv);
+
 
 #endif
