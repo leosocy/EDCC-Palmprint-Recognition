@@ -7,6 +7,11 @@
 #ifndef __EDCC_H__
 #define __EDCC_H__
 
+namespace EDCC {
+    class Adapter {
+
+    };
+}
 int parse_cmd(int argc, const char **argv);
 
 #endif
