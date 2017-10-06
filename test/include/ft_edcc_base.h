@@ -23,7 +23,7 @@
 #define PARAMS_OVER_CONFIG_PATH "../test/example/config/config_params_over.json"
 #define PARAMS_NO_DEFAULT_CONFIG_PATH "../test/example/config/config_params_no_default.json"
 
-#define CORRECT_GROUP_PATH ../test/example/group/trainingSetGroup.json
+#define CORRECT_GROUP_PATH "../test/example/group/trainingSetGroup.json"
 
 #define FEATURES_OUTPUT_PATH "../test/example/features/features.json"
 
