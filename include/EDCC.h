@@ -7,9 +7,13 @@
 #ifndef __EDCC_H__
 #define __EDCC_H__
 
+#define _IN
+#define _OUT
+
 namespace EDCC {
     class Adapter {
         public:
+            //int train(_IN const char *);
             int parse_cmd(int argc, const char **argv);
     };
 }
