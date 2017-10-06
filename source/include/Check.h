@@ -22,17 +22,17 @@ using namespace std;
 namespace EDCC
 {
     class Check {
-        public:
-            bool checkConfigValid(_IN const map<string, int> &configMap);
-            bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data);
-            bool checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data);
-        private:
-            bool checkCodingC(_IN const string &zipCodingC);
+    public:
+        bool checkConfigValid(_IN const map<string, int> &configMap);
+        bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data);
+        bool checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data);
+    private:
+        bool checkCodingC(_IN const string &zipCodingC);
 
-            int imageSize;
-            int gaborKernelSize;
-            int gaborDirections;
-            int laplaceKernelSize;
+        int imageSize;
+        int gaborKernelSize;
+        int gaborDirections;
+        int laplaceKernelSize;
     };
 }
 

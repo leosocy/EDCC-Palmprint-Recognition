@@ -10,7 +10,35 @@
 #include <EDCC.h>
 using namespace EDCC;
 
-int Adapter::parse_cmd(int argc, const char **argv)
+int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
+                                 const char *configFileName,
+                                 const char *featuresOutputFileName,
+                                 bool isIncremental)
+{
+    CHECK_POINTER_NULL_RETURN(trainingSetPalmprintGroupFileName, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(featuresOutputFileName, EDCC_NULL_POINTER_ERROR);
+
+    return EDCC_SUCCESS;
+}
+
+int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
+                                    const char *secondPalmprintImagePath,
+                                    const char *configFileName,
+                                    double &score)
+{
+    return EDCC_SUCCESS;
+}
+
+int EDCC::GetTopKMatchScore(const char *onePalmprintImagePath,
+                            const char *trainingSetFeaturesOrPalmprintGroupFileName,
+                            size_t K,
+                            map<int, MatchResult> &topKResult)
+{
+    return EDCC_SUCCESS;
+}
+
+int parse_cmd(int argc, const char **argv)
 {
     /*ifstream configIn; 
     configIn.open("../config.json");

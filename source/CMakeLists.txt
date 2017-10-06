@@ -33,6 +33,11 @@ if(MSVC)
 	source_group(src FILES ${edcc_src_files}) 
 endif()
 
+if(MSVC)
+	add_compile_options("/MTd")
+elseif (UNIX)
+endif()
+
 add_library(${PROJECT_NAME} STATIC 
 						${edcc_include_files}
 						${edcc_src_files})
