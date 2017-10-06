@@ -15,7 +15,7 @@ Palmprint::Palmprint()
     this->imagePath = "";
 }
 
-Palmprint::Palmprint(const char *identity, const char *imagePath)
+Palmprint::Palmprint(_IN const char *identity, _IN const char *imagePath)
 {
     if(identity == NULL || imagePath == NULL) {
         cerr << "Identity or imagePath can't be null!" << endl;
@@ -34,7 +34,7 @@ Palmprint::~Palmprint()
 {
 }
 
-Palmprint& Palmprint::operator =(const Palmprint &src)
+Palmprint& Palmprint::operator =(_IN const Palmprint &src)
 {
     this->identity = src.identity;
     this->imagePath = src.imagePath;
@@ -42,7 +42,7 @@ Palmprint& Palmprint::operator =(const Palmprint &src)
     return *this;
 }
 
-bool Palmprint::setPalmprintInfo(const char *identity, const char *imagePath)
+bool Palmprint::setPalmprintInfo(_IN const char *identity, _IN const char *imagePath)
 {
     if(identity == NULL || imagePath == NULL) {
         cerr << "Identity or imagePath can't be null!" << endl;
@@ -63,7 +63,7 @@ cv::Mat* Palmprint::genOriImg()
     return &image;
 }
 
-cv::Mat* Palmprint::genSpecImg(const cv::Size &imgSize, bool isGray)
+cv::Mat* Palmprint::genSpecImg(_IN const cv::Size &imgSize, _IN bool isGray)
 {
     Mat *ptOriImg = genOriImg();
     if(ptOriImg == NULL) {
@@ -117,7 +117,7 @@ PalmprintCode::~PalmprintCode()
 {
 }
 
-PalmprintCode& PalmprintCode::operator =(const PalmprintCode &src)
+PalmprintCode& PalmprintCode::operator =(_IN const PalmprintCode &src)
 {
     this->C = src.C;
     this->Cs = src.Cs.clone();
@@ -125,20 +125,20 @@ PalmprintCode& PalmprintCode::operator =(const PalmprintCode &src)
     return *this;
 }
 
-bool PalmprintCode::encodePalmprint(const map< string, int > &configMap)
+bool PalmprintCode::encodePalmprint(_IN const map< string, int > &configMap)
 {
     bool bRet = false;
-    bRet = encodePalmprint(Size(configMap.at("imageSize"), configMap.at("imageSize")), 
-                    Size(configMap.at("gaborKernelSize"), configMap.at("gaborKernelSize")), 
-                    configMap.at("gaborDirections"), 
-                    Size(configMap.at("laplaceKernelSize"), configMap.at("laplaceKernelSize")));
+    bRet = encodePalmprint(Size(configMap.at("imageSize"), configMap.at("imageSize")),
+                           Size(configMap.at("gaborKernelSize"), configMap.at("gaborKernelSize")),
+                           configMap.at("gaborDirections"),
+                           Size(configMap.at("laplaceKernelSize"), configMap.at("laplaceKernelSize")));
     return bRet;
 }
 
-bool PalmprintCode::encodePalmprint(const cv::Size &imgSize, 
-                                            const cv::Size &gabKerSize, 
-                                            int numOfDirections, 
-                                            const cv::Size &lapKerSize) 
+bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
+                                    _IN const cv::Size &gabKerSize,
+                                    _IN int numOfDirections,
+                                    _IN const cv::Size &lapKerSize)
 {
     if(lapKerSize.width % 2 != 1 && lapKerSize.width != lapKerSize.height) {
         cerr << "The width and height of laplace kernel mast be odd!" << endl;
@@ -161,7 +161,9 @@ bool PalmprintCode::encodePalmprint(const cv::Size &imgSize,
     return true;
 }
 
-void PalmprintCode::enhanceImage(const cv::Mat &src, cv::Mat &dst, const cv::Size &lapKerSize)
+void PalmprintCode::enhanceImage(_IN const cv::Mat &src, 
+                                 _OUT cv::Mat &dst, 
+                                 _IN const cv::Size &lapKerSize)
 {
     Mat gaussian;
     GaussianBlur(src, gaussian, Size(5, 5), 0, 0, BORDER_DEFAULT);
@@ -169,9 +171,9 @@ void PalmprintCode::enhanceImage(const cv::Mat &src, cv::Mat &dst, const cv::Siz
     normalize(dst, dst, 0, 1, CV_MINMAX);
 }
 
-void PalmprintCode::genEDCCoding(const vector<cv::Mat> &filterResult, 
-                                        const Size &imgSize, 
-                                        int numOfDirections)
+void PalmprintCode::genEDCCoding(_IN const vector<cv::Mat> &filterResult,
+                                 _IN const Size &imgSize,
+                                 _IN int numOfDirections)
 {
     this->C = Mat(imgSize, CV_8S);
     this->Cs = Mat(imgSize, CV_8S);
@@ -196,7 +198,7 @@ void PalmprintCode::genEDCCoding(const vector<cv::Mat> &filterResult,
     }
 }
 
-double PalmprintCode::matchWith(const PalmprintCode &cmp)
+double PalmprintCode::matchWith(_IN const PalmprintCode &cmp)
 {
     Match matchHandler;
     return matchHandler.matchP2P(*this, cmp);
@@ -204,7 +206,9 @@ double PalmprintCode::matchWith(const PalmprintCode &cmp)
 
 //---------------------------------GaborFilter-----------------------------------
 
-GaborFilter::GaborFilter(const cv::Size &kernelSize, int numOfDirections, int kernelType)
+GaborFilter::GaborFilter(_IN const cv::Size &kernelSize,
+                         _IN int numOfDirections,
+                         _IN int kernelType)
 {
     assert(kernelSize.width %2 == 1 && kernelSize.height % 2 == 1);
     assert(kernelType == GaborFilter::GABOR_KERNEL_REAL 
@@ -220,7 +224,7 @@ GaborFilter::~GaborFilter()
 {
 }
 
-void GaborFilter::doGaborFilter(const cv::Mat &src, cv::Mat &dstMerge)
+void GaborFilter::doGaborFilter(_IN const cv::Mat &src, _OUT cv::Mat &dstMerge)
 {
     vector<cv::Mat> dstVec;
     Mat dst;
@@ -236,10 +240,11 @@ void GaborFilter::doGaborFilter(const cv::Mat &src, cv::Mat &dstMerge)
     merge(dstVec, dstMerge);
 }
 
-void GaborFilter::getGaborKernel(cv::Mat &gaborKernel, int kernelWidth, int kernelHeight,
-                                 int dimension, int direction,
-                                 int kernelType, double Kmax, double f,
-                                 double sigma, int ktype)
+void GaborFilter::getGaborKernel(_OUT cv::Mat &gaborKernel,
+                                 _IN int kernelWidth, _IN int kernelHeight,
+                                 _IN int dimension, _IN int direction,
+                                 _IN int kernelType, _IN double Kmax, _IN double f,
+                                 _IN double sigma, _IN int ktype)
 {
     assert(ktype == CV_32F || ktype == CV_64F);  
     int halfWidth = kernelWidth / 2;

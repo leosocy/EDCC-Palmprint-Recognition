@@ -22,7 +22,7 @@ EDCC::IO::IO()
     paramsSet.insert("gaborDirections");
 }
 
-int EDCC::IO::loadConfig(ifstream &in)
+int EDCC::IO::loadConfig(_IN ifstream &in)
 {
     Json::Value root;
     Json::Reader reader;
@@ -48,13 +48,10 @@ int EDCC::IO::loadConfig(ifstream &in)
         }
     }
 
-    for(map<string, int>::iterator it = configMap.begin(); it != configMap.end(); ++it) {
-        cout << (*it).first << ":" << (*it).second << endl;
-    }
     return LOAD_CONFIG_SUCCESS;
 }
 
-int EDCC::IO::loadPalmprintGroup(ifstream &in, vector<PalmprintCode> &groupVec)
+int EDCC::IO::loadPalmprintGroup(_IN ifstream &in, _OUT vector<PalmprintCode> &groupVec)
 {
     Json::Value root;
     Json::Reader reader;
@@ -79,10 +76,11 @@ int EDCC::IO::loadPalmprintGroup(ifstream &in, vector<PalmprintCode> &groupVec)
             groupVec.push_back(newOne);
         }
     }
+
     return LOAD_PALMPRINT_GROUP_SUCCESS;
 }
 
-int EDCC::IO::loadPalmprintFeatureData(ifstream &in, vector<PalmprintCode> &data)
+int EDCC::IO::loadPalmprintFeatureData(_IN ifstream &in, _OUT vector<PalmprintCode> &data)
 {
     Json::Value root;
     Json::Reader reader;
@@ -109,7 +107,7 @@ int EDCC::IO::loadPalmprintFeatureData(ifstream &in, vector<PalmprintCode> &data
     return LOAD_PALMPRINT_FEATURE_DATA_SUCCESS;
 }
 
-int EDCC::IO::savePalmprintFeatureData(ofstream &out, vector<PalmprintCode> &data)
+int EDCC::IO::savePalmprintFeatureData(_IN ofstream &out, _IN vector<PalmprintCode> &data)
 {
     assert(out.is_open());
     Json::Value root;
@@ -130,9 +128,9 @@ int EDCC::IO::savePalmprintFeatureData(ofstream &out, vector<PalmprintCode> &dat
     return SAVE_PALMPRINT_FEATURE_DATA_SUCCESS;
 }
 
-void EDCC::IO::loadOneIdentityAllPalmprintFeatureData(const string &identity,
-                                                const Json::Value &value,
-                                                vector<PalmprintCode> &data)
+void EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity,
+                                                      _IN const Json::Value &value,
+                                                      _OUT vector<PalmprintCode> &data)
 {
     Json::Value::Members imagePathMembers;
     imagePathMembers = value.getMemberNames();
@@ -144,7 +142,7 @@ void EDCC::IO::loadOneIdentityAllPalmprintFeatureData(const string &identity,
     }
 }
 
-void EDCC::IO::genEDCCoding(const Json::Value &value, PalmprintCode &coding)
+void EDCC::IO::genEDCCoding(_IN const Json::Value &value, _OUT PalmprintCode &coding)
 {
     assert(!value.isNull());
     Mat C(configMap.at("imageSize"), configMap.at("imageSize"), CV_8S);
@@ -157,7 +155,7 @@ void EDCC::IO::genEDCCoding(const Json::Value &value, PalmprintCode &coding)
     coding.zipCodingCs = EDCC::toUpper(coding.zipCodingCs.c_str());
 }
 
-bool EDCC::IO::insert2JsonValue(PalmprintCode &code, Json::Value &value)
+bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _OUT Json::Value &value)
 {
     string identity = code.identity;
     string imagePath = code.imagePath;
@@ -173,7 +171,7 @@ bool EDCC::IO::insert2JsonValue(PalmprintCode &code, Json::Value &value)
     return true;
 }
 
-void EDCC::IO::setEDCCoding(PalmprintCode &coding, Json::Value &value)
+void EDCC::IO::setEDCCoding(_IN PalmprintCode &coding, _OUT Json::Value &value)
 {
     Json::Value cValue, csValue;
     value["C"] = coding.zipCodingC;

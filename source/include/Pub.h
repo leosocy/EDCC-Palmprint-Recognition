@@ -10,11 +10,15 @@
 #include <string>
 using namespace std;
 
+#define _IN
+#define _OUT
+
 namespace EDCC {
-    static const char hexArray[16] = {'0', '1', '2', '3',
-        '4', '5', '6', '7',
-        '8', '9', 'A', 'B',
-        'C', 'D', 'E', 'F'};
+    static const char hexArray[16] =
+    {'0', '1', '2', '3',
+    '4', '5', '6', '7',
+    '8', '9', 'A', 'B',
+    'C', 'D', 'E', 'F'};
 
     #define CHECK_POINTER_NULL_RETURN(pointer, ret) do { \
         if((pointer) == NULL) { \
@@ -28,8 +32,8 @@ namespace EDCC {
         } \
     } while(0)
 
-    string toUpper(const char *src);
-    string toLower(const char *src);
+    string toUpper(_IN const char *src);
+    string toLower(_IN const char *src);
 
 }
 

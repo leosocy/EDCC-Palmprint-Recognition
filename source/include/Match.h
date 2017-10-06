@@ -7,14 +7,15 @@
 #ifndef __MATCH_H__
 #define __MATCH_H__
 #include <opencv2/opencv.hpp>
+#include <Pub.h>
 using namespace std;
-using namespace cv;
 
 namespace EDCC {
     class PalmprintCode;
     class Match {
         public:
-            double matchP2P(const PalmprintCode &instance1, const PalmprintCode &instance2);
+            double matchP2P(_IN const PalmprintCode &instance1, 
+                            _IN const PalmprintCode &instance2);
     };
 }
 

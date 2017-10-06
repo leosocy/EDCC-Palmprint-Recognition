@@ -7,7 +7,7 @@
 #include <Pub.h>
 using namespace EDCC;
 
-string EDCC::toUpper(const char *src)
+string EDCC::toUpper(_IN const char *src)
 {
     string str;
     CHECK_POINTER_NULL_RETURN(src, str);
@@ -20,7 +20,7 @@ string EDCC::toUpper(const char *src)
     return str;
 }
 
-string EDCC::toLower(const char *src)
+string EDCC::toLower(_IN const char *src)
 {
     string str;
     CHECK_POINTER_NULL_RETURN(src, str);

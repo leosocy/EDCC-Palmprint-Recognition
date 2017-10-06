@@ -23,11 +23,11 @@ namespace EDCC
 {
     class Check {
         public:
-            bool checkConfigValid(const map<string, int> &configMap);
-            bool checkPalmprintGroupValid(const vector<PalmprintCode> &data);
-            bool checkPalmprintFeatureData(const vector<PalmprintCode> &data);
+            bool checkConfigValid(_IN const map<string, int> &configMap);
+            bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data);
+            bool checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data);
         private:
-            bool checkCodingC(const string &zipCodingC);
+            bool checkCodingC(_IN const string &zipCodingC);
 
             int imageSize;
             int gaborKernelSize;

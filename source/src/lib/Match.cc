@@ -8,7 +8,8 @@
 #include <Core.h>
 using namespace EDCC;
 
-double Match::matchP2P(const PalmprintCode &instance1, const PalmprintCode &instance2)
+double Match::matchP2P(_IN const PalmprintCode &instance1, 
+                       _IN const PalmprintCode &instance2)
 {
     double score = 0.0;   
     string Cx = instance1.zipCodingC;

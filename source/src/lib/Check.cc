@@ -8,7 +8,7 @@
 #include <Check.h>
 using namespace EDCC;
 
-bool Check::checkConfigValid(const map<string, int> &configMap)
+bool Check::checkConfigValid(_IN const map<string, int> &configMap)
 {
     if(configMap.find("imageSize") == configMap.end() 
         || configMap.find("laplaceKernelSize") == configMap.end()
@@ -49,7 +49,7 @@ bool Check::checkConfigValid(const map<string, int> &configMap)
     return true;
 }
 
-bool Check::checkPalmprintGroupValid(const vector<PalmprintCode> &data)
+bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data)
 {
     
     vector<PalmprintCode>::const_iterator dataIte;
@@ -66,7 +66,7 @@ bool Check::checkPalmprintGroupValid(const vector<PalmprintCode> &data)
     return true;
 }
 
-bool Check::checkPalmprintFeatureData(const vector<PalmprintCode> &data)
+bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data)
 {
     vector<PalmprintCode>::const_iterator dataIte;
     for(dataIte = data.begin(); dataIte != data.end(); ++dataIte) {
@@ -85,7 +85,7 @@ bool Check::checkPalmprintFeatureData(const vector<PalmprintCode> &data)
     return true;
 }
 
-bool Check::checkCodingC(const string &zipCodingC)
+bool Check::checkCodingC(_IN const string &zipCodingC)
 {
     for(size_t i = 0; 
         i < zipCodingC.length()
