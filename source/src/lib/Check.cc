@@ -14,7 +14,7 @@ bool Check::checkConfigValid(_IN const map<string, int> &configMap)
         || configMap.find("laplaceKernelSize") == configMap.end()
         || configMap.find("gaborKernelSize") == configMap.end()
         || configMap.find("gaborDirections") == configMap.end()) {
-        cerr << "Config error!" << endl;
+        cerr << "Load config fail, config params miss!" << endl;
         return false;
     }
     
@@ -41,7 +41,7 @@ bool Check::checkConfigValid(_IN const map<string, int> &configMap)
     }
     if(gaborDirections > CONFIG_VALID_GABOR_DIRECTIONS_MAX
         || gaborDirections < CONFIG_VALID_GABOR_DIRECTIONS_MIN) {
-        cerr << "Gabor Directions must in range [" << "CONFIG_VALID_GABOR_DIRECTIONS_MIN"
+        cerr << "Gabor Directions must in range [" << CONFIG_VALID_GABOR_DIRECTIONS_MIN
             << ", " << CONFIG_VALID_GABOR_DIRECTIONS_MAX << "]!" << endl;
         return false;
     }
@@ -79,7 +79,6 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data)
             cerr << "EDCCoding Cs format error!" << endl;
             return false;
         }
-        
     }
     
     return true;

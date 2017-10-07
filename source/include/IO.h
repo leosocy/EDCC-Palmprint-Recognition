@@ -15,11 +15,9 @@
 #include <string>
 #include <json.h>
 #include <Core.h>
+#include <EDCC.h>
 using namespace std;
 using namespace cv;
-
-#define LOAD_CONFIG_FAILURE 1
-#define LOAD_CONFIG_SUCCESS 0
 
 #define LOAD_PALMPRINT_GROUP_FAILURE 1
 #define LOAD_PALMPRINT_GROUP_SUCCESS 0
@@ -51,7 +49,7 @@ namespace EDCC
         void loadOneIdentityAllPalmprintFeatureData(_IN const string &identity,
                                                     _IN const Json::Value &value,
                                                     _OUT vector<PalmprintCode> &data);
-        void genEDCCoding(_IN const Json::Value &value, _OUT PalmprintCode &coding);
+        bool genEDCCoding(_IN const Json::Value &value, _OUT PalmprintCode &coding);
         bool insert2JsonValue(_IN PalmprintCode &code, _OUT Json::Value &value);
         void setEDCCoding(_IN PalmprintCode &coding, _OUT Json::Value &value);
     };

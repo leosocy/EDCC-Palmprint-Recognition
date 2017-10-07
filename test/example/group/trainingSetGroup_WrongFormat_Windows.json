@@ -1,0 +1,18 @@
+{
+	"1" : {
+		"a" : "..\\test\\example\\database\\001\\1_01_s.bmp",
+		"b" : "..\\test\\example\\database\\001\\1_02_s.bmp",
+		"c" : "..\\test\\example\\database\\001\\1_03_s.bmp",
+		"d" : "..\\test\\example\\database\\001\\1_04_s.bmp",
+		"e" : "..\\test\\example\\database\\001\\1_05_s.bmp",
+		"f" : "..\\test\\example\\database\\001\\1_06_s.bmp"
+	},
+	"2" : {
+		"a" : "..\\test\\example\\database\\002\\1_01_s.bmp",
+		"b" : "..\\test\\example\\database\\002\\1_02_s.bmp",
+		"c" : "..\\test\\example\\database\\002\\1_03_s.bmp",
+		"d" : "..\\test\\example\\database\\002\\1_04_s.bmp",
+		"e" : "..\\test\\example\\database\\002\\1_05_s.bmp",
+		"f" : "..\\test\\example\\database\\002\\1_06_s.bmp"
+	}
+}
