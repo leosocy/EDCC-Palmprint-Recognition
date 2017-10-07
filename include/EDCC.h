@@ -20,7 +20,6 @@ namespace EDCC {
     #define EDCC_SAVE_CONFIG_FAIL 101
 
     #define EDCC_LOAD_TAINING_SET_FAIL 200
-    #define EDCC_SAVE_TAINING_SET_FAIL 201
 
     #define EDCC_LOAD_FEATURES_FAIL 300
     #define EDCC_SAVE_FEATURES_FAIL 301
@@ -44,6 +43,7 @@ namespace EDCC {
 
     int GetTopKMatchScore(const char *onePalmprintImagePath,
                           const char *trainingSetFeaturesOrPalmprintGroupFileName,
+                          const char *configFileName,
                           size_t K,
                           map<int, MatchResult> &topKResult);
 }
