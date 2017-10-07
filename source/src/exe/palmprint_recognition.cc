@@ -19,6 +19,58 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
     CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(featuresOutputFileName, EDCC_NULL_POINTER_ERROR);
 
+    IO trainIO;
+    vector<PalmprintCode> dataAll;
+    vector<PalmprintCode> dataIncremental;
+    Check checkHanler;
+    bool bCheckValid = true;
+    int retCode = 0;
+
+    if(!isIncremental) {
+        ifstream configIn;
+        configIn.open(configFileName);
+        retCode = trainIO.loadConfig(configIn);
+        if(retCode != EDCC_SUCCESS) {
+            return EDCC_LOAD_CONFIG_FAIL;
+        }
+    } else {
+        ifstream featuresIn;
+        featuresIn.open(featuresOutputFileName);
+        retCode = trainIO.loadPalmprintFeatureData(featuresIn, dataIncremental);
+        if(retCode != EDCC_SUCCESS) {
+            return EDCC_LOAD_FEATURES_FAIL;
+        }
+    }
+    if(!checkHanler.checkConfigValid(trainIO.configMap)) {
+        return EDCC_LOAD_CONFIG_FAIL;
+    }
+
+    ifstream trainingSetIn;
+    trainingSetIn.open(trainingSetPalmprintGroupFileName);
+    retCode = trainIO.loadPalmprintGroup(trainingSetIn, dataAll);
+    if(retCode != EDCC_SUCCESS || !checkHanler.checkPalmprintGroupValid(dataAll)) {
+        return EDCC_LOAD_TAINING_SET_FAIL;
+    }
+
+    for(size_t index = 0; index < dataAll.size(); ++index) {
+        dataAll[index].encodePalmprint(trainIO.configMap);
+    }
+    if(isIncremental) {
+        for(size_t i = 0; i < dataIncremental.size(); ++i) {
+            dataAll.push_back(dataIncremental[i]);
+        }
+    }
+    if(!checkHanler.checkPalmprintFeatureData(dataAll)) {
+        return EDCC_LOAD_FEATURES_FAIL;
+    }
+
+    ofstream featuresOut;
+    featuresOut.open(featuresOutputFileName);
+    retCode = trainIO.savePalmprintFeatureData(featuresOut, dataAll);
+    if(retCode != EDCC_SUCCESS) {
+        return EDCC_SAVE_FEATURES_FAIL;
+    }
+
     return EDCC_SUCCESS;
 }
 
@@ -40,22 +92,6 @@ int EDCC::GetTopKMatchScore(const char *onePalmprintImagePath,
 
 int parse_cmd(int argc, const char **argv)
 {
-    /*ifstream configIn; 
-    configIn.open("../config.json");
-    IO trainIO;
-    trainIO.loadConfig(configIn);
-
-    ifstream groupIn;
-    groupIn.open("../palmprintTrainGroup.json");
-    vector<PalmprintCode> data;
-    trainIO.loadPalmprintGroup(groupIn, data);
-    for(size_t index = 0; index < data.size(); ++index) {
-        data[index].encodePalmprint(trainIO.configMap);
-    }
-    ofstream dataOut;
-    dataOut.open("../trainData.json");
-    trainIO.savePalmprintFeatureData(dataOut, data);*/
-
     IO trainIO;
     vector<PalmprintCode> data;
     ifstream dataOut;
