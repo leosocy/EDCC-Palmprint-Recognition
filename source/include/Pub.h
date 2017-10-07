@@ -62,8 +62,6 @@ namespace EDCC {
     } while(0)
 
     string toUpper(_IN const char *src);
-    string toLower(_IN const char *src);
-
 }
 
 #endif // !__PUB_H__

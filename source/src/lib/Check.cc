@@ -92,7 +92,6 @@ bool Check::checkCodingC(_IN const string &zipCodingC)
         && gaborDirections < CONFIG_VALID_GABOR_DIRECTIONS_MAX;
         ++i) {
         if(zipCodingC[i] >= hexArray[gaborDirections]) {
-            cout << zipCodingC << endl;
             return false;
         }
     }
