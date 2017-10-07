@@ -22,6 +22,8 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
     IO trainIO;
     vector<PalmprintCode> dataAll;
     vector<PalmprintCode> dataIncremental;
+    vector<PalmprintCode>::iterator pcIt;
+    vector<PalmprintCode>::iterator pcItTmp;
     Check checkHanler;
     bool bCheckValid = true;
     int retCode = 0;
@@ -52,8 +54,15 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
         return EDCC_LOAD_TAINING_SET_FAIL;
     }
 
-    for(size_t index = 0; index < dataAll.size(); ++index) {
-        dataAll[index].encodePalmprint(trainIO.configMap);
+    for(pcIt = dataAll.begin(); pcIt != dataAll.end();) {
+        bool bRet;
+        bRet = pcIt->encodePalmprint(trainIO.configMap);
+        if(!bRet) {
+            pcItTmp = pcIt;
+            pcIt = dataAll.erase(pcItTmp);
+            continue;
+        }
+        ++pcIt;
     }
     if(isIncremental) {
         for(size_t i = 0; i < dataIncremental.size(); ++i) {
@@ -84,6 +93,7 @@ int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
 
 int EDCC::GetTopKMatchScore(const char *onePalmprintImagePath,
                             const char *trainingSetFeaturesOrPalmprintGroupFileName,
+                            const char *configFileName,
                             size_t K,
                             map<int, MatchResult> &topKResult)
 {

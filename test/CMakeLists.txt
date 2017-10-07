@@ -4,6 +4,7 @@ set(PROJECT_NAME ft_edcc)
 project(${PROJECT_NAME})
 
 set(GTEST_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/gtest)
+set(JSONCPP_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/jsoncpp)
 set(EDCC_ROOT ${CMAKE_SOURCE_DIR}/../source)
 set(EDCC_PUB_HEADER ${CMAKE_SOURCE_DIR}/../include)
 
@@ -17,6 +18,7 @@ add_subdirectory(${GTEST_ROOT} ${CMAKE_BINARY_DIR}/gtest)
 
 include_directories(${EDCC_PUB_HEADER})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${JSONCPP_ROOT}/include)
 include_directories(${GTEST_ROOT}/include)
 
 file(GLOB_RECURSE test_include_files 
