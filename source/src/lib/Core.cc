@@ -66,9 +66,7 @@ cv::Mat* Palmprint::genOriImg()
 cv::Mat* Palmprint::genSpecImg(_IN const cv::Size &imgSize, _IN bool isGray)
 {
     Mat *ptOriImg = genOriImg();
-    if(ptOriImg == NULL) {
-        return NULL;
-    }
+    CHECK_POINTER_NULL_RETURN(ptOriImg, NULL);
     resize(*ptOriImg, *ptOriImg, imgSize);
     if(isGray) {
         cvtColor(*ptOriImg, *ptOriImg, CV_BGR2GRAY);

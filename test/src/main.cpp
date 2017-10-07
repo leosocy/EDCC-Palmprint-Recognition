@@ -9,6 +9,6 @@
 int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);
-    testing::GTEST_FLAG(filter) = "*Given_Correct_Group_And_Config_And_Output_When_Train_With_Incremental_Then_EDCC_SUCCESS_And_Config_Count_Correct";
+    testing::GTEST_FLAG(filter) = "*";
     return RUN_ALL_TESTS();
 }

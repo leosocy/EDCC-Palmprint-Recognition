@@ -37,6 +37,30 @@ namespace EDCC {
         } \
     } while(0)
 
+    #define CHECK_NE_RETURN_VOID(param1, param2) do { \
+        if((param1) != (param2)) { \
+            return ; \
+        } \
+    } while(0)
+
+    #define CHECK_NE_RETURN(param1, param2, ret) do { \
+        if((param1) != (param2)) { \
+            return (ret); \
+        } \
+    } while(0)
+
+    #define CHECK_EQ_RETURN_VOID(param1, param2) do { \
+        if((param1) == (param2)) { \
+            return ; \
+        } \
+    } while(0)
+
+    #define CHECK_EQ_RETURN(param1, param2, ret) do { \
+        if((param1) == (param2)) { \
+            return (ret); \
+        } \
+    } while(0)
+
     string toUpper(_IN const char *src);
     string toLower(_IN const char *src);
 

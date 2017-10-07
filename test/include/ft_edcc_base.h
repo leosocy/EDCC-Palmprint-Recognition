@@ -18,6 +18,7 @@ using namespace std;
 
 #define CORRECT_GROUP_PATH "..\\test\\example\\group\\trainingSetGroup_Windows.json"
 #define INCREMENTAL_GROUP_PATH "..\\test\\example\\group\\trainingSetGroupIncremental_Windows.json"
+#define COVER_GROUP_PATH  "..\\test\\example\\group\\trainingSetGroupCover_Windows.json"
 #define NOT_EXISTS_GROUP_PATH "..\\test\\example\\group\\trainingSetGroupNOT_Windows.json"
 #define WRONG_FORMAT_GROUP_PATH "..\\test\\example\\group\\trainingSetGroup_WrongFormat_Windows.json"
 #define CONFLICT_IMAGE_GROUP_PATH "..\\test\\example\\group\\trainingSetGroup_ConflictImage_Windows.json"
@@ -38,6 +39,8 @@ using namespace std;
 #define PARAMS_NO_DEFAULT_CONFIG_PATH "../test/example/config/config_params_no_default.json"
 
 #define CORRECT_GROUP_PATH "../test/example/group/trainingSetGroup_Linux.json"
+#define INCREMENTAL_GROUP_PATH  "../test/example/group/trainingSetGroupIncremental_Linux.json"
+#define COVER_GROUP_PATH  "../test/example/group/trainingSetGroupCover_Linux.json"
 #define NOT_EXISTS_GROUP_PATH "../test/example/group/trainingSetGroupNOT_Linux.json"
 #define WRONG_FORMAT_GROUP_PATH "../test/example/group/trainingSetGroup_WrongFormat_Linux.json"
 #define CONFLICT_IMAGE_GROUP_PATH "../test/example/group/trainingSetGroup_ConflictImage_Linux.json"

@@ -10,6 +10,13 @@
 #include <EDCC.h>
 using namespace EDCC;
 
+size_t EncodeAllPalmprint(vector<PalmprintCode> &allPalmprint,
+                          const map< string, int > &configMap);
+
+size_t BuildUpAllFeaturesWhenIncremental(const vector<PalmprintCode> &originFeatures,
+                                         const vector<PalmprintCode> &incrementalFeatures,
+                                         vector<PalmprintCode> &allFeatures);
+
 int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
                                  const char *configFileName,
                                  const char *featuresOutputFileName,
@@ -20,10 +27,9 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
     CHECK_POINTER_NULL_RETURN(featuresOutputFileName, EDCC_NULL_POINTER_ERROR);
 
     IO trainIO;
-    vector<PalmprintCode> dataAll;
-    vector<PalmprintCode> dataIncremental;
-    vector<PalmprintCode>::iterator pcIt;
-    vector<PalmprintCode>::iterator pcItTmp;
+    vector<PalmprintCode> featuresAll;
+    vector<PalmprintCode> featuresOrigin;
+    vector<PalmprintCode>::iterator pcIt, pcItTmp;
     Check checkHanler;
     bool bCheckValid = true;
     int retCode = 0;
@@ -32,16 +38,12 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
         ifstream configIn;
         configIn.open(configFileName);
         retCode = trainIO.loadConfig(configIn);
-        if(retCode != EDCC_SUCCESS) {
-            return EDCC_LOAD_CONFIG_FAIL;
-        }
+        CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_CONFIG_FAIL);
     } else {
         ifstream featuresIn;
         featuresIn.open(featuresOutputFileName);
-        retCode = trainIO.loadPalmprintFeatureData(featuresIn, dataIncremental);
-        if(retCode != EDCC_SUCCESS) {
-            return EDCC_LOAD_FEATURES_FAIL;
-        }
+        retCode = trainIO.loadPalmprintFeatureData(featuresIn, featuresOrigin);
+        CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_FEATURES_FAIL);
     }
     if(!checkHanler.checkConfigValid(trainIO.configMap)) {
         return EDCC_LOAD_CONFIG_FAIL;
@@ -49,38 +51,69 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
 
     ifstream trainingSetIn;
     trainingSetIn.open(trainingSetPalmprintGroupFileName);
-    retCode = trainIO.loadPalmprintGroup(trainingSetIn, dataAll);
-    if(retCode != EDCC_SUCCESS || !checkHanler.checkPalmprintGroupValid(dataAll)) {
+    retCode = trainIO.loadPalmprintGroup(trainingSetIn, featuresAll);
+    if(retCode != EDCC_SUCCESS || !checkHanler.checkPalmprintGroupValid(featuresAll)) {
         return EDCC_LOAD_TAINING_SET_FAIL;
     }
+    EncodeAllPalmprint(featuresAll, trainIO.configMap);
+    if(isIncremental) {
+        BuildUpAllFeaturesWhenIncremental(featuresOrigin, featuresAll, featuresAll);
+    }
+    if(!checkHanler.checkPalmprintFeatureData(featuresAll)) {
+        return EDCC_LOAD_FEATURES_FAIL;
+    }
 
-    for(pcIt = dataAll.begin(); pcIt != dataAll.end();) {
+    ofstream featuresOutStream;
+    featuresOutStream.open(featuresOutputFileName);
+    retCode = trainIO.savePalmprintFeatureData(featuresOutStream, featuresAll);
+    CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_SAVE_FEATURES_FAIL);
+
+    return EDCC_SUCCESS;
+}
+
+size_t EncodeAllPalmprint(vector<PalmprintCode> &allPalmprint,
+                          const map< string, int > &configMap)
+{
+    vector<PalmprintCode>::iterator pcIt, pcItTmp;
+    for(pcIt = allPalmprint.begin(); pcIt != allPalmprint.end();) {
         bool bRet;
-        bRet = pcIt->encodePalmprint(trainIO.configMap);
+        bRet = pcIt->encodePalmprint(configMap);
         if(!bRet) {
             pcItTmp = pcIt;
-            pcIt = dataAll.erase(pcItTmp);
+            pcIt = allPalmprint.erase(pcItTmp);
             continue;
         }
         ++pcIt;
     }
-    if(isIncremental) {
-        for(size_t i = 0; i < dataIncremental.size(); ++i) {
-            dataAll.push_back(dataIncremental[i]);
+
+    return allPalmprint.size();
+}
+
+size_t BuildUpAllFeaturesWhenIncremental(const vector<PalmprintCode> &originFeatures,
+                                         const vector<PalmprintCode> &incrementalFeatures,
+                                         vector<PalmprintCode> &allFeatures)
+{
+    vector<PalmprintCode>::const_iterator pcIt, pcItTmp;
+    allFeatures = incrementalFeatures;
+
+    for(pcIt = originFeatures.begin(); pcIt != originFeatures.end(); ++pcIt) {
+        bool isExists = false;
+        for(pcItTmp = incrementalFeatures.begin();
+            pcItTmp != incrementalFeatures.end();
+            ++pcItTmp) {
+            if(pcIt->imagePath == pcItTmp->imagePath
+               && pcIt->identity == pcIt->identity) {
+                cout << "--Cover\t" << pcIt->identity << " : " << pcIt->imagePath << endl;
+                isExists = true;
+                break;
+            }
+        }
+        if(!isExists) {
+            allFeatures.push_back(*pcIt);
         }
     }
-    if(!checkHanler.checkPalmprintFeatureData(dataAll)) {
-        return EDCC_LOAD_FEATURES_FAIL;
-    }
 
-    ofstream featuresOut;
-    featuresOut.open(featuresOutputFileName);
-    retCode = trainIO.savePalmprintFeatureData(featuresOut, dataAll);
-    if(retCode != EDCC_SUCCESS) {
-        return EDCC_SAVE_FEATURES_FAIL;
-    }
-
-    return EDCC_SUCCESS;
+    return allFeatures.size();
 }
 
 int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
