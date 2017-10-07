@@ -28,6 +28,11 @@ using namespace std;
 #define FEATURES_INCREMENTAL_OUTPUT_PATH "..\\test\\example\\features\\features_incremental.json"
 #define FEATURES_OUTPUT_PATH_CANT_CREATE "..\\test\\example\\features\\folder\\features.json"
 
+#define ID1_FIRST_PALMPRINT "..\\test\\example\\database\\001\\1_01_s.bmp"
+#define ID1_SECOND_PALMPRINT "..\\test\\example\\database\\001\\1_02_s.bmp"
+#define ID2_FIRST_PALMPRINT "..\\test\\example\\database\\002\\1_01_s.bmp"
+#define ID2_SECOND_PALMPRINT "..\\test\\example\\database\\002\\1_02_s.bmp"
+
 #else
 
 #define CORRECT_CONFIG_PATH "../test/example/config/config_correct.json"

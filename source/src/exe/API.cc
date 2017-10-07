@@ -29,7 +29,6 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
     IO trainIO;
     vector<PalmprintCode> featuresAll;
     vector<PalmprintCode> featuresOrigin;
-    vector<PalmprintCode>::iterator pcIt, pcItTmp;
     Check checkHanler;
     bool bCheckValid = true;
     int retCode = 0;
@@ -121,6 +120,10 @@ int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
                                     const char *configFileName,
                                     double &score)
 {
+    CHECK_POINTER_NULL_RETURN(firstPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(secondPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
+
     return EDCC_SUCCESS;
 }
 

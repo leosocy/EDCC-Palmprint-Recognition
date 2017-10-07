@@ -19,16 +19,3 @@ string EDCC::toUpper(_IN const char *src)
 
     return str;
 }
-
-string EDCC::toLower(_IN const char *src)
-{
-    string str;
-    CHECK_POINTER_NULL_RETURN(src, str);
-
-    str = src;
-    for(size_t i = 0; i < str.length(); ++i) {
-        str[i] = tolower(str[i]);
-    }
-
-    return str;
-}
