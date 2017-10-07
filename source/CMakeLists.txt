@@ -16,7 +16,7 @@ find_package(OpenCV REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
 include_directories(${EDCC_PUB_HEADER})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/jsoncpp/include)
+include_directories(${JSONCPP_ROOT}/include)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 file(GLOB_RECURSE edcc_include_files 

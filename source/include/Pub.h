@@ -20,6 +20,11 @@ namespace EDCC {
     '8', '9', 'A', 'B',
     'C', 'D', 'E', 'F'};
 
+    #define IMAGE_SIZE "imageSize"
+    #define GABOR_KERNEL_SIZE "gaborKernelSize"
+    #define GABOR_DIRECTIONS "gaborDirections"
+    #define LAPLACE_KERNEL_SIZE "laplaceKernelSize"
+
     #define CHECK_POINTER_NULL_RETURN(pointer, ret) do { \
         if((pointer) == NULL) { \
             return (ret); \

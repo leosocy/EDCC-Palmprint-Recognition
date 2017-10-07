@@ -1,6 +1,6 @@
 {
 	"imageSize" : {
-		"default" : 29,
+		"default" : 49,
 		"desc" : {
 			"en-US" : "Input palmprint image size.",
 			"zh-CN" : "输入掌纹图像的尺寸"
@@ -11,7 +11,7 @@
 		}
 	},
 	"laplaceKernelSize" : {
-		"default" : 27,
+		"default" : 31,
 		"desc" : {
 			"en-US" : "The size of laplace kernel which is used to enhance the palmprint image.",
 			"zh-CN" : "对图像进行增强处理使用的拉普拉斯核大小"
@@ -22,7 +22,7 @@
 		}
 	},
 	"gaborKernelSize" : {
-		"default" : 9,
+		"default" : 15,
 		"desc" : {
 			"en-US" : "The size of 2DGabor kernel which is used to code the palmprint image.",
 			"zh-CN" : "对图像进行2DGabor小波变换使用的核大小"
@@ -33,7 +33,7 @@
 		}
 	},
 	"gaborDirections" : {
-		"default" : 12,
+		"default" : 9,
 		"desc" : {
 			"en-US" : "The number of gabor directions",
 			"zh-CN" : "对图像进行2DGabor小波变换使用方向个数"

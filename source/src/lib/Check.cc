@@ -10,37 +10,38 @@ using namespace EDCC;
 
 bool Check::checkConfigValid(_IN const map<string, int> &configMap)
 {
-    if(configMap.find("imageSize") == configMap.end() 
-        || configMap.find("laplaceKernelSize") == configMap.end()
-        || configMap.find("gaborKernelSize") == configMap.end()
-        || configMap.find("gaborDirections") == configMap.end()) {
+    if(configMap.find(IMAGE_SIZE) == configMap.end()
+       || configMap.find(GABOR_KERNEL_SIZE) == configMap.end()
+       || configMap.find(GABOR_DIRECTIONS) == configMap.end()
+       || configMap.find(LAPLACE_KERNEL_SIZE) == configMap.end()) {
         cerr << "Load config fail, config params miss!" << endl;
         return false;
     }
-    
-    imageSize = configMap.at("imageSize");
-    gaborKernelSize = configMap.at("gaborKernelSize");
-    gaborDirections = configMap.at("gaborDirections");
-    laplaceKernelSize = configMap.at("laplaceKernelSize");
+
+    imageSize = configMap.at(IMAGE_SIZE);
+    gaborKernelSize = configMap.at(GABOR_KERNEL_SIZE);
+    gaborDirections = configMap.at(GABOR_DIRECTIONS);
+    laplaceKernelSize = configMap.at(LAPLACE_KERNEL_SIZE);
 
     if(imageSize < CONFIG_IMAGE_SIZE_MIN) {
         cerr << "ImageSize can't smaller than " << CONFIG_IMAGE_SIZE_MIN << endl;
         return false;
     }
-    if(gaborKernelSize > imageSize 
-        || gaborKernelSize % 2 == 0) {
+    if(gaborKernelSize > imageSize
+       || gaborKernelSize % 2 == 0) {
         cerr << "Gabor Kernel Size must be smaller than imageSize."
             << "And must be odd!" << endl;
         return false;
     }
-    if(laplaceKernelSize > imageSize 
-        || laplaceKernelSize % 2 == 0) {
+    if(laplaceKernelSize > imageSize
+       || laplaceKernelSize % 2 == 0
+       || laplaceKernelSize > CONFIG_VALID_LAPLACE_KERNEL_SIZE_MAX) {
         cerr << "Laplace Kernel Size must be smaller than imageSize."
-            << "And must be odd!" << endl;
+            << "And must be odd and samller than 31!" << endl;
         return false;
     }
     if(gaborDirections > CONFIG_VALID_GABOR_DIRECTIONS_MAX
-        || gaborDirections < CONFIG_VALID_GABOR_DIRECTIONS_MIN) {
+       || gaborDirections < CONFIG_VALID_GABOR_DIRECTIONS_MIN) {
         cerr << "Gabor Directions must in range [" << CONFIG_VALID_GABOR_DIRECTIONS_MIN
             << ", " << CONFIG_VALID_GABOR_DIRECTIONS_MAX << "]!" << endl;
         return false;

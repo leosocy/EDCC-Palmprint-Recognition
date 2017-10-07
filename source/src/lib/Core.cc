@@ -128,10 +128,10 @@ PalmprintCode& PalmprintCode::operator =(_IN const PalmprintCode &src)
 bool PalmprintCode::encodePalmprint(_IN const map< string, int > &configMap)
 {
     bool bRet = false;
-    bRet = encodePalmprint(Size(configMap.at("imageSize"), configMap.at("imageSize")),
-                           Size(configMap.at("gaborKernelSize"), configMap.at("gaborKernelSize")),
-                           configMap.at("gaborDirections"),
-                           Size(configMap.at("laplaceKernelSize"), configMap.at("laplaceKernelSize")));
+    bRet = encodePalmprint(Size(configMap.at(IMAGE_SIZE), configMap.at(IMAGE_SIZE)),
+                           Size(configMap.at(GABOR_KERNEL_SIZE), configMap.at(GABOR_KERNEL_SIZE)),
+                           configMap.at(GABOR_DIRECTIONS),
+                           Size(configMap.at(LAPLACE_KERNEL_SIZE), configMap.at(LAPLACE_KERNEL_SIZE)));
     return bRet;
 }
 
@@ -140,10 +140,6 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
                                     _IN int numOfDirections,
                                     _IN const cv::Size &lapKerSize)
 {
-    if(lapKerSize.width % 2 != 1 && lapKerSize.width != lapKerSize.height) {
-        cerr << "The width and height of laplace kernel mast be odd!" << endl;
-        return false;
-    }
     GaborFilter filter(gabKerSize, numOfDirections, GaborFilter::GABOR_KERNEL_REAL);
     Mat *imgRet = genSpecImg(imgSize);
     if(imgRet == NULL) {

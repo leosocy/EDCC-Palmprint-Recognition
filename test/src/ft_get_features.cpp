@@ -30,6 +30,9 @@ TEST_F(ft_get_features, Given_Correct_Group_And_Config_And_Output_When_Train_Wit
                                            CORRECT_CONFIG_PATH,
                                            FEATURES_OUTPUT_PATH);
     EXPECT_EQ(ret, EDCC_SUCCESS);
+    CheckFeaturesConfigEqualConfigFile(FEATURES_OUTPUT_PATH, CORRECT_CONFIG_PATH);
+    CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "1", 6);
+    CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "2", 6);
 }
 
 TEST_F(ft_get_features, Given_Correct_Group_And_ConfigNotExists_And_Output_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
@@ -85,5 +88,50 @@ TEST_F(ft_get_features, Given_GroupNotExists_And_Correct_Config_And_Output_When_
     int ret = EDCC::GetTrainingSetFeatures(WRONG_FORMAT_GROUP_PATH,
                                            CORRECT_CONFIG_PATH,
                                            FEATURES_OUTPUT_PATH);
+
     EXPECT_EQ(ret, EDCC_LOAD_TAINING_SET_FAIL);
+}
+
+TEST_F(ft_get_features, Given_GroupConflictImage_And_Correct_Config_And_Output_When_Train_Without_Incremental_Then_EDCC_LOAD_TAINING_SET_FAIL)
+{
+    int ret = EDCC::GetTrainingSetFeatures(CONFLICT_IMAGE_GROUP_PATH,
+                                           CORRECT_CONFIG_PATH,
+                                           FEATURES_OUTPUT_PATH);
+
+    EXPECT_EQ(ret, EDCC_LOAD_TAINING_SET_FAIL);
+}
+
+TEST_F(ft_get_features, Given_GroupSomeImageError_And_Correct_Config_And_Output_When_Train_Without_Incremental_Then_EDCC_SUCCESS_And_Count_Correct)
+{
+    int ret = EDCC::GetTrainingSetFeatures(SOME_IMAGE_ERROR_GROUP_PATH,
+                                           CORRECT_CONFIG_PATH,
+                                           FEATURES_OUTPUT_PATH);
+
+    EXPECT_EQ(ret, EDCC_SUCCESS);
+    CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "1", 5);
+    CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "2", 4);
+}
+
+TEST_F(ft_get_features, Given_Correct_Group_And_Config_And_Output_When_Features_Has_Data_And_Train_Without_Incremental_Then_EDCC_SUCCESS_And_Data_Cover)
+{
+    int ret = EDCC::GetTrainingSetFeatures(CORRECT_GROUP_PATH,
+                                           CORRECT_CONFIG_PATH,
+                                           FEATURES_OUTPUT_PATH);
+    EXPECT_EQ(ret, EDCC_SUCCESS);
+
+    ret = EDCC::GetTrainingSetFeatures(INCREMENTAL_GROUP_PATH,
+                                       INCREMENTAL_CONFIG_PATH,
+                                       FEATURES_OUTPUT_PATH);
+    EXPECT_EQ(ret, EDCC_SUCCESS);
+    CheckFeaturesConfigEqualConfigFile(FEATURES_OUTPUT_PATH, INCREMENTAL_CONFIG_PATH);
+    CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "3", 6);
+    CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "4", 6);
+}
+
+TEST_F(ft_get_features, Given_Correct_Group_And_Config_And_OutputCantCreate_When_Train_Without_Incremental_Then_EDCC_SAVE_FEATURES_FAIL)
+{
+    int ret = EDCC::GetTrainingSetFeatures(CORRECT_GROUP_PATH,
+                                           CORRECT_CONFIG_PATH,
+                                           FEATURES_OUTPUT_PATH_CANT_CREATE);
+    EXPECT_EQ(ret, EDCC_SAVE_FEATURES_FAIL);
 }
