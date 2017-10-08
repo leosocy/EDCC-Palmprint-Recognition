@@ -30,7 +30,6 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
     vector<PalmprintCode> featuresAll;
     vector<PalmprintCode> featuresOrigin;
     Check checkHanler;
-    bool bCheckValid = true;
     int retCode = 0;
 
     if(!isIncremental) {
@@ -123,6 +122,21 @@ int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
     CHECK_POINTER_NULL_RETURN(firstPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(secondPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
+
+    IO matchIO;
+    int retCode = 0;
+    ifstream configIn;
+    Check checkHanler;
+
+    configIn.open(configFileName);
+    retCode = matchIO.loadConfig(configIn);
+    CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_CONFIG_FAIL);
+    if(!checkHanler.checkConfigValid(matchIO.configMap)) {
+        return EDCC_LOAD_CONFIG_FAIL;
+    }
+
+    PalmprintCode firstPalmprint("identity", firstPalmprintImagePath);
+    PalmprintCode secondPalmprint("identity", secondPalmprintImagePath);
 
     return EDCC_SUCCESS;
 }

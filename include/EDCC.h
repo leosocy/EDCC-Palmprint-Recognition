@@ -24,6 +24,8 @@ namespace EDCC {
     #define EDCC_LOAD_FEATURES_FAIL 300
     #define EDCC_SAVE_FEATURES_FAIL 301
 
+    #define EDCC_PALMPRINT_IMAGE_NOT_EXISTS 400
+
     typedef struct  {
         string identity;
         string imagePath;
