@@ -11,11 +11,16 @@
 using namespace EDCC;
 
 size_t EncodeAllPalmprint(vector<PalmprintCode> &allPalmprint,
-                          const map< string, int > &configMap);
+                          const map<string, int> &configMap);
 
 size_t BuildUpAllFeaturesWhenIncremental(const vector<PalmprintCode> &originFeatures,
                                          const vector<PalmprintCode> &incrementalFeatures,
                                          vector<PalmprintCode> &allFeatures);
+
+bool SortTopK(const PalmprintCode &onePalmrpint,
+              const vector<PalmprintCode> &featuresAll,
+              size_t k,
+              map<size_t, MatchResult> &topKResult);
 
 int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
                                  const char *configFileName,
@@ -41,7 +46,10 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
         ifstream featuresIn;
         featuresIn.open(featuresOutputFileName);
         retCode = trainIO.loadPalmprintFeatureData(featuresIn, featuresOrigin);
-        CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_FEATURES_FAIL);
+        if(retCode != EDCC_SUCCESS
+           || !checkHanler.checkPalmprintFeatureData(featuresOrigin, trainIO.configMap)) {
+            return EDCC_LOAD_FEATURES_FAIL;
+        }
     }
     if(!checkHanler.checkConfigValid(trainIO.configMap)) {
         return EDCC_LOAD_CONFIG_FAIL;
@@ -57,14 +65,96 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
     if(isIncremental) {
         BuildUpAllFeaturesWhenIncremental(featuresOrigin, featuresAll, featuresAll);
     }
-    if(!checkHanler.checkPalmprintFeatureData(featuresAll)) {
-        return EDCC_LOAD_FEATURES_FAIL;
-    }
 
     ofstream featuresOutStream;
     featuresOutStream.open(featuresOutputFileName);
     retCode = trainIO.savePalmprintFeatureData(featuresOutStream, featuresAll);
     CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_SAVE_FEATURES_FAIL);
+
+    return EDCC_SUCCESS;
+}
+
+int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
+                                    const char *secondPalmprintImagePath,
+                                    const char *configFileName,
+                                    double &score)
+{
+    CHECK_POINTER_NULL_RETURN(firstPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(secondPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
+
+    IO matchIO;
+    int retCode = 0;
+    ifstream configIn;
+    Check checkHanler;
+    score = 0.0;
+
+    configIn.open(configFileName);
+    retCode = matchIO.loadConfig(configIn);
+    CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_CONFIG_FAIL);
+    if(!checkHanler.checkConfigValid(matchIO.configMap)) {
+        return EDCC_LOAD_CONFIG_FAIL;
+    }
+
+    PalmprintCode firstPalmprint("identity", firstPalmprintImagePath);
+    PalmprintCode secondPalmprint("identity", secondPalmprintImagePath);
+    if(!firstPalmprint.encodePalmprint(matchIO.configMap)
+       || !secondPalmprint.encodePalmprint(matchIO.configMap)) {
+        return EDCC_PALMPRINT_IMAGE_NOT_EXISTS;
+    }
+
+    score = firstPalmprint.matchWith(secondPalmprint);
+
+    return EDCC_SUCCESS;
+}
+
+int EDCC::GetTopKMatchScore(const char *onePalmprintImagePath,
+                            const char *trainingSetFeaturesOrPalmprintGroupFileName,
+                            const char *configFileName,
+                            bool isFeatures,
+                            size_t K,
+                            map<size_t, MatchResult> &topKResult)
+{
+    CHECK_POINTER_NULL_RETURN(onePalmprintImagePath, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(trainingSetFeaturesOrPalmprintGroupFileName, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
+
+    IO matchIO;
+    int retCode = 0;
+    ifstream featuresOrGroupIn;
+    vector<PalmprintCode> featuresAll;
+    Check checkHanler;
+
+    featuresOrGroupIn.open(trainingSetFeaturesOrPalmprintGroupFileName);
+    if(isFeatures) {
+        retCode = matchIO.loadPalmprintFeatureData(featuresOrGroupIn, featuresAll);
+        if(!checkHanler.checkPalmprintFeatureData(featuresAll, matchIO.configMap)) {
+            return EDCC_LOAD_FEATURES_FAIL;
+        }
+    } else {
+        retCode = matchIO.loadPalmprintGroup(featuresOrGroupIn, featuresAll);
+        if(retCode != EDCC_SUCCESS
+           || !checkHanler.checkPalmprintGroupValid(featuresAll)) {
+            return EDCC_LOAD_TAINING_SET_FAIL;
+        }
+
+        ifstream configIn;
+        configIn.open(configFileName);
+        retCode = matchIO.loadConfig(configIn);
+    }
+    if(retCode != EDCC_SUCCESS
+       || !checkHanler.checkConfigValid(matchIO.configMap)) {
+        return EDCC_LOAD_CONFIG_FAIL;
+    }
+    if(!isFeatures) {
+        EncodeAllPalmprint(featuresAll, matchIO.configMap);
+    }
+    PalmprintCode onePalmprint("identity", onePalmprintImagePath);
+    if(!onePalmprint.encodePalmprint(matchIO.configMap)) {
+        return EDCC_PALMPRINT_IMAGE_NOT_EXISTS;
+    }
+
+    SortTopK(onePalmprint, featuresAll, K, topKResult);
 
     return EDCC_SUCCESS;
 }
@@ -114,80 +204,31 @@ size_t BuildUpAllFeaturesWhenIncremental(const vector<PalmprintCode> &originFeat
     return allFeatures.size();
 }
 
-int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
-                                    const char *secondPalmprintImagePath,
-                                    const char *configFileName,
-                                    double &score)
+bool cmp(const MatchResult &result1, const MatchResult &result2)
 {
-    CHECK_POINTER_NULL_RETURN(firstPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(secondPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
-
-    IO matchIO;
-    int retCode = 0;
-    ifstream configIn;
-    Check checkHanler;
-    score = 0.0;
-
-    configIn.open(configFileName);
-    retCode = matchIO.loadConfig(configIn);
-    CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_CONFIG_FAIL);
-    if(!checkHanler.checkConfigValid(matchIO.configMap)) {
-        return EDCC_LOAD_CONFIG_FAIL;
-    }
-
-    PalmprintCode firstPalmprint("identity", firstPalmprintImagePath);
-    PalmprintCode secondPalmprint("identity", secondPalmprintImagePath);
-    if(!firstPalmprint.encodePalmprint(matchIO.configMap)
-       || !secondPalmprint.encodePalmprint(matchIO.configMap)) {
-        return EDCC_PALMPRINT_IMAGE_NOT_EXISTS;
-    }
-
-    score = firstPalmprint.matchWith(secondPalmprint);
-
-    return EDCC_SUCCESS;
+    return result1.score > result2.score;
 }
 
-int EDCC::GetTopKMatchScore(const char *onePalmprintImagePath,
-                            const char *trainingSetFeaturesOrPalmprintGroupFileName,
-                            const char *configFileName,
-                            size_t K,
-                            map<int, MatchResult> &topKResult)
+bool SortTopK(const PalmprintCode &onePalmrpint,
+              const vector<PalmprintCode> &featuresAll,
+              size_t k,
+              map<size_t, MatchResult> &topKResult)
 {
-    return EDCC_SUCCESS;
-}
+    vector<MatchResult> results;
 
-int parse_cmd(int argc, const char **argv)
-{
-    IO trainIO;
-    vector<PalmprintCode> data;
-    ifstream dataOut;
-    dataOut.open( "../example/trainData.json" );
-    trainIO.loadPalmprintFeatureData(dataOut, data);
-    Check checkHanler;
-    bool bValid = true;
-    bValid = bValid && checkHanler.checkConfigValid(trainIO.configMap);
-    bValid = bValid && checkHanler.checkPalmprintGroupValid(data);
-    bValid = bValid && checkHanler.checkPalmprintFeatureData(data);
-
-    if(!bValid) {
-        return EXIT_FAILURE;
+    for(size_t i = 0; i < featuresAll.size(); ++i) {
+        MatchResult oneResult;
+        oneResult.identity = featuresAll.at(i).identity;
+        oneResult.imagePath = featuresAll.at(i).imagePath;
+        oneResult.score = featuresAll.at(i).matchWith(onePalmrpint);
+        results.push_back(oneResult);
     }
-    for(size_t inner = 0; inner < data.size(); ++inner) {
-        double maxScore = -DBL_MAX;
-        size_t maxIndex = -1;
-        for(size_t outter = 0; outter < data.size(); ++outter) {
-            if(data[inner].matchWith(data[outter]) > maxScore && inner != outter) {
-                maxScore = data[inner].matchWith(data[outter]);
-                maxIndex = outter;
-            }
-        }
-        cout << "--------------------------------------------" << endl;
-        cout << "instance_1 : " << data[inner].imagePath << endl << "Match : " << data[maxIndex].imagePath << endl;
-        cout << "score: " << maxScore << endl;
-        cout << "--------------------------------------------" << endl << endl;
+    sort(results.begin(), results.end(), cmp);
+
+    for(size_t i = 0; i < k && i < featuresAll.size(); ++i) {
+        results.at(i).rank = i;
+        topKResult.insert(map<size_t, MatchResult>::value_type(i, results.at(i)));
     }
 
-    return 0;
+    return true;
 }
-

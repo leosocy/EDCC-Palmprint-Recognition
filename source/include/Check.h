@@ -11,7 +11,6 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include <Core.h>
 #include <Pub.h>
 using namespace std;
 
@@ -22,11 +21,13 @@ using namespace std;
 
 namespace EDCC
 {
+    class PalmprintCode;
     class Check {
     public:
         bool checkConfigValid(_IN const map<string, int> &configMap);
         bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data);
-        bool checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data);
+        bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
+                                              _IN const map<string, int> &configMap);
     private:
         bool checkCodingC(_IN const string &zipCodingC);
 
