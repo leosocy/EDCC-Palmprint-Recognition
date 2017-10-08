@@ -30,7 +30,7 @@ namespace EDCC {
         string identity;
         string imagePath;
         double score;
-        int rank;
+        size_t rank;
     } MatchResult;
 
     int GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
@@ -46,8 +46,9 @@ namespace EDCC {
     int GetTopKMatchScore(const char *onePalmprintImagePath,
                           const char *trainingSetFeaturesOrPalmprintGroupFileName,
                           const char *configFileName,
+                          bool isFeatures,
                           size_t K,
-                          map<int, MatchResult> &topKResult);
+                          map<size_t, MatchResult> &topKResult);
 }
 
 

@@ -126,6 +126,11 @@ PalmprintCode& PalmprintCode::operator =(_IN const PalmprintCode &src)
 bool PalmprintCode::encodePalmprint(_IN const map< string, int > &configMap)
 {
     bool bRet = false;
+    Check checkHadler;
+    if(!checkHadler.checkConfigValid(configMap)) {
+        return false;
+    }
+
     bRet = encodePalmprint(Size(configMap.at(IMAGE_SIZE), configMap.at(IMAGE_SIZE)),
                            Size(configMap.at(GABOR_KERNEL_SIZE), configMap.at(GABOR_KERNEL_SIZE)),
                            configMap.at(GABOR_DIRECTIONS),
@@ -192,7 +197,7 @@ void PalmprintCode::genEDCCoding(_IN const vector<cv::Mat> &filterResult,
     }
 }
 
-double PalmprintCode::matchWith(_IN const PalmprintCode &cmp)
+double PalmprintCode::matchWith(_IN const PalmprintCode &cmp) const 
 {
     Match matchHandler;
     return matchHandler.matchP2P(*this, cmp);

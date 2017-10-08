@@ -36,3 +36,12 @@ TEST_F(ft_get_features_incremental, Given_Features_And_IncrementalGroup_Has_Cove
     CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "2", 6);
     CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "4", 6);
 }
+
+TEST_F(ft_get_features_incremental, Given_FeaturesInvalid_And_IncrementalGroup_When_Train_With_Incremental_Then_EDCC_LOAD_FEATURES_FAIL)
+{
+    int ret = EDCC::GetTrainingSetFeatures(COVER_GROUP_PATH,
+                                           INCREMENTAL_CONFIG_PATH,
+                                           FEATURES_TRAINGING_SET_INVALID,
+                                           true);
+    EXPECT_EQ(ret, EDCC_LOAD_FEATURES_FAIL);
+}

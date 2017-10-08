@@ -1,11 +1,12 @@
 /*************************************************************************
-	> File Name: IO..cc
+	> File Name: IO.cc
 	> Author: Leosocy
 	> Mail: 513887568@qq.com 
 	> Created Time: 2017/09/18 22:00:10
  ************************************************************************/
 
 #include <Check.h>
+#include <Core.h>
 using namespace EDCC;
 
 bool Check::checkConfigValid(_IN const map<string, int> &configMap)
@@ -67,8 +68,13 @@ bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data)
     return true;
 }
 
-bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data)
+bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
+                                      _IN const map<string, int> &configMap)
 {
+    if(!checkConfigValid(configMap)) {
+        return false;
+    }
+
     vector<PalmprintCode>::const_iterator dataIte;
     for(dataIte = data.begin(); dataIte != data.end(); ++dataIte) {
         if((dataIte->zipCodingC).length() != imageSize * imageSize
