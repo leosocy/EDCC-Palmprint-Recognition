@@ -127,6 +127,7 @@ int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
     int retCode = 0;
     ifstream configIn;
     Check checkHanler;
+    score = 0.0;
 
     configIn.open(configFileName);
     retCode = matchIO.loadConfig(configIn);
@@ -137,6 +138,12 @@ int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
 
     PalmprintCode firstPalmprint("identity", firstPalmprintImagePath);
     PalmprintCode secondPalmprint("identity", secondPalmprintImagePath);
+    if(!firstPalmprint.encodePalmprint(matchIO.configMap)
+       || !secondPalmprint.encodePalmprint(matchIO.configMap)) {
+        return EDCC_PALMPRINT_IMAGE_NOT_EXISTS;
+    }
+
+    score = firstPalmprint.matchWith(secondPalmprint);
 
     return EDCC_SUCCESS;
 }

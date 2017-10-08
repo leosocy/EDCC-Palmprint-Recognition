@@ -32,6 +32,7 @@ using namespace std;
 #define ID1_SECOND_PALMPRINT "..\\test\\example\\database\\001\\1_02_s.bmp"
 #define ID2_FIRST_PALMPRINT "..\\test\\example\\database\\002\\1_01_s.bmp"
 #define ID2_SECOND_PALMPRINT "..\\test\\example\\database\\002\\1_02_s.bmp"
+#define NOT_EXISTS_PALMPRINT "..\\test\\example\\database\\002\\not_exists.bmp"
 
 #else
 
@@ -59,6 +60,7 @@ using namespace std;
 #define ID1_SECOND_PALMPRINT "../test/example/database/001/1_02_s.bmp"
 #define ID2_FIRST_PALMPRINT "../test/example/database/002/1_01_s.bmp"
 #define ID2_SECOND_PALMPRINT "../test/example/database/002/1_02_s.bmp"
+#define NOT_EXISTS_PALMPRINT "../test/example/database/002/not_exists.bmp"
 
 #endif
 

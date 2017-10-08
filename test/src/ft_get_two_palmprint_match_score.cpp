@@ -53,3 +53,32 @@ TEST_F(ft_get_two_palmprint_match_score, Given_ConfigParamsOver_When_Get_Score_T
                                               matchScore);
     EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
 }
+
+TEST_F(ft_get_two_palmprint_match_score, Given_One_Palmprint_Not_Exists_When_Get_Score_Then_EDCC_PALMPRINT_IMAGE_NOT_EXISTS)
+{
+    int ret = EDCC::GetTwoPalmprintMatchScore(ID1_FIRST_PALMPRINT,
+                                              NOT_EXISTS_PALMPRINT,
+                                              CORRECT_CONFIG_PATH,
+                                              matchScore);
+    EXPECT_EQ(ret, EDCC_PALMPRINT_IMAGE_NOT_EXISTS);
+}
+
+TEST_F(ft_get_two_palmprint_match_score, Given_Two_Same_Image_When_Get_Score_Then_EDCC_SUCCESS_And_MatchScore_EQ1)
+{
+    int ret = EDCC::GetTwoPalmprintMatchScore(ID1_FIRST_PALMPRINT,
+                                              ID1_FIRST_PALMPRINT,
+                                              CORRECT_CONFIG_PATH,
+                                              matchScore);
+    EXPECT_EQ(ret, EDCC_SUCCESS);
+    EXPECT_EQ(matchScore, 1.0);
+}
+
+TEST_F(ft_get_two_palmprint_match_score, Given_Two_Diff_Image_When_Get_Score_Then_EDCC_SUCCESS_And_MatchScore_NE1)
+{
+    int ret = EDCC::GetTwoPalmprintMatchScore(ID1_FIRST_PALMPRINT,
+                                              ID1_SECOND_PALMPRINT,
+                                              CORRECT_CONFIG_PATH,
+                                              matchScore);
+    EXPECT_EQ(ret, EDCC_SUCCESS);
+    EXPECT_NE(matchScore, 1.0);
+}
