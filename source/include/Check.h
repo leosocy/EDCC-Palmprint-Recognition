@@ -26,7 +26,7 @@ namespace EDCC
     public:
         bool checkConfigValid(_IN const map<string, int> &configMap);
         bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data);
-        bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
+        bool checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
                                               _IN const map<string, int> &configMap);
     private:
         bool checkCodingC(_IN const string &zipCodingC);
