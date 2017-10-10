@@ -168,11 +168,7 @@ void ft_edcc_base::CopyFile(const char *srcFile, const char *dstFile)
     #ifdef _WINDOWS
     snprintf(opr, sizeof(opr), "echo f | xcopy /y %s %s > ft_log.txt", srcFile, dstFile);
     #else
-<<<<<<< HEAD
-    snprintf(opr, sizeof(opr), "mv -f %s %s > ft_log.txt", srcDir, dstDir);
-=======
     snprintf(opr, sizeof(opr), "mv -f %s %s > ft_log.txt", srcFile, dstFile);
->>>>>>> add CopyDir DeleteDir for FT
     #endif
 
     system(opr);
