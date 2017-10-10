@@ -9,12 +9,6 @@ using namespace EDCC;
 
 //-----------------------------------Palmprint-------------------------------------
 
-Palmprint::Palmprint()
-{
-    this->identity = "";
-    this->imagePath = "";
-}
-
 Palmprint::Palmprint(_IN const char *identity, _IN const char *imagePath)
 {
     if(identity == NULL || imagePath == NULL) {
@@ -103,12 +97,6 @@ void EDCCoding::compressCoding()
     zipCodingC = ssZipC.str();
     zipCodingCs = ssZipCs.str();
 }
-
-bool EDCCoding::decompressCoding(const char *ptCodingC, const char *ptCodingCs)
-{
-    return true;
-}
-
 //---------------------------------PalmprintCode--------------------------------
 
 PalmprintCode::~PalmprintCode()
@@ -143,7 +131,7 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
                                     _IN int numOfDirections,
                                     _IN const cv::Size &lapKerSize)
 {
-    GaborFilter filter(gabKerSize, numOfDirections, GaborFilter::GABOR_KERNEL_REAL);
+    GaborFilter filter(gabKerSize, numOfDirections);
     Mat *imgRet = genSpecImg(imgSize);
     if(imgRet == NULL) {
         cerr << imagePath << " not exists!\n";
@@ -206,14 +194,11 @@ double PalmprintCode::matchWith(_IN const PalmprintCode &cmp) const
 //---------------------------------GaborFilter-----------------------------------
 
 GaborFilter::GaborFilter(_IN const cv::Size &kernelSize,
-                         _IN int numOfDirections,
-                         _IN int kernelType)
+                         _IN int numOfDirections)
 {
     assert(kernelSize.width %2 == 1 && kernelSize.height % 2 == 1);
-    assert(kernelType == GaborFilter::GABOR_KERNEL_REAL 
-            || kernelType == GaborFilter::GABOR_KERNEL_IMAG 
-            || kernelType == GaborFilter::GABOR_KERNEL_MAG);
     assert(numOfDirections > 0);
+
     this->kernelSize = kernelSize;
     this->numOfDirections = numOfDirections;
     this->kernelType = kernelType;
@@ -231,7 +216,7 @@ void GaborFilter::doGaborFilter(_IN const cv::Mat &src, _OUT cv::Mat &dstMerge)
     int gaborW = this->kernelSize.width;
     Mat gaborKernel;
     for(int direction = 0; direction < this->numOfDirections; ++direction) {
-        getGaborKernel(gaborKernel, gaborW, gaborH, 0, direction, this->kernelType);
+        getGaborKernelReal(gaborKernel, gaborW, gaborH, 0, direction);
         filter2D(src, dst, CV_64F, gaborKernel);
         normalize(dst, dst, 0, 1, CV_MINMAX);
         dstVec.push_back(dst.clone());
@@ -239,13 +224,14 @@ void GaborFilter::doGaborFilter(_IN const cv::Mat &src, _OUT cv::Mat &dstMerge)
     merge(dstVec, dstMerge);
 }
 
-void GaborFilter::getGaborKernel(_OUT cv::Mat &gaborKernel,
-                                 _IN int kernelWidth, _IN int kernelHeight,
-                                 _IN int dimension, _IN int direction,
-                                 _IN int kernelType, _IN double Kmax, _IN double f,
-                                 _IN double sigma, _IN int ktype)
+void GaborFilter::getGaborKernelReal(_OUT cv::Mat &gaborKernel,
+                                     _IN int kernelWidth, _IN int kernelHeight,
+                                     _IN int dimension, _IN int direction,
+                                     _IN double Kmax, _IN double f,
+                                     _IN double sigma, _IN int ktype)
 {
-    assert(ktype == CV_32F || ktype == CV_64F);  
+    assert(ktype == CV_32F || ktype == CV_64F);
+
     int halfWidth = kernelWidth / 2;
     int halfHeight = kernelHeight / 2;
     double Qu = CV_PI * direction / this->numOfDirections;
@@ -253,49 +239,19 @@ void GaborFilter::getGaborKernel(_OUT cv::Mat &gaborKernel,
     double Kv = Kmax / pow(f, dimension);
     double postmean = exp(-sqsigma / 2);
     Mat kernel(kernelWidth, kernelHeight, ktype);
-    Mat kernel_2(kernelWidth, kernelHeight, ktype);
-    Mat kernel_mag(kernelWidth, kernelHeight, ktype);
-    double tmp1, tmp2, tmp3;
-    for(int j = -halfHeight; j <= halfHeight; j++) {
-        for(int i = -halfWidth; i <= halfWidth; i++) {
-            tmp1 = exp(-(Kv * Kv * (j * j + i * i )) / (2 * sqsigma));
-            tmp2 = cos(Kv * cos(Qu) * i + Kv * sin(Qu) * j) - postmean;
-            tmp3 = sin(Kv * cos(Qu) * i + Kv * sin(Qu) * j);
-            if(kernelType == GaborFilter::GABOR_KERNEL_REAL) {
-                if(ktype == CV_32F) {
-                    kernel.at<float>(j + halfHeight, i + halfWidth) =
-                        (float)(Kv * Kv * tmp1 * tmp2 / sqsigma);
-                } else {
-                    kernel.at<double>(j + halfHeight, i + halfWidth) =
-                        (double)(Kv * Kv * tmp1 * tmp2 / sqsigma);
-                }
-            } else if(kernelType == GaborFilter::GABOR_KERNEL_IMAG) {
-                if(ktype == CV_32F) {
-                    kernel.at<float>(j + halfHeight, i + halfWidth) =
-                        (float)(Kv * Kv * tmp1 * tmp3 / sqsigma);
-                } else {
-                    kernel.at<double>(j + halfHeight, i + halfWidth) =
-                        (double)(Kv * Kv * tmp1 * tmp3 / sqsigma);
-                }
+    double tmp1, tmp2;
+    for(int i = -halfHeight; i <= halfHeight; i++) {
+        for(int j = -halfWidth; j <= halfWidth; j++) {
+            tmp1 = exp(-(Kv * Kv * (i * i + j * j)) / (2 * sqsigma));
+            tmp2 = cos(Kv * cos(Qu) * j + Kv * sin(Qu) * i) - postmean;
+            if(ktype == CV_32F) {
+                kernel.at<float>(i + halfHeight, j + halfWidth) =
+                    (float)(Kv * Kv * tmp1 * tmp2 / sqsigma);
             } else {
-                if(ktype == CV_32F) {
-                    kernel.at<float>(j + halfHeight, i + halfWidth) =
-                        (float)(Kv * Kv * tmp1 * tmp2 / sqsigma);
-                    kernel_2.at<float>( j + halfHeight, i + halfWidth) =
-                        (float)(Kv * Kv * tmp1 * tmp3 / sqsigma);
-                } else {
-                    kernel.at<double>(j + halfHeight, i + halfWidth) =
-                        (double)(Kv * Kv * tmp1 * tmp2 / sqsigma);
-                    kernel_2.at<double>(j + halfHeight, i + halfWidth) =
-                        (double)(Kv * Kv * tmp1 * tmp3 / sqsigma);
-                }
+                kernel.at<double>(i + halfHeight, j + halfWidth) =
+                    (double)(Kv * Kv * tmp1 * tmp2 / sqsigma);
             }
         }
     }
-    if(kernelType == GaborFilter::GABOR_KERNEL_MAG) {
-        magnitude(kernel, kernel_2, kernel_mag);
-        gaborKernel = kernel_mag.clone();
-    } else {
-        gaborKernel = kernel.clone();
-    }
+    gaborKernel = kernel.clone();
 }

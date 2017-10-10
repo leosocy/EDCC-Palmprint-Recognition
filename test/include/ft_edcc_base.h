@@ -8,6 +8,9 @@ using namespace std;
 
 #ifdef _WINDOWS
 
+#define EXAMPLE_SRC_DIR "..\\test\\exampleOrigin"
+#define EXAMPLE_DST_DIR "..\\test\\example\\"
+
 #define CORRECT_CONFIG_PATH "..\\test\\example\\config\\config_correct.json"
 #define INCREMENTAL_CONFIG_PATH "..\\test\\example\\config\\config_incremental.json"
 #define NOT_EXISTS_CONFIG_PATH "..\\test\\example\\config\\config.json"
@@ -28,15 +31,19 @@ using namespace std;
 #define FEATURES_INCREMENTAL_OUTPUT_PATH "..\\test\\example\\features\\features_incremental.json"
 #define FEATURES_OUTPUT_PATH_CANT_CREATE "..\\test\\example\\features\\folder\\features.json"
 #define FEATURES_TRAINGING_SET_EXISTS "..\\test\\example\\features\\trainingFeatures.json"
-#define FEATURES_TRAINGING_SET_INVALID  "..\\test\\example\\features\\trainingFeaturesInvalid.json"
+#define FEATURES_TRAINGING_SET_INVALID_C  "..\\test\\example\\features\\trainingFeaturesInvalidC.json"
+#define FEATURES_TRAINGING_SET_INVALID_CS  "..\\test\\example\\features\\trainingFeaturesInvalidCs.json"
 
-#define ID1_FIRST_PALMPRINT "..\\test\\example\\database\\001\\2_01_s.bmp"
-#define ID1_SECOND_PALMPRINT "..\\test\\example\\database\\001\\2_02_s.bmp"
-#define ID2_FIRST_PALMPRINT "..\\test\\example\\database\\002\\2_01_s.bmp"
-#define ID2_SECOND_PALMPRINT "..\\test\\example\\database\\002\\2_02_s.bmp"
-#define NOT_EXISTS_PALMPRINT "..\\test\\example\\database\\002\\not_exists.bmp"
+#define ID1_FIRST_PALMPRINT "..\\test\\palmprint_database\\001\\2_01_s.bmp"
+#define ID1_SECOND_PALMPRINT "..\\test\\palmprint_database\\001\\2_02_s.bmp"
+#define ID2_FIRST_PALMPRINT "..\\test\\palmprint_database\\002\\2_01_s.bmp"
+#define ID2_SECOND_PALMPRINT "..\\test\\palmprint_database\\002\\2_02_s.bmp"
+#define NOT_EXISTS_PALMPRINT "..\\test\\palmprint_database\\002\\not_exists.bmp"
 
 #else
+
+#define EXAMPLE_SRC_DIR "../test/exampleOrigin"
+#define EXAMPLE_DST_DIR "../test/example"
 
 #define CORRECT_CONFIG_PATH "../test/example/config/config_correct.json"
 #define INCREMENTAL_CONFIG_PATH  "../test/example/config/config_incremental.json"
@@ -58,7 +65,8 @@ using namespace std;
 #define FEATURES_INCREMENTAL_OUTPUT_PATH "../test/example/features/features_incremental.json"
 #define FEATURES_OUTPUT_PATH_CANT_CREATE "../test/example/features/folder/features_incremental.json"
 #define FEATURES_TRAINGING_SET_EXISTS "../test/example/features/trainingFeatures.json"
-#define FEATURES_TRAINGING_SET_INVALID "../test/example/features/trainingFeaturesInvalid.json"
+#define FEATURES_TRAINGING_SET_INVALID_C "../test/example/features/trainingFeaturesInvalidC.json"
+#define FEATURES_TRAINGING_SET_INVALID_CS "../test/example/features/trainingFeaturesInvalidCs.json"
 
 #define ID1_FIRST_PALMPRINT "../test/example/database/001/1_01_s.bmp"
 #define ID1_SECOND_PALMPRINT "../test/example/database/001/1_02_s.bmp"
@@ -70,10 +78,31 @@ using namespace std;
 
 class ft_edcc_base : public testing::Test {
 public:
+    ft_edcc_base();
+    ~ft_edcc_base();
+
     void CheckFeaturesConfigEqualConfigFile(const char *featuresFileName,
                                             const char *configFileName);
 
     void CheckOneIdentityImageCountInFeatures(const char *featuresFileName,
                                               const char *identity,
                                               int expectedCount);
+
+    void ModifyConfigParams(const char *configOrFeaturesFileName,
+                            const char *paramName,
+                            int valueToSet);
+
+    void CheckConfigParams(const char *configOrFeaturesFileName,
+                           const char *paramName,
+                           int expectValue);
+private:
+    Json::Value* GetJsonValueByConfigParamName(const char *configOrFeaturesFileName,
+                                               const char *paramName);
+    Json::Value valueRoot;
+
+    void CopyDir(const char *srcDir, const char *dstDir);
+    void CopyFile(const char *srcFile, const char *dstFile);
+
+    void DeleteDir(const char *srcDir);
+    void DeleteFile(const char *srcFile);
 };

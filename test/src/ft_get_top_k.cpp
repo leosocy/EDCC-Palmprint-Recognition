@@ -197,3 +197,14 @@ TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScore_Then_EDCC_SUC
                                 topKResult);
     EXPECT_EQ(ret, EDCC_SUCCESS);
 }
+
+TEST_F(ft_get_top_k, Given_FeaturesInvalidC_When_GetTop10MatchScore_Then_EDCC_LOAD_FEATURES_FAIL)
+{
+    int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
+                                FEATURES_TRAINGING_SET_INVALID_C,
+                                CORRECT_CONFIG_PATH,
+                                true,
+                                10,
+                                topKResult);
+    EXPECT_EQ(ret, EDCC_LOAD_FEATURES_FAIL);
+}

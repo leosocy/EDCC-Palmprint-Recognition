@@ -22,7 +22,6 @@ namespace EDCC
     public:
         string identity;
         string imagePath;
-        Palmprint();
         Palmprint(_IN const char *identity, _IN const char *imagePath);
         virtual ~Palmprint();	
         virtual Palmprint& operator =(_IN const Palmprint &src);
@@ -39,7 +38,6 @@ namespace EDCC
         string zipCodingC;
         string zipCodingCs;
         void compressCoding();
-        bool decompressCoding(const char *codingC, const char *codingCs);
     protected:
         Mat C;
         Mat Cs;
@@ -71,23 +69,15 @@ namespace EDCC
     {
     public:
         GaborFilter(_IN const cv::Size &kernelSize, 
-                    _IN int numOfDirections, 
-                    _IN int kernelType);
+                    _IN int numOfDirections);
         ~GaborFilter();
         void doGaborFilter(_IN const cv::Mat &src, _OUT cv::Mat &dstMerge);
-            
-        enum {
-            GABOR_KERNEL_REAL = 0,
-            GABOR_KERNEL_IMAG,
-            GABOR_KERNEL_MAG
-        };
     private:
         cv::Size kernelSize;
         int numOfDirections;
         int kernelType;
-        void getGaborKernel(_OUT cv::Mat &gaborKernel, _IN int kernelWidth, _IN int kernelHeight,
+        void getGaborKernelReal(_OUT cv::Mat &gaborKernel, _IN int kernelWidth, _IN int kernelHeight,
                             _IN int dimension, _IN int direction,
-                            _IN int kernelType,
                             _IN double Kmax = CV_PI / 2, _IN double f = sqrt(2.0),
                             _IN double sigma = 2 * CV_PI, _IN int ktype = CV_64F);
     };
