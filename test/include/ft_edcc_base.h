@@ -68,11 +68,11 @@ using namespace std;
 #define FEATURES_TRAINGING_SET_INVALID_C "../test/example/features/trainingFeaturesInvalidC.json"
 #define FEATURES_TRAINGING_SET_INVALID_CS "../test/example/features/trainingFeaturesInvalidCs.json"
 
-#define ID1_FIRST_PALMPRINT "../test/example/database/001/1_01_s.bmp"
-#define ID1_SECOND_PALMPRINT "../test/example/database/001/1_02_s.bmp"
-#define ID2_FIRST_PALMPRINT "../test/example/database/002/1_01_s.bmp"
-#define ID2_SECOND_PALMPRINT "../test/example/database/002/1_02_s.bmp"
-#define NOT_EXISTS_PALMPRINT "../test/example/database/002/not_exists.bmp"
+#define ID1_FIRST_PALMPRINT "../test/palmprint_database/001/1_01_s.bmp"
+#define ID1_SECOND_PALMPRINT "../test/palmprint_database/001/1_02_s.bmp"
+#define ID2_FIRST_PALMPRINT "../test/palmprint_database/002/1_01_s.bmp"
+#define ID2_SECOND_PALMPRINT "../test/palmprint_database/002/1_02_s.bmp"
+#define NOT_EXISTS_PALMPRINT "../test/palmprint_database/002/not_exists.bmp"
 
 #endif
 
