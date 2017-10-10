@@ -42,8 +42,8 @@ using namespace std;
 
 #else
 
-#define EXAMPLE_SRC_DIR "../test/exampleOrigin/"
-#define EXAMPLE_DST_DIR "../test/example/"
+#define EXAMPLE_SRC_DIR "../test/exampleOrigin"
+#define EXAMPLE_DST_DIR "../test/example"
 
 #define CORRECT_CONFIG_PATH "../test/example/config/config_correct.json"
 #define INCREMENTAL_CONFIG_PATH  "../test/example/config/config_incremental.json"
