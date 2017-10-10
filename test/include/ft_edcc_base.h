@@ -42,7 +42,7 @@ using namespace std;
 
 #else
 
-#define EXAMPLE_SRC_DIR "../test/exampleOrigin"
+#define EXAMPLE_SRC_DIR "../test/exampleOrigin/"
 #define EXAMPLE_DST_DIR "../test/example/"
 
 #define CORRECT_CONFIG_PATH "../test/example/config/config_correct.json"
