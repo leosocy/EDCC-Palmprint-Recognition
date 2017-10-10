@@ -37,11 +37,20 @@ TEST_F(ft_get_features_incremental, Given_Features_And_IncrementalGroup_Has_Cove
     CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "4", 6);
 }
 
-TEST_F(ft_get_features_incremental, Given_FeaturesInvalid_And_IncrementalGroup_When_Train_With_Incremental_Then_EDCC_LOAD_FEATURES_FAIL)
+TEST_F(ft_get_features_incremental, Given_FeaturesInvalidC_And_IncrementalGroup_When_Train_With_Incremental_Then_EDCC_LOAD_FEATURES_FAIL)
 {
     int ret = EDCC::GetTrainingSetFeatures(COVER_GROUP_PATH,
                                            INCREMENTAL_CONFIG_PATH,
-                                           FEATURES_TRAINGING_SET_INVALID,
+                                           FEATURES_TRAINGING_SET_INVALID_C,
+                                           true);
+    EXPECT_EQ(ret, EDCC_LOAD_FEATURES_FAIL);
+}
+
+TEST_F(ft_get_features_incremental, Given_FeaturesInvalidCs_And_IncrementalGroup_When_Train_With_Incremental_Then_EDCC_LOAD_FEATURES_FAIL)
+{
+    int ret = EDCC::GetTrainingSetFeatures(COVER_GROUP_PATH,
+                                           INCREMENTAL_CONFIG_PATH,
+                                           FEATURES_TRAINGING_SET_INVALID_CS,
                                            true);
     EXPECT_EQ(ret, EDCC_LOAD_FEATURES_FAIL);
 }

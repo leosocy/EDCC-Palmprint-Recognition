@@ -43,10 +43,42 @@ TEST_F(ft_get_features, Given_ConfigNotExists_When_Train_Without_Incremental_The
     EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
 }
 
-TEST_F(ft_get_features, Given_ConfigParamsError_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
+TEST_F(ft_get_features, Given_ConfigParamsErrorImageSize_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
 {
+    ModifyConfigParams(CORRECT_CONFIG_PATH, "imageSize", 11);
+    CheckConfigParams(CORRECT_CONFIG_PATH, "imageSize", 11);
     int ret = EDCC::GetTrainingSetFeatures(CORRECT_GROUP_PATH,
-                                           PARAMS_ERROR_CONFIG_PATH,
+                                           CORRECT_CONFIG_PATH,
+                                           FEATURES_OUTPUT_PATH);
+    EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
+}
+
+TEST_F(ft_get_features, Given_ConfigParamsErrorLaplace_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams(CORRECT_CONFIG_PATH, "laplaceKernelSize", 30);
+    CheckConfigParams(CORRECT_CONFIG_PATH, "laplaceKernelSize", 30);
+    int ret = EDCC::GetTrainingSetFeatures(CORRECT_GROUP_PATH,
+                                           CORRECT_CONFIG_PATH,
+                                           FEATURES_OUTPUT_PATH);
+    EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
+}
+
+TEST_F(ft_get_features, Given_ConfigParamsErrorGaborSize_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams(CORRECT_CONFIG_PATH, "gaborKernelSize", 30);
+    CheckConfigParams(CORRECT_CONFIG_PATH, "gaborKernelSize", 30);
+    int ret = EDCC::GetTrainingSetFeatures(CORRECT_GROUP_PATH,
+                                           CORRECT_CONFIG_PATH,
+                                           FEATURES_OUTPUT_PATH);
+    EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
+}
+
+TEST_F(ft_get_features, Given_ConfigParamsErrorDirections_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams(CORRECT_CONFIG_PATH, "gaborDirections", 18);
+    CheckConfigParams(CORRECT_CONFIG_PATH, "gaborDirections", 18);
+    int ret = EDCC::GetTrainingSetFeatures(CORRECT_GROUP_PATH,
+                                           CORRECT_CONFIG_PATH,
                                            FEATURES_OUTPUT_PATH);
     EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
 }
@@ -85,7 +117,7 @@ TEST_F(ft_get_features, Given_GroupWrongFormat_When_Train_Without_Incremental_Th
 
 TEST_F(ft_get_features, Given_GroupNotExists_When_Train_Without_Incremental_Then_EDCC_LOAD_TAINING_SET_FAIL)
 {
-    int ret = EDCC::GetTrainingSetFeatures(WRONG_FORMAT_GROUP_PATH,
+    int ret = EDCC::GetTrainingSetFeatures(NOT_EXISTS_GROUP_PATH,
                                            CORRECT_CONFIG_PATH,
                                            FEATURES_OUTPUT_PATH);
 
