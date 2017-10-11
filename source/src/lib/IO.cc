@@ -28,15 +28,15 @@ int EDCC::IO::loadConfig(_IN ifstream &in)
     Json::Reader reader;
     Json::Value::Members members;
     if(!reader.parse(in, root)) {
-        cerr << "Parse config.json failed, please confirm the file is exists." << endl;
+        EDCC_Log("Parse config.json failed, please confirm the file is exists.\n");
         return EDCC_LOAD_CONFIG_FAIL;
     }
     members = root.getMemberNames();
     for(Json::Value::Members::iterator it = members.begin(); 
             it != members.end(); ++it) {
         if(!root[*it].isObject() || root[*it]["default"].isNull()) {
-            cerr << "Parse config.json failed, you can only change the value\
- of \"default\" label in this file." << endl;
+            EDCC_Log("Parse config.json failed, you can only change the value of \
+                     \"default\" label in this file.\n");
             return EDCC_LOAD_CONFIG_FAIL;
         } else {
             if(paramsSet.find(*it) != paramsSet.end()) {
@@ -46,7 +46,7 @@ int EDCC::IO::loadConfig(_IN ifstream &in)
                     configMap.insert(map<string, int>::value_type(*it, root[*it]["default"].asInt()));
                 }         
             } else {
-                cerr << "Illegal configuration parameters." << endl;
+                EDCC_Log("Illegal configuration parameters.\n");
                 return EDCC_LOAD_CONFIG_FAIL;
             }
         }
@@ -62,16 +62,16 @@ int EDCC::IO::loadPalmprintGroup(_IN ifstream &in, _OUT vector<PalmprintCode> &g
     Json::Value::Members members;
 
     if(!reader.parse(in, root)) {
-        cerr << "Parse json failed. Don't change the json format. You need to confirm the format like this." << endl;
-        cerr << PALMPRINT_GROUP_FORMAT << endl;
+        EDCC_Log("Parse json failed. Don't change the json format. You need to confirm the format like this.\n");
+        EDCC_Log(PALMPRINT_GROUP_FORMAT"\n");
         return EDCC_LOAD_TAINING_SET_FAIL;
     }
     members = root.getMemberNames();
     for(Json::Value::Members::iterator it = members.begin(); 
             it != members.end(); ++it) {
         if(!root[*it].isArray()) {
-            cerr << "Don't change the json format. You need to confirm the format like this." << endl;
-            cerr << PALMPRINT_GROUP_FORMAT << endl;
+            EDCC_Log("Don't change the json format. You need to confirm the format like this.\n");
+            EDCC_Log(PALMPRINT_GROUP_FORMAT"\n");
             return EDCC_LOAD_TAINING_SET_FAIL;
         }
         Json::Value imageList = root[*it];
@@ -92,12 +92,12 @@ int EDCC::IO::loadPalmprintFeatureData(_IN ifstream &in, _OUT vector<PalmprintCo
     Json::Reader reader;
     Json::Value::Members members;
     if(!reader.parse(in, root)) {
-        cerr << "Load Palmprint Features Data failed. Don't change the json format." << endl;
+        EDCC_Log("Load Palmprint Features Data failed. Don't change the json format.\n");
         return EDCC_LOAD_FEATURES_FAIL;
     }
     for(set<string>::iterator it = paramsSet.begin(); it != paramsSet.end(); ++it) {
         if(root[*it].isNull() || !root[*it].isInt()) {
-            cerr << "Load Palmprint Features Data failed. Make sure json file has config." << endl;
+            EDCC_Log("Load Palmprint Features Data failed. Make sure json file has config.\n");
             return EDCC_LOAD_CONFIG_FAIL;
         }
         if(configMap.find(*it) != configMap.end()) {
@@ -120,13 +120,14 @@ int EDCC::IO::loadPalmprintFeatureData(_IN ifstream &in, _OUT vector<PalmprintCo
 int EDCC::IO::savePalmprintFeatureData(_IN ofstream &out, _IN vector<PalmprintCode> &data)
 {
     if(!out.is_open()) {
-        cerr << "Output stream can't open." << endl;
+        EDCC_Log("Output stream can't open.\n");
         return EDCC_SAVE_FEATURES_FAIL;
     }
     Json::Value root;
     for(set<string>::iterator it = paramsSet.begin(); it != paramsSet.end(); ++it) {
         if(configMap.find(*it) == configMap.end()) {
-            cerr << "If you want to train/predict, load config.json first.Or if you want incremental training/prediction, load trainData.json first." << endl;
+            EDCC_Log("If you want to train/predict, load config.json first.\
+                    Or if you want incremental training/prediction, load trainData.json first.\n");
             return EDCC_SAVE_CONFIG_FAIL;
         } else {
             root[*it] = configMap.at(*it);
@@ -160,7 +161,7 @@ void EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity
 bool EDCC::IO::genEDCCoding(_IN const Json::Value &value, _OUT PalmprintCode &coding)
 {
     if(value.isNull() || !value.isObject()) {
-        cerr << "Load Palmprint Features Data failed. Don't change the json format." << endl;
+        EDCC_Log("Load Palmprint Features Data failed. Don't change the json format.\n");
         return false;
     }
 
@@ -170,7 +171,7 @@ bool EDCC::IO::genEDCCoding(_IN const Json::Value &value, _OUT PalmprintCode &co
     
     if(value["C"].isNull() || !value["C"].isString()
        || value["Cs"].isNull() || !value["Cs"].isString()) {
-        cerr << "Load Palmprint Features Data failed. Don't change the json format." << endl;
+        EDCC_Log("Load Palmprint Features Data failed. Don't change the json format.\n");
         return false;
     }
     coding.zipCodingC = EDCC::toUpper(value["C"].asString().c_str());
@@ -184,8 +185,7 @@ bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _OUT Json::Value &value
     string identity = code.identity;
     string imagePath = code.imagePath;
     if(!value[identity].isNull() && !value[identity][imagePath].isNull()) {
-        cerr << "identity: " << identity << "\timagepath: " << imagePath 
-            << "\tis already exists." << endl;
+        EDCC_Log("identity: %s\timagepath: %s\tis already exists.\n");
         return false;
     }
     Json::Value codeValue;

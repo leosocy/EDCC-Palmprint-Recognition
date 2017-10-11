@@ -12,7 +12,7 @@ using namespace EDCC;
 Palmprint::Palmprint(_IN const char *identity, _IN const char *imagePath)
 {
     if(identity == NULL || imagePath == NULL) {
-        cerr << "Identity or imagePath can't be null!" << endl;
+        EDCC_Log("Identity or imagePath can't be null!\n");
         return ;
     }
 
@@ -39,7 +39,7 @@ Palmprint& Palmprint::operator =(_IN const Palmprint &src)
 bool Palmprint::setPalmprintInfo(_IN const char *identity, _IN const char *imagePath)
 {
     if(identity == NULL || imagePath == NULL) {
-        cerr << "Identity or imagePath can't be null!" << endl;
+        EDCC_Log("Identity or imagePath can't be null!\n");
         return false;
     }
     this->identity = identity;
@@ -51,7 +51,7 @@ cv::Mat* Palmprint::genOriImg()
 {
     image = imread(this->imagePath, CV_LOAD_IMAGE_COLOR);
     if(!image.data) {
-        cerr << "Read image failed!" << endl;
+        EDCC_Log("Read image failed!\n");
         return NULL;
     }
     return &image;
@@ -134,7 +134,7 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
     GaborFilter filter(gabKerSize, numOfDirections);
     Mat *imgRet = genSpecImg(imgSize);
     if(imgRet == NULL) {
-        cerr << imagePath << " not exists!\n";
+        EDCC_Log("%s not exists!\n", imagePath.c_str());
         return false;
     }
     Mat palmprintImage = *imgRet;
