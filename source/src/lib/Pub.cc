@@ -6,6 +6,7 @@
 ************************************************************************/
 #include <Pub.h>
 #include <stdarg.h>
+#include <stdio.h>
 using namespace EDCC;
 
 string EDCC::toUpper(_IN const char *src)
