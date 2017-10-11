@@ -8,6 +8,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 using namespace EDCC;
 
 string EDCC::toUpper(_IN const char *src)
