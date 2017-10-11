@@ -22,7 +22,7 @@ double Match::matchP2P(_IN const PalmprintCode &instance1,
        || Cy.empty()
        || Csx.empty()
        || Csy.empty()) {
-        cerr << "Two palmprint instance info error." << endl;
+        EDCC_Log("Two palmprint instance info error.\n");
         return score;
     }
 

@@ -15,7 +15,7 @@ bool Check::checkConfigValid(_IN const map<string, int> &configMap)
        || configMap.find(GABOR_KERNEL_SIZE) == configMap.end()
        || configMap.find(GABOR_DIRECTIONS) == configMap.end()
        || configMap.find(LAPLACE_KERNEL_SIZE) == configMap.end()) {
-        cerr << "Load config fail, config params miss!" << endl;
+        EDCC_Log("Load config fail, config params miss!\n");
         return false;
     }
 
@@ -25,26 +25,24 @@ bool Check::checkConfigValid(_IN const map<string, int> &configMap)
     laplaceKernelSize = configMap.at(LAPLACE_KERNEL_SIZE);
 
     if(imageSize < CONFIG_IMAGE_SIZE_MIN) {
-        cerr << "ImageSize can't smaller than " << CONFIG_IMAGE_SIZE_MIN << endl;
+        EDCC_Log("ImageSize can't smaller than %d\n", CONFIG_IMAGE_SIZE_MIN);
         return false;
     }
     if(gaborKernelSize > imageSize
        || gaborKernelSize % 2 == 0) {
-        cerr << "Gabor Kernel Size must be smaller than imageSize."
-            << "And must be odd!" << endl;
+        EDCC_Log("Gabor Kernel Size must be smaller than imageSize.And must be odd!\n");
         return false;
     }
     if(laplaceKernelSize > imageSize
        || laplaceKernelSize % 2 == 0
        || laplaceKernelSize > CONFIG_VALID_LAPLACE_KERNEL_SIZE_MAX) {
-        cerr << "Laplace Kernel Size must be smaller than imageSize."
-            << "And must be odd and samller than 31!" << endl;
+        EDCC_Log("Laplace Kernel Size must be smaller than imageSize.And must be odd and samller than 31!\n");
         return false;
     }
     if(gaborDirections > CONFIG_VALID_GABOR_DIRECTIONS_MAX
        || gaborDirections < CONFIG_VALID_GABOR_DIRECTIONS_MIN) {
-        cerr << "Gabor Directions must in range [" << CONFIG_VALID_GABOR_DIRECTIONS_MIN
-            << ", " << CONFIG_VALID_GABOR_DIRECTIONS_MAX << "]!" << endl;
+        EDCC_Log("Gabor Directions must in range [%d, %d]!\n", 
+                 CONFIG_VALID_GABOR_DIRECTIONS_MIN, CONFIG_VALID_GABOR_DIRECTIONS_MAX);
         return false;
     }
         
@@ -59,7 +57,7 @@ bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data)
         for(vector<PalmprintCode>::const_iterator dataInnerIte = dataIte + 1;
             dataInnerIte != data.end(); ++dataInnerIte) {
             if(dataIte->imagePath == dataInnerIte->imagePath) {
-                cerr << "Image Path: " << dataIte->imagePath << " Conflict!" << endl;
+                EDCC_Log("Image Path: %s Conflict!\n", dataIte->imagePath.c_str());
                 return false;
             }
         }
@@ -79,11 +77,11 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
     for(dataIte = data.begin(); dataIte != data.end(); ++dataIte) {
         if((dataIte->zipCodingC).length() != imageSize * imageSize
             || !checkCodingC(dataIte->zipCodingC)) {
-            cerr << "EDCCoding C format error!" << endl;
+            EDCC_Log("EDCCoding C format error!\n");
             return false;
         }
         if((dataIte->zipCodingCs).length() != (imageSize * imageSize / 4 + 1)) {
-            cerr << "EDCCoding Cs format error!" << endl;
+            EDCC_Log("EDCCoding Cs format error!\n");
             return false;
         }
     }
