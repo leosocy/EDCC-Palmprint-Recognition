@@ -22,10 +22,10 @@ bool SortTopK(const PalmprintCode &onePalmrpint,
               size_t k,
               map<size_t, MatchResult> &topKResult);
 
-int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
-                                 const char *configFileName,
-                                 const char *featuresOutputFileName,
-                                 bool isIncremental)
+int EDCC::GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
+                                 _IN const char *configFileName,
+                                 _IN const char *featuresOutputFileName,
+                                 _IN bool isIncremental)
 {
     CHECK_POINTER_NULL_RETURN(trainingSetPalmprintGroupFileName, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
@@ -54,13 +54,14 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
     if(!checkHanler.checkConfigValid(trainIO.configMap)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
-
+    
     ifstream trainingSetIn;
     trainingSetIn.open(trainingSetPalmprintGroupFileName);
     retCode = trainIO.loadPalmprintGroup(trainingSetIn, featuresAll);
     if(retCode != EDCC_SUCCESS || !checkHanler.checkPalmprintGroupValid(featuresAll)) {
         return EDCC_LOAD_TAINING_SET_FAIL;
     }
+    
     EncodeAllPalmprint(featuresAll, trainIO.configMap);
     if(isIncremental) {
         BuildUpAllFeaturesWhenIncremental(featuresOrigin, featuresAll, featuresAll);
@@ -74,10 +75,10 @@ int EDCC::GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
     return EDCC_SUCCESS;
 }
 
-int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
-                                    const char *secondPalmprintImagePath,
-                                    const char *configFileName,
-                                    double &score)
+int EDCC::GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
+                                    _IN const char *secondPalmprintImagePath,
+                                    _IN const char *configFileName,
+                                    _INOUT double &score)
 {
     CHECK_POINTER_NULL_RETURN(firstPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(secondPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
@@ -108,12 +109,12 @@ int EDCC::GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
     return EDCC_SUCCESS;
 }
 
-int EDCC::GetTopKMatchScore(const char *onePalmprintImagePath,
-                            const char *trainingSetFeaturesOrPalmprintGroupFileName,
-                            const char *configFileName,
-                            bool isFeatures,
-                            size_t K,
-                            map<size_t, MatchResult> &topKResult)
+int EDCC::GetTopKMatchScore(_IN const char *onePalmprintImagePath,
+                            _IN const char *trainingSetFeaturesOrPalmprintGroupFileName,
+                            _IN const char *configFileName,
+                            _IN bool isFeatures,
+                            _IN size_t K,
+                            _INOUT map<size_t, MatchResult> &topKResult)
 {
     CHECK_POINTER_NULL_RETURN(onePalmprintImagePath, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(trainingSetFeaturesOrPalmprintGroupFileName, EDCC_NULL_POINTER_ERROR);
@@ -191,7 +192,7 @@ size_t BuildUpAllFeaturesWhenIncremental(const vector<PalmprintCode> &originFeat
             ++pcItTmp) {
             if(pcIt->imagePath == pcItTmp->imagePath
                && pcIt->identity == pcIt->identity) {
-                cout << "--Cover\t" << pcIt->identity << " : " << pcIt->imagePath << endl;
+                EDCC_Log("----Cover\t%s: %s", pcIt->identity.c_str(), pcIt->imagePath.c_str());
                 isExists = true;
                 break;
             }

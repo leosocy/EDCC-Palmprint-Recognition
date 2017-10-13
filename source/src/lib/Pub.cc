@@ -7,13 +7,12 @@
 #include <Pub.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 using namespace EDCC;
 
-string EDCC::toUpper(_IN const char *src)
+std::string EDCC::toUpper(_IN const char *src)
 {
-    string str;
+    std::string str;
     CHECK_POINTER_NULL_RETURN(src, str);
 
     str = src;
@@ -24,7 +23,7 @@ string EDCC::toUpper(_IN const char *src)
     return str;
 }
 
-void EDCC::EDCC_Log(const char *format, ...)
+void EDCC::EDCC_Log(_IN const char *format, ...)
 {
     char log[1024] = {0};
     va_list args;

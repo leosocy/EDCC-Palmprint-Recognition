@@ -10,7 +10,6 @@
 #include <string>
 #include <map>
 #include <vector>
-using namespace std;
 
 namespace EDCC {
     #define EDCC_SUCCESS 0
@@ -26,29 +25,32 @@ namespace EDCC {
 
     #define EDCC_PALMPRINT_IMAGE_NOT_EXISTS 400
 
+    #define _IN
+    #define _INOUT
+
     typedef struct  {
-        string identity;
-        string imagePath;
+        std::string identity;
+        std::string imagePath;
         double score;
         size_t rank;
     } MatchResult;
 
-    int GetTrainingSetFeatures(const char *trainingSetPalmprintGroupFileName,
-                               const char *configFileName,
-                               const char *featuresOutputFileName,
-                               bool isIncremental = false);
+    int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
+                               _IN const char *configFileName,
+                               _IN const char *featuresOutputFileName,
+                               _IN bool isIncremental = false);
 
-    int GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
-                                  const char *secondPalmprintImagePath,
-                                  const char *configFileName,
-                                  double &score);
+    int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
+                                  _IN const char *secondPalmprintImagePath,
+                                  _IN const char *configFileName,
+                                  _INOUT double &score);
 
-    int GetTopKMatchScore(const char *onePalmprintImagePath,
-                          const char *trainingSetFeaturesOrPalmprintGroupFileName,
-                          const char *configFileName,
-                          bool isFeatures,
-                          size_t K,
-                          map<size_t, MatchResult> &topKResult);
+    int GetTopKMatchScore(_IN const char *onePalmprintImagePath,
+                          _IN const char *trainingSetFeaturesOrPalmprintGroupFileName,
+                          _IN const char *configFileName,
+                          _IN bool isFeatures,
+                          _IN size_t K,
+                          _INOUT std::map<size_t, MatchResult> &topKResult);
 }
 
 

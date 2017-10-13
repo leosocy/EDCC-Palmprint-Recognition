@@ -41,17 +41,17 @@ namespace EDCC
         IO();
 
         int loadConfig(_IN ifstream &in);
-        int loadPalmprintGroup(_IN ifstream &in, _OUT vector<PalmprintCode> &groupVec);
-        int loadPalmprintFeatureData(_IN ifstream &in, _OUT vector<PalmprintCode> &data);
+        int loadPalmprintGroup(_IN ifstream &in, _Inout vector<PalmprintCode> &groupVec);
+        int loadPalmprintFeatureData(_IN ifstream &in, _Inout vector<PalmprintCode> &data);
         int savePalmprintFeatureData(_IN ofstream &out, _IN vector<PalmprintCode> &data);
     private:
         set< string > paramsSet;
         void loadOneIdentityAllPalmprintFeatureData(_IN const string &identity,
                                                     _IN const Json::Value &value,
-                                                    _OUT vector<PalmprintCode> &data);
-        bool genEDCCoding(_IN const Json::Value &value, _OUT PalmprintCode &coding);
-        bool insert2JsonValue(_IN PalmprintCode &code, _OUT Json::Value &value);
-        void setEDCCoding(_IN PalmprintCode &coding, _OUT Json::Value &value);
+                                                    _Inout vector<PalmprintCode> &data);
+        bool genEDCCoding(_IN const Json::Value &value, _Inout PalmprintCode &coding);
+        bool insert2JsonValue(_IN PalmprintCode &code, _Inout Json::Value &value);
+        void setEDCCoding(_IN PalmprintCode &coding, _Inout Json::Value &value);
     };
     //=========================================================
 }

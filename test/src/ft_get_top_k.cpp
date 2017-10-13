@@ -176,7 +176,7 @@ TEST_F(ft_get_top_k, Given_PalmprintGroup_When_GetTop10MatchScore_Then_EDCC_SUCC
     CheckTopKMatchScore(10);
 }
 
-TEST_F(ft_get_top_k, Given_FeaturesNotExists_When_GetTop10MatchScore_Then_EDCC_LOAD_FEATURES_FAIL)
+TEST_F(ft_get_top_k, Given_FeaturesNotExists_When_GetTop10MatchScoreUseFeatures_Then_EDCC_LOAD_FEATURES_FAIL)
 {
     int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
                                 FEATURES_OUTPUT_PATH_CANT_CREATE,
@@ -187,7 +187,7 @@ TEST_F(ft_get_top_k, Given_FeaturesNotExists_When_GetTop10MatchScore_Then_EDCC_L
     EXPECT_EQ(ret, EDCC_LOAD_FEATURES_FAIL);
 }
 
-TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScore_Then_EDCC_SUCCESS)
+TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScoreUseFeatures_Then_EDCC_SUCCESS)
 {
     int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
                                 FEATURES_TRAINGING_SET_EXISTS,
@@ -196,9 +196,10 @@ TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScore_Then_EDCC_SUC
                                 10,
                                 topKResult);
     EXPECT_EQ(ret, EDCC_SUCCESS);
+    CheckTopKMatchScore(10);
 }
 
-TEST_F(ft_get_top_k, Given_FeaturesInvalidC_When_GetTop10MatchScore_Then_EDCC_LOAD_FEATURES_FAIL)
+TEST_F(ft_get_top_k, Given_FeaturesInvalidC_When_GetTop10MatchScoreUseFeatures_Then_EDCC_LOAD_FEATURES_FAIL)
 {
     int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
                                 FEATURES_TRAINGING_SET_INVALID_C,

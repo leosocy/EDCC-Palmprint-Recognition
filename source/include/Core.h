@@ -58,7 +58,7 @@ namespace EDCC
         double matchWith(_IN const PalmprintCode &cmp) const;
     private:
         void enhanceImage(_IN const cv::Mat &src,
-                          _OUT cv::Mat &dst,
+                          _Inout cv::Mat &dst,
                           _IN const cv::Size &lapKerSize);
         void genEDCCoding(_IN const vector<cv::Mat> &filterResult,
                           _IN const Size &imgSize,
@@ -71,15 +71,15 @@ namespace EDCC
         GaborFilter(_IN const cv::Size &kernelSize, 
                     _IN int numOfDirections);
         ~GaborFilter();
-        void doGaborFilter(_IN const cv::Mat &src, _OUT cv::Mat &dstMerge);
+        void doGaborFilter(_IN const cv::Mat &src, _Inout cv::Mat &dstMerge);
     private:
         cv::Size kernelSize;
         int numOfDirections;
         int kernelType;
-        void getGaborKernelReal(_OUT cv::Mat &gaborKernel, _IN int kernelWidth, _IN int kernelHeight,
-                            _IN int dimension, _IN int direction,
-                            _IN double Kmax = CV_PI / 2, _IN double f = sqrt(2.0),
-                            _IN double sigma = 2 * CV_PI, _IN int ktype = CV_64F);
+        void getGaborKernelReal(_Inout cv::Mat &gaborKernel, _IN int kernelWidth, _IN int kernelHeight,
+                                _IN int dimension, _IN int direction,
+                                _IN double Kmax = CV_PI / 2, _IN double f = sqrt(2.0),
+                                _IN double sigma = 2 * CV_PI, _IN int ktype = CV_64F);
     };
 }
 
