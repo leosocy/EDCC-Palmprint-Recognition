@@ -114,7 +114,7 @@ int EDCC::GetTopKMatchScore(_IN const char *onePalmprintImagePath,
                             _IN const char *configFileName,
                             _IN bool isFeatures,
                             _IN size_t K,
-                            _INOUT map<size_t, MatchResult> &topKResult)
+                            _INOUT std::map<size_t, MatchResult> &topKResult)
 {
     CHECK_POINTER_NULL_RETURN(onePalmprintImagePath, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(trainingSetFeaturesOrPalmprintGroupFileName, EDCC_NULL_POINTER_ERROR);

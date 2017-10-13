@@ -34,7 +34,7 @@ if(MSVC)
 endif()
 
 if(MSVC)
-	add_compile_options("/MTd")
+	add_compile_options("/MT")
 elseif (UNIX)
 endif()
 
