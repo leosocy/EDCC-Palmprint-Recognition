@@ -50,5 +50,5 @@ target_link_libraries(${PROJECT_NAME} EDCC gtest)
 
 enable_testing()
 add_test(NAME ${PROJECT_NAME} 
-				CONFIGURATIONS  Debug
+				CONFIGURATIONS  Release
 				COMMAND ${PROJECT_NAME})
