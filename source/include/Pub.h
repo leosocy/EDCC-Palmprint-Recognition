@@ -8,10 +8,10 @@
 #define __PUB_H__
 
 #include <string>
-using namespace std;
 
 #define _IN
 #define _OUT
+#define _Inout
 
 namespace EDCC {
     static const char hexArray[16] =
@@ -61,9 +61,9 @@ namespace EDCC {
         } \
     } while(0)
 
-    string toUpper(_IN const char *src);
+    std::string toUpper(_IN const char *src);
 
-    void EDCC_Log(const char *format, ...);
+    void EDCC_Log(_IN const char *format, _IN ...);
 }
 
 #endif // !__PUB_H__

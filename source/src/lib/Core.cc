@@ -149,7 +149,7 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
 }
 
 void PalmprintCode::enhanceImage(_IN const cv::Mat &src, 
-                                 _OUT cv::Mat &dst, 
+                                 _Inout cv::Mat &dst,
                                  _IN const cv::Size &lapKerSize)
 {
     Mat gaussian;
@@ -208,7 +208,7 @@ GaborFilter::~GaborFilter()
 {
 }
 
-void GaborFilter::doGaborFilter(_IN const cv::Mat &src, _OUT cv::Mat &dstMerge)
+void GaborFilter::doGaborFilter(_IN const cv::Mat &src, _Inout cv::Mat &dstMerge)
 {
     vector<cv::Mat> dstVec;
     Mat dst;
@@ -224,7 +224,7 @@ void GaborFilter::doGaborFilter(_IN const cv::Mat &src, _OUT cv::Mat &dstMerge)
     merge(dstVec, dstMerge);
 }
 
-void GaborFilter::getGaborKernelReal(_OUT cv::Mat &gaborKernel,
+void GaborFilter::getGaborKernelReal(_Inout cv::Mat &gaborKernel,
                                      _IN int kernelWidth, _IN int kernelHeight,
                                      _IN int dimension, _IN int direction,
                                      _IN double Kmax, _IN double f,

@@ -3,6 +3,8 @@ cmake_minimum_required( VERSION 2.8 )
 set(PROJECT_NAME ft_edcc)
 project(${PROJECT_NAME})
 
+#find_package(OpenCV REQUIRED)
+
 set(GTEST_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/gtest)
 set(JSONCPP_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/jsoncpp)
 set(EDCC_ROOT ${CMAKE_SOURCE_DIR}/../source)
@@ -36,14 +38,14 @@ if(MSVC)
 endif()
 
 if(MSVC)
-	add_compile_options("/MTd")
+	add_compile_options("/MT")
 elseif (UNIX)
 endif()
 
 add_executable(${PROJECT_NAME} ${test_include_files} ${test_src_files})
 
 #FIND_LIBRARY(LIB_GTEST gtest.a ${CMAKE_BINARY_DIR} NO_DEFAULT_PATH)
-link_directories(${CMAKE_BINARY_DIR})
+#link_directories(${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/../lib)
 target_link_libraries(${PROJECT_NAME} EDCC gtest)
 
 enable_testing()
