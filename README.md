@@ -4,7 +4,7 @@
 
 **使用更少的训练样本，获得更高的准确率。**
 
-[关于EDCC算法](https://github.com/Leosocy/EDCC/tree/master/include)
+[关于EDCC算法](https://leosocy.github.io/2017/10/18/%E5%85%B3%E4%BA%8EEDCC%E7%AE%97%E6%B3%95/)
 
 ## 目录结构
 
