@@ -2,12 +2,14 @@
 
 `EDCC( Enhanced and Discriminative Competitive Code )`算法，用于掌纹的识别。
 
-[EDCC算法说明](https://github.com/Leosocy/EDCC/tree/master/include)
+**使用更少的训练样本，获得更高的准确率。**
+
+[关于EDCC算法](https://github.com/Leosocy/EDCC/tree/master/include)
 
 ## 目录结构
 
-- `include`:包含算法API的头文件。
-- `source`:EDCC算法的源代码，以及算法说明。
+- `include`:包含算法API的头文件以及API说明。
+- `source`:EDCC算法的源代码以及代码架构。
 - `test`:程序的FT用例。
 - `thirdparty`:第三方库，包括jsoncpp和gtest。
 - `lib`:一个CMakeList用于生成EDCC静态和动态链接库。
@@ -25,7 +27,7 @@
 
 在`edcc_lib`目录下会生成`libEDCC_STATIC.a`以及`libEDCC.so`
 
-编译库常见问题[FAQ](https://github.com/Leosocy/EDCC/tree/master/lib)
+编译库过程常见问题[FAQ](https://github.com/Leosocy/EDCC/tree/master/lib)
 
 ### 链接EDCC库
 
