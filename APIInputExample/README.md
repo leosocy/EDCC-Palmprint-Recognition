@@ -9,7 +9,7 @@
 - `gaborDirections`:EDCC使用的2DGabor方向个数
 - `laplaceKernelSize`:EDCC使用的拉普拉斯图像增强算子核尺寸
 
-`Tips`:您可以通过更改这些参数，以获得最高的识别准确率。
+`Tips`:您可以通过更改这些参数，调试以获得最高的识别准确率。
 
 ## TrainingSet
 
@@ -21,4 +21,5 @@
 ## Features
 
 EDCC算法提取的掌纹特征。该文件在调用`GetTrainingSetFeatures`API后生成。
-请勿手动修改！
+
+**请勿手动修改！**

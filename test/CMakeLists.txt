@@ -19,18 +19,18 @@ add_subdirectory(${EDCC_ROOT} ${CMAKE_BINARY_DIR}/EDCC)
 add_subdirectory(${GTEST_ROOT} ${CMAKE_BINARY_DIR}/gtest)
 
 include_directories(${EDCC_PUB_HEADER})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/include)
 include_directories(${JSONCPP_ROOT}/include)
 include_directories(${GTEST_ROOT}/include)
 
 file(GLOB_RECURSE test_include_files 
-	${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
+	${CMAKE_CURRENT_SOURCE_DIR}/source/include/*.h
 	${EDCC_PUB_HEADER}/*.h
 )
 file(GLOB_RECURSE test_src_files
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
+	${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.cc
+	${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.c
 )
 if(MSVC)
 	source_group(include FILES ${test_include_files})
