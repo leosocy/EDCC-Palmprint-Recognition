@@ -64,7 +64,7 @@ TEST_F(ft_get_top_k, Given_PalmprintNotExists_When_GetTop10MatchScore_Then_EDCC_
                                 false,
                                 10,
                                 topKResult);
-    EXPECT_EQ(ret, EDCC_PALMPRINT_IMAGE_NOT_EXISTS);
+    EXPECT_EQ(ret, EDCC_LOAD_PALMPRINT_IMAGE_FAIL);
     CheckTopKMatchScore(0);
 }
 

@@ -128,7 +128,7 @@ int EDCC::IO::savePalmprintFeatureData(_IN ofstream &out, _IN vector<PalmprintCo
         if(configMap.find(*it) == configMap.end()) {
             EDCC_Log("If you want to train/predict, load config.json first.\
                     Or if you want incremental training/prediction, load trainData.json first.\n");
-            return EDCC_SAVE_CONFIG_FAIL;
+            return EDCC_SAVE_FEATURES_FAIL;
         } else {
             root[*it] = configMap.at(*it);
         }

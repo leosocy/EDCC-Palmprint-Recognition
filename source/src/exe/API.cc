@@ -101,7 +101,7 @@ int EDCC::GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
     PalmprintCode secondPalmprint("identity", secondPalmprintImagePath);
     if(!firstPalmprint.encodePalmprint(matchIO.configMap)
        || !secondPalmprint.encodePalmprint(matchIO.configMap)) {
-        return EDCC_PALMPRINT_IMAGE_NOT_EXISTS;
+        return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
 
     score = firstPalmprint.matchWith(secondPalmprint);
@@ -152,7 +152,7 @@ int EDCC::GetTopKMatchScore(_IN const char *onePalmprintImagePath,
     }
     PalmprintCode onePalmprint("identity", onePalmprintImagePath);
     if(!onePalmprint.encodePalmprint(matchIO.configMap)) {
-        return EDCC_PALMPRINT_IMAGE_NOT_EXISTS;
+        return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
 
     SortTopK(onePalmprint, featuresAll, K, topKResult);
