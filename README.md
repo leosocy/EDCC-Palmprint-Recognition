@@ -1,6 +1,6 @@
 # EDCC: 高效、准确的掌纹识别算法
 
-`EDCC( Enhanced and Discriminative Competitive Code )`算法，用于掌纹的识别。
+`EDCC( Enhanced and Discriminative Competitive Code, 增强的、有辨识度的竞争编码)`算法，用于掌纹的识别。
 
 **使用更少的训练样本，获得更高的准确率。**
 
