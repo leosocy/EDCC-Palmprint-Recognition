@@ -16,11 +16,11 @@
 }"
 EDCC::IO::IO()
 {
-    paramsSet.insert("imageSizeW");
-    paramsSet.insert("imageSizeH");
-    paramsSet.insert("gaborKernelSize");
-    paramsSet.insert("gaborDirections");
-    paramsSet.insert("laplaceKernelSize");
+    paramsSet.insert(IMAGE_SIZE_W);
+    paramsSet.insert(IMAGE_SIZE_H);
+    paramsSet.insert(GABOR_KERNEL_SIZE);
+    paramsSet.insert(GABOR_DIRECTIONS);
+    paramsSet.insert(LAPLACE_KERNEL_SIZE);
 }
 
 int EDCC::IO::loadConfig(_IN ifstream &in)
@@ -87,7 +87,7 @@ int EDCC::IO::loadPalmprintGroup(_IN ifstream &in, _INOUT vector<PalmprintCode> 
     return EDCC_SUCCESS;
 }
 
-int EDCC::IO::loadPalmprintFeatureData(_IN ifstream &in, _Inout vector<PalmprintCode> &data)
+int EDCC::IO::loadPalmprintFeatureData(_IN ifstream &in, _INOUT vector<PalmprintCode> &data)
 {
     Json::Value root;
     Json::Reader reader;
@@ -145,7 +145,7 @@ int EDCC::IO::savePalmprintFeatureData(_IN ofstream &out, _IN vector<PalmprintCo
 
 void EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity,
                                                       _IN const Json::Value &value,
-                                                      _Inout vector<PalmprintCode> &data)
+                                                      _INOUT vector<PalmprintCode> &data)
 {
     Json::Value::Members imagePathMembers;
     Json::Value::Members::iterator it;
@@ -159,7 +159,7 @@ void EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity
     }
 }
 
-bool EDCC::IO::genEDCCoding(_IN const Json::Value &value, _Inout PalmprintCode &coding)
+bool EDCC::IO::genEDCCoding(_IN const Json::Value &value, _INOUT PalmprintCode &coding)
 {
     if(value.isNull() || !value.isObject()) {
         EDCC_Log("Load Palmprint Features Data failed. Don't change the json format.\n");
@@ -191,7 +191,7 @@ bool EDCC::IO::genEDCCoding(_IN const Json::Value &value, _Inout PalmprintCode &
     return true;
 }
 
-bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _Inout Json::Value &value)
+bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _INOUT Json::Value &value)
 {
     string identity = code.identity;
     string imagePath = code.imagePath;
@@ -206,7 +206,7 @@ bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _Inout Json::Value &val
     return true;
 }
 
-void EDCC::IO::setEDCCoding(_IN PalmprintCode &coding, _Inout Json::Value &value)
+void EDCC::IO::setEDCCoding(_IN PalmprintCode &coding, _INOUT Json::Value &value)
 {
     string aesCoding = coding.encrypt();
     stringstream codingSS;

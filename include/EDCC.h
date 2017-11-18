@@ -27,6 +27,7 @@
 
 #define EDCC_CODING_INVALID 600
 
+<<<<<<< HEAD
 #define _IN
 #define _OUT
 #define _INOUT
@@ -38,6 +39,21 @@ typedef struct  {
     size_t rank;
 } MatchResult;
 
+=======
+#define EDCC_CODING_BUFF_LEN_NOT_ENOUGH 700
+
+#define _IN
+#define _OUT
+#define _INOUT
+
+typedef struct  {
+    std::string identity;
+    std::string imagePath;
+    double score;
+    size_t rank;
+} MatchResult;
+
+>>>>>>> 重构
 extern "C" {
 
     /* Some primitive operation */

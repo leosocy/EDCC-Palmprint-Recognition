@@ -2,6 +2,8 @@
 
 #include <gtest/gtest.h>
 #include <json.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <fstream>
 #include <EDCC.h>
 using namespace std;
@@ -31,8 +33,7 @@ using namespace std;
 #define FEATURES_INCREMENTAL_OUTPUT_PATH "..\\test\\example\\features\\features_incremental.json"
 #define FEATURES_OUTPUT_PATH_CANT_CREATE "..\\test\\example\\features\\folder\\features.json"
 #define FEATURES_TRAINGING_SET_EXISTS "..\\test\\example\\features\\trainingFeatures.json"
-#define FEATURES_TRAINGING_SET_INVALID_C  "..\\test\\example\\features\\trainingFeaturesInvalidC.json"
-#define FEATURES_TRAINGING_SET_INVALID_CS  "..\\test\\example\\features\\trainingFeaturesInvalidCs.json"
+#define FEATURES_TRAINGING_SET_COING_BEEN_CHANGED  "..\\test\\example\\features\\trainingFeaturesBeenChanged.json"
 
 #define ID1_FIRST_PALMPRINT "..\\test\\palmprint_database\\001\\2_01_s.bmp"
 #define ID1_SECOND_PALMPRINT "..\\test\\palmprint_database\\001\\2_02_s.bmp"
@@ -65,8 +66,7 @@ using namespace std;
 #define FEATURES_INCREMENTAL_OUTPUT_PATH "../test/example/features/features_incremental.json"
 #define FEATURES_OUTPUT_PATH_CANT_CREATE "../test/example/features/folder/features_incremental.json"
 #define FEATURES_TRAINGING_SET_EXISTS "../test/example/features/trainingFeatures.json"
-#define FEATURES_TRAINGING_SET_INVALID_C "../test/example/features/trainingFeaturesInvalidC.json"
-#define FEATURES_TRAINGING_SET_INVALID_CS "../test/example/features/trainingFeaturesInvalidCs.json"
+#define FEATURES_TRAINGING_SET_COING_BEEN_CHANGED "../test/example/features/trainingFeaturesBeenChanged.json"
 
 #define ID1_FIRST_PALMPRINT "../test/palmprint_database/001/1_01_s.bmp"
 #define ID1_SECOND_PALMPRINT "../test/palmprint_database/001/1_02_s.bmp"

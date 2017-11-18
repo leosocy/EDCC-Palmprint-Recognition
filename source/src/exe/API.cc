@@ -36,8 +36,7 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
     int retCode = 0;
     ifstream configIn;
     Check checkHandler;
-    pCodingBuff = NULL;
-    buffLen = 0;
+    bufLen = 0;
 
     configIn.open(configFileName);
     retCode = trainIO.loadConfig(configIn);

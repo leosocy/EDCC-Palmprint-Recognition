@@ -70,96 +70,96 @@ TEST_F(ft_get_top_k, Given_PalmprintNotExists_When_GetTop10MatchScore_Then_EDCC_
 
 TEST_F(ft_get_top_k, Given_PalmprintGroup_And_ConfigNotExists_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    int ret = EDCC::GetTopKMatchScore(ID1_FIRST_PALMPRINT,
-                                      CORRECT_GROUP_PATH,
-                                      NOT_EXISTS_CONFIG_PATH,
-                                      false,
-                                      10,
-                                      topKResult);
+    int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
+                                CORRECT_GROUP_PATH,
+                                NOT_EXISTS_CONFIG_PATH,
+                                false,
+                                10,
+                                topKResult);
     EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
     CheckTopKMatchScore(0);
 }
 
 TEST_F(ft_get_top_k, Given_PalmprintGroup_And_ConfigParamsError_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    int ret = EDCC::GetTopKMatchScore(ID1_FIRST_PALMPRINT,
-                                      CORRECT_GROUP_PATH,
-                                      PARAMS_ERROR_CONFIG_PATH,
-                                      false,
-                                      10,
-                                      topKResult);
+    int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
+                                CORRECT_GROUP_PATH,
+                                PARAMS_ERROR_CONFIG_PATH,
+                                false,
+                                10,
+                                topKResult);
     EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
     CheckTopKMatchScore(0);
 }
 
 TEST_F(ft_get_top_k, Given_PalmprintGroup_And_ConfigParamsMiss_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    int ret = EDCC::GetTopKMatchScore(ID1_FIRST_PALMPRINT,
-                                      CORRECT_GROUP_PATH,
-                                      PARAMS_MISS_CONFIG_PATH,
-                                      false,
-                                      10,
-                                      topKResult);
+    int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
+                                CORRECT_GROUP_PATH,
+                                PARAMS_MISS_CONFIG_PATH,
+                                false,
+                                10,
+                                topKResult);
     EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
     CheckTopKMatchScore(0);
 }
 
 TEST_F(ft_get_top_k, Give_PalmprintGroup_And_ConfigParamsNoDefault_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    int ret = EDCC::GetTopKMatchScore(ID1_FIRST_PALMPRINT,
-                                      CORRECT_GROUP_PATH,
-                                      PARAMS_NO_DEFAULT_CONFIG_PATH,
-                                      false,
-                                      10,
-                                      topKResult);
+    int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
+                                CORRECT_GROUP_PATH,
+                                PARAMS_NO_DEFAULT_CONFIG_PATH,
+                                false,
+                                10,
+                                topKResult);
     EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
     CheckTopKMatchScore(0);
 }
 
 TEST_F(ft_get_top_k, Given_PalmprintGroup_And_ConfigParamsOver_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    int ret = EDCC::GetTopKMatchScore(ID1_FIRST_PALMPRINT,
-                                      CORRECT_GROUP_PATH,
-                                      PARAMS_OVER_CONFIG_PATH,
-                                      false,
-                                      10,
-                                      topKResult);
+    int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
+                                CORRECT_GROUP_PATH,
+                                PARAMS_OVER_CONFIG_PATH,
+                                false,
+                                10,
+                                topKResult);
     EXPECT_EQ(ret, EDCC_LOAD_CONFIG_FAIL);
     CheckTopKMatchScore(0);
 }
 
 TEST_F(ft_get_top_k, Given_PalmprintGroup_And_GroupWrongFormat_When_GetTop10MatchScore_Then_EDCC_LOAD_TAINING_SET_FAIL)
 {
-    int ret = EDCC::GetTopKMatchScore(ID1_FIRST_PALMPRINT,
-                                      WRONG_FORMAT_GROUP_PATH,
-                                      CORRECT_CONFIG_PATH,
-                                      false,
-                                      10,
-                                      topKResult);
+    int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
+                                WRONG_FORMAT_GROUP_PATH,
+                                CORRECT_CONFIG_PATH,
+                                false,
+                                10,
+                                topKResult);
     EXPECT_EQ(ret, EDCC_LOAD_TAINING_SET_FAIL);
     CheckTopKMatchScore(0);
 }
 
 TEST_F(ft_get_top_k, Given_PalmprintGroup_And_GroupNotExists_When_GetTop10MatchScore_Then_EDCC_LOAD_TAINING_SET_FAIL)
 {
-    int ret = EDCC::GetTopKMatchScore(ID1_FIRST_PALMPRINT,
-                                      WRONG_FORMAT_GROUP_PATH,
-                                      CORRECT_CONFIG_PATH,
-                                      false,
-                                      10,
-                                      topKResult);
+    int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
+                                WRONG_FORMAT_GROUP_PATH,
+                                CORRECT_CONFIG_PATH,
+                                false,
+                                10,
+                                topKResult);
     EXPECT_EQ(ret, EDCC_LOAD_TAINING_SET_FAIL);
     CheckTopKMatchScore(0);
 }
 
 TEST_F(ft_get_top_k, Given_PalmprintGroup_And_GroupConflictImage_When_GetTop10MatchScore_Then_EDCC_LOAD_TAINING_SET_FAIL)
 {
-    int ret = EDCC::GetTopKMatchScore(ID1_FIRST_PALMPRINT,
-                                      CONFLICT_IMAGE_GROUP_PATH,
-                                      CORRECT_CONFIG_PATH,
-                                      false,
-                                      10,
-                                      topKResult);
+    int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
+                                CONFLICT_IMAGE_GROUP_PATH,
+                                CORRECT_CONFIG_PATH,
+                                false,
+                                10,
+                                topKResult);
     EXPECT_EQ(ret, EDCC_LOAD_TAINING_SET_FAIL);
     CheckTopKMatchScore(0);
 }
@@ -202,7 +202,7 @@ TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScoreUseFeatures_Th
 TEST_F(ft_get_top_k, Given_FeaturesInvalidC_When_GetTop10MatchScoreUseFeatures_Then_EDCC_LOAD_FEATURES_FAIL)
 {
     int ret = GetTopKMatchScore(ID1_FIRST_PALMPRINT,
-                                FEATURES_TRAINGING_SET_INVALID_C,
+                                FEATURES_TRAINGING_SET_COING_BEEN_CHANGED,
                                 CORRECT_CONFIG_PATH,
                                 true,
                                 10,
