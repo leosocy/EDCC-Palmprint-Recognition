@@ -13,10 +13,10 @@
 #include <Pub.h>
 #include <Check.h>
 #include <Match.h>
-#include <AES.h>
 
 using namespace std;
 using namespace cv;
+#pragma warning(disable : 4200)
 
 namespace EDCC
 {

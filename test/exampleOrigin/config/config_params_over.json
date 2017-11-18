@@ -1,57 +1,68 @@
 {
-	"imageSize" : {
-		"default" : 29,
-		"desc" : {
-			"en-US" : "Input palmprint image size.",
-			"zh-CN" : "输入掌纹图像的尺寸"
-		},
-		"regulation" : {
-			"en-US" : "29 is Experience, should bigger than this.Should not be too large, will affect the size of the palm print code.Too large size will increase the size of the feature matrix and the cost time of recognition.",
-			"zh-CN" : "29是经验值，需要大于等于此值。不宜过大，会影响掌纹的编码大小，过大的尺寸会增加特征矩阵的大小，增加识别耗时"
-		}
-	},
-	"laplaceKernelSize" : {
-		"default" : 27,
-		"desc" : {
-			"en-US" : "The size of laplace kernel which is used to enhance the palmprint image.",
-			"zh-CN" : "对图像进行增强处理使用的拉普拉斯核大小"
-		},
-		"regulation" : {
-			"en-US" : "Can not be larger than the size of the palm print image, and must be odd.",
-			"zh-CN" : "不能大于掌纹图像的大小，而且必须是奇数"
-		}
-	},
-	"gaborKernelSize" : {
-		"default" : 9,
-		"desc" : {
-			"en-US" : "The size of 2DGabor kernel which is used to code the palmprint image.",
-			"zh-CN" : "对图像进行2DGabor小波变换使用的核大小"
-		},
-		"regulation" : {
-			"en-US" : "Can not be larger than the size of the palm print image, and must be odd.",
-			"zh-CN" : "不能大于掌纹图像的大小，而且必须是奇数"
-		}
-	},
-	"gaborDirections" : {
-		"default" : 12,
-		"desc" : {
-			"en-US" : "The number of gabor directions",
-			"zh-CN" : "对图像进行2DGabor小波变换使用方向个数"
-		},
-		"regulation" : {
-			"en-US" : "In range[4, 16]",
-			"zh-CN" : "在4-16之间"
-		}
-	},
-	"overParameter" : {
-		"default" : 66,
-		"desc" : {
-			"en-US" : "123",
-			"zh-CN" : "123"
-		},
-		"regulation" : {
-			"en-US" : "456",
-			"zh-CN" : "456"
-		}
-	}
+    "imageSizeW" : {
+        "default" : 29,
+        "desc" : {
+            "en-US" : "Input palmprint image size width.",
+            "zh-CN" : "输入掌纹图像的宽度"
+        },
+        "regulation" : {
+            "en-US" : "29 is Experience, should bigger than this.Should not be too large, will affect the size of the palm print code.Too large size will increase the size of the feature matrix and the cost time of recognition.",
+            "zh-CN" : "29是经验值，需要大于等于此值。不宜过大，会影响掌纹的编码大小，过大的尺寸会增加特征矩阵的大小，增加识别耗时"
+        }
+    },
+    "imageSizeH" : {
+        "default" : 29,
+        "desc" : {
+            "en-US" : "Input palmprint image size height.",
+            "zh-CN" : "输入掌纹图像的高度"
+        },
+        "regulation" : {
+            "en-US" : "29 is Experience, should bigger than this.Should not be too large, will affect the size of the palm print code.Too large size will increase the size of the feature matrix and the cost time of recognition.",
+            "zh-CN" : "29是经验值，需要大于等于此值。不宜过大，会影响掌纹的编码大小，过大的尺寸会增加特征矩阵的大小，增加识别耗时"
+        }
+    },
+    "laplaceKernelSize" : {
+        "default" : 27,
+        "desc" : {
+            "en-US" : "The size of laplace kernel which is used to enhance the palmprint image.",
+            "zh-CN" : "对图像进行增强处理使用的拉普拉斯核大小"
+        },
+        "regulation" : {
+            "en-US" : "Can not be larger than the size of the palm print image, and must be odd.",
+            "zh-CN" : "不能大于掌纹图像的大小，而且必须是奇数"
+        }
+    },
+    "gaborKernelSize" : {
+        "default" : 9,
+        "desc" : {
+            "en-US" : "The size of 2DGabor kernel which is used to code the palmprint image.",
+            "zh-CN" : "对图像进行2DGabor小波变换使用的核大小"
+        },
+        "regulation" : {
+            "en-US" : "Can not be larger than the size of the palm print image, and must be odd.",
+            "zh-CN" : "不能大于掌纹图像的大小，而且必须是奇数"
+        }
+    },
+    "gaborDirections" : {
+        "default" : 12,
+        "desc" : {
+            "en-US" : "The number of gabor directions",
+            "zh-CN" : "对图像进行2DGabor小波变换使用方向个数"
+        },
+        "regulation" : {
+            "en-US" : "In range[4, 16]",
+            "zh-CN" : "在4-16之间"
+        }
+    },
+    "overParameter" : {
+        "default" : 66,
+        "desc" : {
+            "en-US" : "123",
+            "zh-CN" : "123"
+        },
+        "regulation" : {
+            "en-US" : "456",
+            "zh-CN" : "456"
+        }
+    }
 }

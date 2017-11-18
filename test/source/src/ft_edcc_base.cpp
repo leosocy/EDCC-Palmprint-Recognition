@@ -31,11 +31,13 @@ void ft_edcc_base::CheckFeaturesConfigEqualConfigFile(const char *featuresFileNa
         return;
     }
 
-    if(featuresRoot["imageSize"].isNull()
+    if(featuresRoot["imageSizeW"].isNull()
+       || featuresRoot["imageSizeH"].isNull()
        || featuresRoot["laplaceKernelSize"].isNull()
        || featuresRoot["gaborKernelSize"].isNull()
        || featuresRoot["gaborDirections"].isNull()
-       || configRoot["imageSize"].isNull()
+       || configRoot["imageSizeW"].isNull()
+       || configRoot["imageSizeH"].isNull()
        || configRoot["laplaceKernelSize"].isNull()
        || configRoot["gaborKernelSize"].isNull()
        || configRoot["gaborDirections"].isNull()) {
@@ -43,7 +45,8 @@ void ft_edcc_base::CheckFeaturesConfigEqualConfigFile(const char *featuresFileNa
         return;
     }
 
-    EXPECT_EQ(featuresRoot["imageSize"].asInt(), configRoot["imageSize"]["default"].asInt());
+    EXPECT_EQ(featuresRoot["imageSizeW"].asInt(), configRoot["imageSizeW"]["default"].asInt());
+    EXPECT_EQ(featuresRoot["imageSizeH"].asInt(), configRoot["imageSizeH"]["default"].asInt());
     EXPECT_EQ(featuresRoot["laplaceKernelSize"].asInt(), configRoot["laplaceKernelSize"]["default"].asInt());
     EXPECT_EQ(featuresRoot["gaborKernelSize"].asInt(), configRoot["gaborKernelSize"]["default"].asInt());
     EXPECT_EQ(featuresRoot["gaborDirections"].asInt(), configRoot["gaborDirections"]["default"].asInt());
@@ -121,7 +124,6 @@ Json::Value* ft_edcc_base::GetJsonValueByConfigParamName(const char *configOrFea
        || paramName == NULL) {
         return NULL;
     }
-
 
     ifstream configIn;
     configIn.open(configOrFeaturesFileName);

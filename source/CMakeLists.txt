@@ -22,29 +22,27 @@ include_directories(${AES_ROOT}/include)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 file(GLOB_RECURSE edcc_include_files 
-	${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
-	${AES_ROOT}/include/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
 )
 
 file(GLOB_RECURSE edcc_src_files
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
-	${AES_ROOT}/source/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
 )
 if(MSVC)
-	source_group(include FILES ${edcc_include_files})
-	source_group(src FILES ${edcc_src_files}) 
+    source_group(include FILES ${edcc_include_files})
+    source_group(src FILES ${edcc_src_files}) 
 endif()
 
 if(MSVC)
-	add_compile_options("/MT")
+    add_compile_options("/MT")
 elseif (UNIX)
 endif()
 
 add_library(${PROJECT_NAME} STATIC 
-						${edcc_include_files}
-						${edcc_src_files})
+            ${edcc_include_files}
+            ${edcc_src_files})
 #FIND_LIBRARY(LIB_JSONCPP NAMES jsoncpp PATHS ${CMAKE_BINARY_DIR}/thirdparty/jsoncpp/Debug NO_DEFAULT_PATH)
 #message(${LIB_JSONCPP})
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} jsoncpp)
