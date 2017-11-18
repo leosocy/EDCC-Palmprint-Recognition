@@ -11,7 +11,7 @@
 
 #define _IN
 #define _OUT
-#define _Inout
+#define _INOUT
 
 namespace EDCC {
     static const char hexArray[16] =
@@ -20,7 +20,8 @@ namespace EDCC {
     '8', '9', 'A', 'B',
     'C', 'D', 'E', 'F'};
 
-    #define IMAGE_SIZE "imageSize"
+    #define IMAGE_SIZE_W "imageSizeW"
+    #define IMAGE_SIZE_H "imageSizeH"
     #define GABOR_KERNEL_SIZE "gaborKernelSize"
     #define GABOR_DIRECTIONS "gaborDirections"
     #define LAPLACE_KERNEL_SIZE "laplaceKernelSize"

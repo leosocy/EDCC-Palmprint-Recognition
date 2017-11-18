@@ -31,7 +31,8 @@ namespace EDCC
     private:
         bool checkCodingC(_IN const string &zipCodingC);
 
-        int imageSize;
+        int imageSizeW;
+        int imageSizeH;
         int gaborKernelSize;
         int gaborDirections;
         int laplaceKernelSize;

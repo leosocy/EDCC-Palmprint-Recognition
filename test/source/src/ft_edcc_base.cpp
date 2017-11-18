@@ -7,7 +7,7 @@ ft_edcc_base::ft_edcc_base()
 
 ft_edcc_base::~ft_edcc_base()
 {
-    DeleteDir(EXAMPLE_DST_DIR);
+    //DeleteDir(EXAMPLE_DST_DIR);
 }
 
 void ft_edcc_base::CheckFeaturesConfigEqualConfigFile(const char *featuresFileName,

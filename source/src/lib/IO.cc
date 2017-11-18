@@ -16,10 +16,11 @@
 }"
 EDCC::IO::IO()
 {
-    paramsSet.insert("imageSize");
-    paramsSet.insert("laplaceKernelSize");
+    paramsSet.insert("imageSizeW");
+    paramsSet.insert("imageSizeH");
     paramsSet.insert("gaborKernelSize");
     paramsSet.insert("gaborDirections");
+    paramsSet.insert("laplaceKernelSize");
 }
 
 int EDCC::IO::loadConfig(_IN ifstream &in)
@@ -55,7 +56,7 @@ int EDCC::IO::loadConfig(_IN ifstream &in)
     return EDCC_SUCCESS;
 }
 
-int EDCC::IO::loadPalmprintGroup(_IN ifstream &in, _Inout vector<PalmprintCode> &groupVec)
+int EDCC::IO::loadPalmprintGroup(_IN ifstream &in, _INOUT vector<PalmprintCode> &groupVec)
 {
     Json::Value root;
     Json::Reader reader;
@@ -169,13 +170,23 @@ bool EDCC::IO::genEDCCoding(_IN const Json::Value &value, _Inout PalmprintCode &
     Mat C(imageSize, imageSize, CV_8S);
     Mat Cs(imageSize, imageSize, CV_8S);
     
-    if(value["C"].isNull() || !value["C"].isString()
-       || value["Cs"].isNull() || !value["Cs"].isString()) {
+    if(value["Coding"].isNull() || !value["Coding"].isString()) {
         EDCC_Log("Load Palmprint Features Data failed. Don't change the json format.\n");
         return false;
     }
-    coding.zipCodingC = EDCC::toUpper(value["C"].asString().c_str());
-    coding.zipCodingCs = EDCC::toUpper(value["Cs"].asString().c_str());
+    //coding.zipCodingC = EDCC::toUpper(value["C"].asString().c_str());
+    //coding.zipCodingCs = EDCC::toUpper(value["Cs"].asString().c_str());
+
+    string aesCoding = value["Coding"].asString();
+    stringstream aesSS;
+
+    for(size_t i = 0; i < aesCoding.length(); i += 2) {
+        string tmp = aesCoding.substr(i, 2);
+        unsigned char c;
+        sscanf(tmp.c_str(), "%02x", &c);
+        aesSS << c;
+    }
+    coding.decrypt(aesSS.str());
 
     return true;
 }
@@ -197,8 +208,15 @@ bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _Inout Json::Value &val
 
 void EDCC::IO::setEDCCoding(_IN PalmprintCode &coding, _Inout Json::Value &value)
 {
-    Json::Value cValue, csValue;
-    value["C"] = coding.zipCodingC;
-    value["Cs"] = coding.zipCodingCs;
+    string aesCoding = coding.encrypt();
+    stringstream codingSS;
+    char cTmp[3] = {0};
+
+    for(size_t i = 0; i < aesCoding.length(); ++i) {
+        memset(cTmp, 0, 3);
+        sprintf(cTmp, "%02x", (unsigned char)aesCoding[i]);
+        codingSS << cTmp;
+    }
+    value["Coding"] = codingSS.str();
 }
 

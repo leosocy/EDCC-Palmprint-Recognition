@@ -81,6 +81,7 @@ public:
     ft_edcc_base();
     ~ft_edcc_base();
 
+
     void CheckFeaturesConfigEqualConfigFile(const char *featuresFileName,
                                             const char *configFileName);
 
@@ -98,6 +99,7 @@ public:
 private:
     Json::Value* GetJsonValueByConfigParamName(const char *configOrFeaturesFileName,
                                                const char *paramName);
+
     Json::Value valueRoot;
 
     void CopyDir(const char *srcDir, const char *dstDir);

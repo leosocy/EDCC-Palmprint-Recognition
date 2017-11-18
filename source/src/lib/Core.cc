@@ -69,6 +69,37 @@ cv::Mat* Palmprint::genSpecImg(_IN const cv::Size &imgSize, _IN bool isGray)
 }
 
 //---------------------------------EDCCoding------------------------------------
+
+
+unsigned char* EDCCoding::encrypt()
+{
+    compressCoding();
+    if(zipCodingC.empty()
+       || zipCodingCs.empty())
+    {
+        return "";
+    }
+    string comCoding = zipCodingC + "\n" + zipCodingCs;
+
+    /*AES aes;
+    std::string errMsg;
+    std::string outData;
+    aes.encrypt4aes(comCoding, "062206271314520a", outData, errMsg);
+    return errMsg == "" ? outData : "";*/
+    return comCoding;
+}
+
+void EDCCoding::decrypt(const string &aesCoding)
+{
+    std::string strInput, errMsg;
+    AES aes;
+    aes.decrypt4aes(aesCoding, "062206271314520a", strInput, errMsg);
+    size_t pos = strInput.find("\n");
+    zipCodingC = strInput.substr(0, pos);
+    zipCodingCs = strInput.substr(pos + 1, strInput.length() - pos - 1);
+    cout << "C:" << zipCodingC << endl << "Cs:" << zipCodingCs << endl;
+}
+
 void EDCCoding::compressCoding()
 {
     int width = C.cols;
@@ -97,6 +128,8 @@ void EDCCoding::compressCoding()
     zipCodingC = ssZipC.str();
     zipCodingCs = ssZipCs.str();
 }
+
+
 //---------------------------------PalmprintCode--------------------------------
 
 PalmprintCode::~PalmprintCode()
@@ -119,17 +152,17 @@ bool PalmprintCode::encodePalmprint(_IN const map< string, int > &configMap)
         return false;
     }
 
-    bRet = encodePalmprint(Size(configMap.at(IMAGE_SIZE), configMap.at(IMAGE_SIZE)),
-                           Size(configMap.at(GABOR_KERNEL_SIZE), configMap.at(GABOR_KERNEL_SIZE)),
+    bRet = encodePalmprint(Size(configMap.at(IMAGE_SIZE_W), configMap.at(IMAGE_SIZE_H)),
+                           configMap.at(GABOR_KERNEL_SIZE),
                            configMap.at(GABOR_DIRECTIONS),
-                           Size(configMap.at(LAPLACE_KERNEL_SIZE), configMap.at(LAPLACE_KERNEL_SIZE)));
+                           configMap.at(LAPLACE_KERNEL_SIZE));
     return bRet;
 }
 
 bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
-                                    _IN const cv::Size &gabKerSize,
+                                    _IN int gabKerSize,
                                     _IN int numOfDirections,
-                                    _IN const cv::Size &lapKerSize)
+                                    _IN int lapKerSize)
 {
     GaborFilter filter(gabKerSize, numOfDirections);
     Mat *imgRet = genSpecImg(imgSize);
@@ -144,7 +177,7 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
     vector<cv::Mat> resultVec;
     split(gaborResult, resultVec);
     genEDCCoding(resultVec, imgSize, numOfDirections);
-    compressCoding();
+
     return true;
 }
 
@@ -154,7 +187,7 @@ void PalmprintCode::enhanceImage(_IN const cv::Mat &src,
 {
     Mat gaussian;
     GaussianBlur(src, gaussian, Size(5, 5), 0, 0, BORDER_DEFAULT);
-    Laplacian( gaussian, dst, CV_64F, lapKerSize.width);
+    Laplacian(gaussian, dst, CV_64F, lapKerSize.width);
     normalize(dst, dst, 0, 1, CV_MINMAX);
 }
 
