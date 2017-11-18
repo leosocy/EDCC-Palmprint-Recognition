@@ -4,6 +4,7 @@ set(PROJECT_NAME EDCC)
 project(${PROJECT_NAME})
 set(JSONCPP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/jsoncpp)
 set(EDCC_PUB_HEADER ${CMAKE_SOURCE_DIR}/../include)
+set(AES_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/aes)
 
 message(STATUS "——————————————————————————————————————")
 message(STATUS "PROJECT_NAME : " ${PROJECT_NAME})
@@ -17,16 +18,19 @@ find_package(OpenCV REQUIRED)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
 include_directories(${EDCC_PUB_HEADER})
 include_directories(${JSONCPP_ROOT}/include)
+include_directories(${AES_ROOT}/include)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 file(GLOB_RECURSE edcc_include_files 
 	${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
+	${AES_ROOT}/include/*.h
 )
 
 file(GLOB_RECURSE edcc_src_files
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
+	${AES_ROOT}/source/*.cpp
 )
 if(MSVC)
 	source_group(include FILES ${edcc_include_files})

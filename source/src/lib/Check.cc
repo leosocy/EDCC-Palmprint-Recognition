@@ -11,7 +11,8 @@ using namespace EDCC;
 
 bool Check::checkConfigValid(_IN const map<string, int> &configMap)
 {
-    if(configMap.find(IMAGE_SIZE) == configMap.end()
+    if(configMap.find(IMAGE_SIZE_W) == configMap.end()
+       || configMap.find(IMAGE_SIZE_H) == configMap.end()
        || configMap.find(GABOR_KERNEL_SIZE) == configMap.end()
        || configMap.find(GABOR_DIRECTIONS) == configMap.end()
        || configMap.find(LAPLACE_KERNEL_SIZE) == configMap.end()) {
@@ -19,21 +20,24 @@ bool Check::checkConfigValid(_IN const map<string, int> &configMap)
         return false;
     }
 
-    imageSize = configMap.at(IMAGE_SIZE);
+    imageSizeW = configMap.at(IMAGE_SIZE_W);
+    imageSizeH = configMap.at(IMAGE_SIZE_H);
     gaborKernelSize = configMap.at(GABOR_KERNEL_SIZE);
     gaborDirections = configMap.at(GABOR_DIRECTIONS);
     laplaceKernelSize = configMap.at(LAPLACE_KERNEL_SIZE);
 
-    if(imageSize < CONFIG_IMAGE_SIZE_MIN) {
-        EDCC_Log("ImageSize can't smaller than %d\n", CONFIG_IMAGE_SIZE_MIN);
+    if(imageSizeW < CONFIG_IMAGE_SIZE_MIN || imageSizeH < CONFIG_IMAGE_SIZE_MIN) {
+        EDCC_Log("ImageSize(%d, %d) can't smaller than %d\n", imageSizeW, imageSizeH, CONFIG_IMAGE_SIZE_MIN);
         return false;
     }
-    if(gaborKernelSize > imageSize
+    if(gaborKernelSize > imageSizeW
+       || gaborKernelSize > imageSizeH
        || gaborKernelSize % 2 == 0) {
         EDCC_Log("Gabor Kernel Size must be smaller than imageSize.And must be odd!\n");
         return false;
     }
-    if(laplaceKernelSize > imageSize
+    if(laplaceKernelSize > imageSizeW
+       || laplaceKernelSize > imageSizeH
        || laplaceKernelSize % 2 == 0
        || laplaceKernelSize > CONFIG_VALID_LAPLACE_KERNEL_SIZE_MAX) {
         EDCC_Log("Laplace Kernel Size must be smaller than imageSize.And must be odd and samller than 31!\n");
@@ -75,7 +79,7 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
 
     vector<PalmprintCode>::const_iterator dataIte;
     for(dataIte = data.begin(); dataIte != data.end(); ++dataIte) {
-        if((dataIte->zipCodingC).length() != imageSize * imageSize
+        if((dataIte->zipCodingC).length() != imageSizeW * imageSizeH
             || !checkCodingC(dataIte->zipCodingC)) {
             EDCC_Log("EDCCoding C format error!\n");
             return false;
