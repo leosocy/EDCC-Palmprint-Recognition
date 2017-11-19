@@ -43,12 +43,11 @@ namespace EDCC
 
         typedef struct
         {
-            unsigned short imageSizeW;
-            unsigned short imageSizeH;
-            unsigned short gaborSize;
-            unsigned short laplaceSize;
-            unsigned char directions;
-            unsigned char cPad[3];
+            int imageSizeW;
+            int imageSizeH;
+            int gaborSize;
+            int laplaceSize;
+            int directions;
 
             unsigned int codingBuffLen;
             unsigned char pCodingBuff[0];
@@ -61,8 +60,14 @@ namespace EDCC
         Mat Cs;
         string zipCodingC;
         string zipCodingCs;
-        EDCC_CODING_T *tCoding;
+        EDCC_CODING_T *ptCoding;
+        #define MAGIC_KEY_LEN sizeof(int)
+        int magicKey;
 
+        bool initPtCoding(_IN const cv::Size &imgSize,
+                          _IN int gabKerSize,
+                          _IN int numOfDirections,
+                          _IN int lapKerSize);
         void compressCoding();
     };
     
