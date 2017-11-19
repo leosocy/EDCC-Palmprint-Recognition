@@ -2,14 +2,15 @@
 
 ## Config
 
-用于对EDCC算法的参数进行配置。共有四个参数：
+用于对EDCC算法的参数进行配置。共有五个参数：
 
-- `imageSize`:作为输入的掌纹ROI图像尺寸
+- `imageSizeW`:作为输入的掌纹ROI图像宽度
+- `imageSizeH`:作为输入的掌纹ROI图像高度
 - `gaborKernelSize`:EDCC使用的2DGabor小波核尺寸
 - `gaborDirections`:EDCC使用的2DGabor方向个数
 - `laplaceKernelSize`:EDCC使用的拉普拉斯图像增强算子核尺寸
 
-`Tips`:您可以通过更改这些参数，调试以获得最高的识别准确率。
+`Tips`: 您可以通过更改这些参数，调试以获得最高的识别准确率。
 
 ## TrainingSet
 
@@ -18,8 +19,12 @@
 - 一个ID可以对应n个掌纹实例，但是掌纹图像路径不能重复。
 - 两个不同ID中不能有相同的掌纹图像路径。
 
+`Tips`: 此文件可以作为小数据量掌纹库的训练集输入。
+
 ## Features
 
 EDCC算法提取的掌纹特征。该文件在调用`GetTrainingSetFeatures`API后生成。
 
 **请勿手动修改！**
+
+`Tips`: 此文件可以作为小数据量掌纹库的训练集特征库，但是存储空间和读取效率都比较低。如果数据量大，则需要调用原语`GetEDCCCoding`获得掌纹特征编码，存入数据库。
