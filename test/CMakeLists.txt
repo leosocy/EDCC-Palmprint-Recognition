@@ -24,21 +24,21 @@ include_directories(${JSONCPP_ROOT}/include)
 include_directories(${GTEST_ROOT}/include)
 
 file(GLOB_RECURSE test_include_files 
-	${CMAKE_CURRENT_SOURCE_DIR}/source/include/*.h
-	${EDCC_PUB_HEADER}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/include/*.h
+    ${EDCC_PUB_HEADER}/*.h
 )
 file(GLOB_RECURSE test_src_files
-	${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.cc
-	${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.c
 )
 if(MSVC)
-	source_group(include FILES ${test_include_files})
-	source_group(src FILES ${test_src_files}) 
+    source_group(include FILES ${test_include_files})
+    source_group(src FILES ${test_src_files}) 
 endif()
 
 if(MSVC)
-	add_compile_options("/MT")
+    add_compile_options("/MT")
 elseif (UNIX)
 endif()
 
@@ -49,6 +49,6 @@ add_executable(${PROJECT_NAME} ${test_include_files} ${test_src_files})
 target_link_libraries(${PROJECT_NAME} EDCC gtest)
 
 enable_testing()
-add_test(NAME ${PROJECT_NAME} 
-				CONFIGURATIONS  Release
-				COMMAND ${PROJECT_NAME})
+add_test(NAME ${PROJECT_NAME}
+                CONFIGURATIONS  Release
+                COMMAND ${PROJECT_NAME})
