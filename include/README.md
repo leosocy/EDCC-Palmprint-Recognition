@@ -1,5 +1,116 @@
 # API说明
 
+## `GetEDCCCoding`
+
+### 功能
+
+获得一幅掌纹图像的EDCC特征编码，您可以将获得的数据存入数据库形成掌纹特征库。
+
+### 入参说明
+
+```C++
+int GetEDCCCoding(_IN const char *palmprintImagePath,
+                  _IN const char *configFileName,
+                  _INOUT unsigned char *pCodingBuf,
+                  _IN size_t bufMaxLen,
+                  _OUT size_t &bufLen);
+```
+
+- **palmprintImagePath**: 一幅掌纹图像的路径。
+- **configFileName**: EDCC算法参数配置的文件路径。
+- **pCodingBuf**: 编码特征字节流缓冲区的地址。
+- **bufMaxLen**: 缓冲区的最大存储长度，建议和config中配置的图片大小相等，e.g. ImageSize = (100, 100) => bufMaxLen = 10000。
+- **bufLen**: EDCC特征编码字节流的真实长度， bufLen < bufMaxLen。
+
+### 用法
+
+e.g. `config.json`中配置imageSizeW = 100, imageSizeH = 100, 则bufMaxLen可以设置为100*100左右
+
+```C++
+size_t bufMaxLen = 1024 * 10;
+unsigned char* pCodingBuf = (unsigned char *)malloc(sizeof(unsigned char) * bufMaxLen);
+size_t bufLen = 0;
+int ret = GetEDCCCoding("../test/palmprint_database/001/1_01_s.bmp",
+                        "./config.json",
+                        pCodingBuf,
+                        bufMaxLen,
+                        bufLen);
+```
+
+## `GetTwoPalmprintCodingMatchScore`
+
+### 功能
+
+获得两个掌纹编码(通过GetEDCCCoding获得)的匹配得分(相似度)，得分越接近1表明两个掌纹相似度越高。
+
+### 入参说明
+
+```C++
+int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCoding,
+                                    _IN const unsigned char *secondPalmprintCoding,
+                                    _OUT double &score);
+```
+
+- **firstPalmprintCoding**: 一幅掌纹图像的编码。
+- **secondPalmprintCoding**: 另一幅掌纹图像的编码。
+- **score**: 获得的匹配得分。
+
+### 用法
+
+```C++
+size_t bufMaxLen = 1024 * 10;
+unsigned char* pCodingBuf1 = (unsigned char *)malloc(sizeof(unsigned char) * bufMaxLen);
+unsigned char* pCodingBuf2 = (unsigned char *)malloc(sizeof(unsigned char) * bufMaxLen);
+size_t bufLen1 = 0;
+size_t bufLen2 = 0;
+int ret = GetEDCCCoding("../test/palmprint_database/001/1_01_s.bmp",
+                        "./config.json",
+                        pCodingBuf1,
+                        bufMaxLen,
+                        bufLen1);
+ret = etEDCCCoding("../test/palmprint_database/001/1_01_s.bmp",
+                   "./config.json",
+                   pCodingBuf2,
+                   bufMaxLen,
+                   bufLen2);
+double score = 0.0;
+ret = GetTwoPalmprintCodingMatchScore(pCodingBuf1,
+                                      pCodingBuf2,
+                                      score);
+```
+
+`Tips`: 您也可以通过从掌纹特征数据库中读取特征编码。
+
+## `GetTwoPalmprintMatchScore`
+
+### 功能
+
+获得两幅掌纹图像的匹配得分(相似度)，得分越接近1表明两个掌纹相似度越高。
+
+### 入参说明
+
+```C++
+int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
+                              _IN const char *secondPalmprintImagePath,
+                              _IN const char *configFileName,
+                              _INOUT double &score);
+```
+
+- **firstPalmprintImagePath**: 一幅掌纹图像的路径。
+- **secondPalmprintImagePath**: 另一幅掌纹图像的路径。
+- **configFileName**: EDCC算法参数配置的文件路径。
+- **score**: 获得的匹配得分。
+
+### 用法
+
+```C++
+double matchScore = 0.0
+int ret = GetTwoPalmprintMatchScore("../test/palmprint_database/001/1_01_s.bmp",
+                                    "../test/palmprint_database/002/1_01_s.bmp",
+                                    "./config.json",
+                                    matchScore);
+```
+
 ## `GetTrainingSetFeatures`
 
 ### 功能
@@ -48,36 +159,6 @@ int ret = GetTrainingSetFeatures("./trainingSet.json",
                                  true);
 ```
 
-## `GetTwoPalmprintMatchScore`
-
-### 功能
-
-获得两幅掌纹图像的匹配得分(相似度)，得分越接近1表明两个掌纹相似度越高。
-
-### 入参说明
-
-```C++
-int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
-                              _IN const char *secondPalmprintImagePath,
-                              _IN const char *configFileName,
-                              _INOUT double &score);
-```
-
-- **firstPalmprintImagePath**: 一幅掌纹图像的路径。
-- **secondPalmprintImagePath**: 另一幅掌纹图像的路径。
-- **configFileName**: EDCC算法参数配置的文件路径。
-- **score**: 获得的匹配得分。
-
-### 用法
-
-```C++
-double matchScore = 0.0
-int ret = EDCC::GetTwoPalmprintMatchScore("../test/palmprint_database/001/1_01_s.bmp",
-                                          "../test/palmprint_database/002/1_01_s.bmp",
-                                          "./config.json",
-                                          matchScore);
-```
-
 ## `GetTopKMatchScore`
 
 ### 功能
@@ -102,11 +183,12 @@ int GetTopKMatchScore(_IN const char *onePalmprintImagePath,
 - **K**: 获取前K高的匹配的分。
 - **topKResult**: 匹配的结果，map中按匹配得分从高至低排序,e.g. topKResult.at(1)为匹配得分第1的匹配结果。
 
-  MatchResult结构体中的参数说明:
-  - `identity`: 掌纹身份
-  - `imagePath`: 掌纹图像路径
-  - `score`: 匹配得分
-  - `rank`: 此项匹配结果在K个结果中的得分排名
+MatchResult结构体中的参数说明:
+
+- `identity`: 掌纹身份
+- `imagePath`: 掌纹图像路径
+- `score`: 匹配得分
+- `rank`: 此项匹配结果在K个结果中的得分排名
 
 ### 用法
 
@@ -142,36 +224,52 @@ int ret = GetTopKMatchScore("../test/palmprint_database/001/1_01_s.bmp",
 - **EDCC_NULL_POINTER_ERROR**: API入参存在空指针。
 - **EDCC_LOAD_CONFIG_FAIL**: 加载EDCC算法配置文件出错。
 
-  可能原因：
-  1. 路径不存在
-  1. 配置文件中的算法参数名非法或缺失
-  1. 配置文件中的算法配置值非法
-  1. 特征库文件中的参数值非法
-  1. json文件格式问题
+    可能原因：
 
-  Tips: 如果API返回此失败码，可以参考此[算法配置文件](https://github.com/Leosocy/EDCC/blob/master/APIInputExample/config.json)
+        1. 路径不存在
+        1. 配置文件中的算法参数名非法或缺失
+        1. 配置文件中的算法配置值非法
+        1. 特征库文件中的参数值非法
+        1. json文件格式问题
+
+    `Tips`: 如果API返回此失败码，可以参考此[算法配置文件](https://github.com/Leosocy/EDCC/blob/master/APIInputExample/config.json)
+
 - **EDCC_LOAD_TAINING_SET_FAIL**: 加载掌纹训练集文件出错。
 
-  可能原因：
-  1. 路径不存在
-  1. json文件格式问题
+    可能原因：
 
-  Tips: 如果API返回此失败码，可以参考此[掌纹训练集文件](https://github.com/Leosocy/EDCC/blob/master/APIInputExample/trainingSet.json)
+        1. 路径不存在
+        1. json文件格式问题
+
+    `Tips`: 如果API返回此失败码，可以参考此[掌纹训练集文件](https://github.com/Leosocy/EDCC/blob/master/APIInputExample/trainingSet.json)
+
 - **EDCC_LOAD_FEATURES_FAIL**: 加载掌纹特征库文件出错。
 
-  可能原因:
-  1. 通常不会出现此错误，除非您手动修改了掌纹特征库文件
+    可能原因:
 
-  Tips: 请勿修改掌纹特征库文件
+        1. 通常不会出现此错误，除非您手动修改了掌纹特征库文件
+
+    `Tips`: 请勿修改掌纹特征库文件
+
 - **EDCC_SAVE_FEATURES_FAIL**: 保存掌纹特征库出错。
 
-  可能原因:
-  1. 特征库的保存路径文件无法创建
+    可能原因:
 
-  Tips: 请确保当前用户有权限操作对应的路径
+        1. 特征库的保存路径文件无法创建
+
+    `Tips`: 请确保当前用户有权限操作对应的路径
 
 - **EDCC_LOAD_PALMPRINT_IMAGE_FAIL**: 加载掌纹图像失败。
 
-  可能原因:
-  1. 掌纹图像的路径不存在
-  1. 该文件路径不是OpenCV可以解析的格式
+    可能原因:
+
+        1. 掌纹图像的路径不存在
+        1. 该文件路径不是OpenCV可以解析的格式
+
+- **EDCC_CODING_BUFF_LEN_NOT_ENOUGH**: 字节流长度不足。
+
+    可能原因:
+
+        1. 调用`GetEDCCCoding`时传入的缓冲区大小不足。
+
+    `Tips`: bufMaxLen可以通过配置的输入掌纹图像大小来计算。

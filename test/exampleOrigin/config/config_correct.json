@@ -1,16 +1,16 @@
 {
-   "gaborDirections" : {
-       "default" : 12,
-       "desc" : {
-           "en-US" : "The number of gabor directions",
-           "zh-CN" : "对图像进行2DGabor小波变换使用方向个数"
+    "gaborDirections" : {
+        "default" : 12,
+        "desc" : {
+            "en-US" : "The number of gabor directions",
+            "zh-CN" : "对图像进行2DGabor小波变换使用方向个数"
         },
         "regulation" : {
             "en-US" : "In range[4, 16]",
             "zh-CN" : "在4-16之间"
         }
     },
-   "gaborKernelSize" : {
+    "gaborKernelSize" : {
         "default" : 9,
         "desc" : {
             "en-US" : "The size of 2DGabor kernel which is used to code the palmprint image.",

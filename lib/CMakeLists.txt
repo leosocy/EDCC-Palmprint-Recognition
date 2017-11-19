@@ -32,6 +32,7 @@ file(GLOB_RECURSE jsoncpp_src_files
 
 file(GLOB_RECURSE edcc_include_files 
 	${EDCC_ROOT}/include/*.h
+	${EDCC_PUB_HEADER}/*.h
 )
 
 file(GLOB_RECURSE edcc_src_files

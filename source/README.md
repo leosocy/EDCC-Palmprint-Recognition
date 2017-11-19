@@ -23,11 +23,11 @@
 
 ## Core
 
-- 掌纹`Palmprint`
+- 手掌`Palmprint`
 - EDCC编码`EDCCoding`
 - Gabor滤波器`GaborFilter`
 - 掌纹编码`PalmprintCode`
 
 ## Match
 
-- 两个掌纹编码点对点匹配`maxMatch`
+- 两个掌纹编码点对点匹配`matchP2P`
