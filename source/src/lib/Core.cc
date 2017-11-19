@@ -70,34 +70,58 @@ cv::Mat* Palmprint::genSpecImg(_IN const cv::Size &imgSize, _IN bool isGray)
 
 //---------------------------------EDCCoding------------------------------------
 
-
-unsigned char* EDCCoding::encrypt()
+EDCCoding::EDCCoding()
 {
+    ptCoding = NULL;
+    magicKey = 0x0622520a;
+}
+
+EDCCoding::~EDCCoding()
+{
+    if(this->ptCoding != NULL) {
+        free(this->ptCoding);
+        this->ptCoding = NULL;
+    }
+}
+
+size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf, _IN size_t bufMaxLen)
+{
+    if(this->ptCoding == NULL
+       || bufMaxLen < ptCoding->codingBuffLen + sizeof(EDCC_CODING_T)) {
+        EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!\n");
+        return 0;
+    }
+
     compressCoding();
     if(zipCodingC.empty()
        || zipCodingCs.empty())
     {
-        return "";
+        return 0;
     }
-    string comCoding = zipCodingC + "\n" + zipCodingCs;
 
-    /*AES aes;
-    std::string errMsg;
-    std::string outData;
-    aes.encrypt4aes(comCoding, "062206271314520a", outData, errMsg);
-    return errMsg == "" ? outData : "";*/
-    return comCoding;
+    if(zipCodingC.length() % 2 != 0) {
+        zipCodingC += "0";
+    }
+    if(zipCodingCs.length() % 2 != 0) {
+        zipCodingCs += "0";
+    }
+
+    string comCoding = zipCodingC + zipCodingCs;
+    for(size_t i = 0; i < comCoding.length() / 2; ++i) {
+        string tmp = comCoding.substr(i*2, 2);
+        sscanf(tmp.c_str(), "%02x", ptCoding->pCodingBuff + i);
+    }
+    memcpy(ptCoding->pCodingBuff + comCoding.length() / 2, &magicKey, sizeof(int));
+
+    return sizeof(EDCC_CODING_T) + ptCoding->codingBuffLen;
 }
 
-void EDCCoding::decrypt(const string &aesCoding)
+bool EDCCoding::decrypt(_IN unsigned char *pCodingBuf)
 {
-    std::string strInput, errMsg;
-    AES aes;
-    aes.decrypt4aes(aesCoding, "062206271314520a", strInput, errMsg);
-    size_t pos = strInput.find("\n");
-    zipCodingC = strInput.substr(0, pos);
-    zipCodingCs = strInput.substr(pos + 1, strInput.length() - pos - 1);
-    cout << "C:" << zipCodingC << endl << "Cs:" << zipCodingCs << endl;
+    if(pCodingBuf == NULL) {
+        return false;
+    }
+    return true;
 }
 
 void EDCCoding::compressCoding()
@@ -129,6 +153,27 @@ void EDCCoding::compressCoding()
     zipCodingCs = ssZipCs.str();
 }
 
+bool EDCCoding::initPtCoding(_IN const cv::Size &imgSize,
+                             _IN int gabKerSize,
+                             _IN int numOfDirections,
+                             _IN int lapKerSize)
+{
+    size_t t_coding_size = sizeof(EDCC_CODING_T) + (int)ceil(imgSize.width*imgSize.height / 2) + (int)ceil(imgSize.width*imgSize.height / 8) + MAGIC_KEY_LEN;
+    this->ptCoding = (EDCC_CODING_T *)malloc(t_coding_size);
+    if(this->ptCoding == NULL) {
+        return false;
+    }
+
+    memset(this->ptCoding, 0, t_coding_size);
+    ptCoding->imageSizeW = imgSize.width;
+    ptCoding->imageSizeH = imgSize.height;
+    ptCoding->gaborSize = gabKerSize;
+    ptCoding->directions = numOfDirections;
+    ptCoding->laplaceSize = lapKerSize;
+    ptCoding->codingBuffLen = t_coding_size - sizeof(EDCC_CODING_T);
+
+    return true;
+}
 
 //---------------------------------PalmprintCode--------------------------------
 
@@ -164,7 +209,7 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
                                     _IN int numOfDirections,
                                     _IN int lapKerSize)
 {
-    GaborFilter filter(gabKerSize, numOfDirections);
+    GaborFilter filter(cv::Size(gabKerSize, gabKerSize), numOfDirections);
     Mat *imgRet = genSpecImg(imgSize);
     if(imgRet == NULL) {
         EDCC_Log("%s not exists!\n", imagePath.c_str());
@@ -183,11 +228,11 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
 
 void PalmprintCode::enhanceImage(_IN const cv::Mat &src, 
                                  _INOUT cv::Mat &dst,
-                                 _IN const cv::Size &lapKerSize)
+                                 _IN int lapKerSize)
 {
     Mat gaussian;
     GaussianBlur(src, gaussian, Size(5, 5), 0, 0, BORDER_DEFAULT);
-    Laplacian(gaussian, dst, CV_64F, lapKerSize.width);
+    Laplacian(gaussian, dst, CV_64F, lapKerSize);
     normalize(dst, dst, 0, 1, CV_MINMAX);
 }
 

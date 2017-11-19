@@ -12,7 +12,8 @@ using namespace std;
 
 namespace EDCC {
     class PalmprintCode;
-    class Match {
+    class Match 
+    {
     public:
         double matchP2P(_IN const PalmprintCode &instance1, 
                         _IN const PalmprintCode &instance2);

@@ -13,6 +13,8 @@
 #define _OUT
 #define _INOUT
 
+typedef unsigned short u_short;
+
 namespace EDCC {
     static const char hexArray[16] =
     {'0', '1', '2', '3',
