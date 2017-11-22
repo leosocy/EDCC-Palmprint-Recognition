@@ -84,7 +84,7 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
             EDCC_Log("EDCCoding C format error!\n");
             return false;
         }
-        if((dataIte->zipCodingCs).length() != (imageSize * imageSize / 4 + 1)) {
+        if((dataIte->zipCodingCs).length() != (imageSizeW * imageSizeH / 4 + 1)) {
             EDCC_Log("EDCCoding Cs format error!\n");
             return false;
         }

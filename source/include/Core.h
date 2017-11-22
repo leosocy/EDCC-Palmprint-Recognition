@@ -53,13 +53,18 @@ namespace EDCC
             unsigned char pCodingBuff[0];
         } EDCC_CODING_T;
 
-        size_t encrypt(_INOUT unsigned char *pCodingBuf, _IN size_t bufMaxLen);
+        size_t encrypt(_INOUT unsigned char *pCodingBuf, 
+                       _IN size_t bufMaxLen, 
+                       _IN const map<string, int> &configMap);
         bool decrypt(_IN unsigned char *pCodingBuf);
+        string encodeToHexString();
+        bool decodeFromHexString(const string &hexString);
+        
+        string zipCodingC;
+        string zipCodingCs;
     protected:
         Mat C;
         Mat Cs;
-        string zipCodingC;
-        string zipCodingCs;
         EDCC_CODING_T *ptCoding;
         #define MAGIC_KEY_LEN sizeof(int)
         int magicKey;
@@ -69,6 +74,8 @@ namespace EDCC
                           _IN int numOfDirections,
                           _IN int lapKerSize);
         void compressCoding();
+    private:
+        void freeCoding();
     };
     
     class PalmprintCode : public Palmprint, public EDCCoding

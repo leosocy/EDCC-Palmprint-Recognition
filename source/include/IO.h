@@ -49,9 +49,9 @@ namespace EDCC
         void loadOneIdentityAllPalmprintFeatureData(_IN const string &identity,
                                                     _IN const Json::Value &value,
                                                     _INOUT vector<PalmprintCode> &data);
-        bool genEDCCoding(_IN const Json::Value &value, _INOUT PalmprintCode &coding);
+        bool getEDCCoding(_IN const Json::Value &value, _INOUT PalmprintCode &coding);
         bool insert2JsonValue(_IN PalmprintCode &code, _INOUT Json::Value &value);
-        void setEDCCoding(_IN PalmprintCode &coding, _INOUT Json::Value &value);
+        bool setEDCCoding(_IN PalmprintCode &coding, _INOUT Json::Value &value);
     };
     //=========================================================
 }
