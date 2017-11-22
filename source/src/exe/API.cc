@@ -49,7 +49,7 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
     if(!onePalmprint.encodePalmprint(trainIO.configMap)) {
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
-    bufLen = onePalmprint.encrypt(pCodingBuf, bufMaxLen);
+    bufLen = onePalmprint.encrypt(pCodingBuf, bufMaxLen, trainIO.configMap);
 
     return EDCC_SUCCESS;
 }

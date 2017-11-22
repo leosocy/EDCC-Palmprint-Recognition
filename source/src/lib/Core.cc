@@ -84,8 +84,18 @@ EDCCoding::~EDCCoding()
     }
 }
 
-size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf, _IN size_t bufMaxLen)
+size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf, 
+                          _IN size_t bufMaxLen, 
+                          _IN const map<string, int> &configMap)
 {
+    Check checkHadler;
+    if(!checkHadler.checkConfigValid(configMap)) {
+        return 0;
+    }
+    initPtCoding(Size(configMap.at(IMAGE_SIZE_W), configMap.at(IMAGE_SIZE_H)),
+                 configMap.at(GABOR_KERNEL_SIZE),
+                 configMap.at(GABOR_DIRECTIONS),
+                 configMap.at(LAPLACE_KERNEL_SIZE));
     if(this->ptCoding == NULL
        || bufMaxLen < ptCoding->codingBuffLen + sizeof(EDCC_CODING_T)) {
         EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!\n");
@@ -121,7 +131,35 @@ bool EDCCoding::decrypt(_IN unsigned char *pCodingBuf)
     if(pCodingBuf == NULL) {
         return false;
     }
+
+    EDCC_CODING_T *l_ptCoding = (EDCC_CODING_T*)pCodingBuf;
+    int actMagicKey;
+    memcpy(&actMagicKey, ptCoding->pCodingBuff + l_ptCoding->codingBuffLen - 4, MAGIC_KEY_LEN);
+    CHECK_NE_RETURN(actMagicKey, magicKey, false);
     return true;
+}
+
+string EDCCoding::encodeToHexString()
+{
+    string sRet = "";
+    CHECK_POINTER_NULL_RETUR(this->ptCoding, sRet);
+
+    size_t coding_size = ptCoding->codingBuffLen + sizeof(EDCC_CODING_T);
+    size_t pos = 0;
+    stringstream ss;
+    while(pos < coding_size) {
+        char tmp[3];
+        sprintf(tmp, "%02x", ((unsigned char*)ptCoding)[pos]);
+        ss << tmp;
+        ++pos;
+    }
+    sRet = ss.str();
+
+    return sRet;
+}
+bool EDCCoding::decodeFromHexString(const string &hexString)
+{
+
 }
 
 void EDCCoding::compressCoding()
@@ -158,6 +196,7 @@ bool EDCCoding::initPtCoding(_IN const cv::Size &imgSize,
                              _IN int numOfDirections,
                              _IN int lapKerSize)
 {
+    freeCoding();
     size_t t_coding_size = sizeof(EDCC_CODING_T) + (int)ceil(imgSize.width*imgSize.height / 2) + (int)ceil(imgSize.width*imgSize.height / 8) + MAGIC_KEY_LEN;
     this->ptCoding = (EDCC_CODING_T *)malloc(t_coding_size);
     if(this->ptCoding == NULL) {
@@ -173,6 +212,14 @@ bool EDCCoding::initPtCoding(_IN const cv::Size &imgSize,
     ptCoding->codingBuffLen = t_coding_size - sizeof(EDCC_CODING_T);
 
     return true;
+}
+
+void EDCCoding::freeCoding()
+{
+    if(this->ptCoding != NULL) {
+        free(this->ptCoding);
+        this->ptCoding = NULL;
+    }
 }
 
 //---------------------------------PalmprintCode--------------------------------
