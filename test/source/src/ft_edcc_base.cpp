@@ -3,11 +3,43 @@
 ft_edcc_base::ft_edcc_base() 
 {
     CopyDir(EXAMPLE_SRC_DIR, EXAMPLE_DST_DIR);
+
+    this->configPath = NULL;
+    this->groupPath = NULL;
+    this->featurePath = NULL;
+    this->imagePath = NULL;
 }
 
 ft_edcc_base::~ft_edcc_base()
 {
     //DeleteDir(EXAMPLE_DST_DIR);
+    freeCArray(&(this->configPath));
+    freeCArray(&(this->groupPath));
+    freeCArray(&(this->featurePath));
+    freeCArray(&(this->imagePath));
+}
+
+void ft_edcc_base::setCArray(char *dstArray, const char *srcArray, size_t len)
+{
+    if(srcArray = NULL) {
+        dstArray = NULL;
+        return;
+    }
+    dstArray = (char*)malloc(len * sizeof(char));
+    strncpy(dstArray, srcArray, len);
+}
+
+void ft_edcc_base::freeCArray(char **pcArray)
+{
+    if(*pcArray != NULL) {
+        free(*pcArray);
+        *pcArray = NULL;
+    }
+}
+
+void ft_edcc_base::CheckInterfaceRet(int expectRet)
+{
+    EXPECT_EQ(interRet, expectRet);
 }
 
 void ft_edcc_base::CheckFeaturesConfigEqualConfigFile(const char *featuresFileName,

@@ -76,10 +76,31 @@ using namespace std;
 
 #endif
 
+#define PATH_LEN 128
 class ft_edcc_base : public testing::Test {
 public:
     ft_edcc_base();
     ~ft_edcc_base();
+
+    void SetConfigPath(const char *configPath) { 
+        freeCArray(&(this->configPath));
+        setCArray(this->configPath, configPath, PATH_LEN);
+    }
+    void SetGroupPath(const char *groupPath) {
+        freeCArray(&(this->groupPath));
+        setCArray(this->groupPath, groupPath, PATH_LEN);
+    }
+    void SetFeaturePath(const char *featurePath) {
+        freeCArray(&(this->featurePath));
+        setCArray(this->featurePath, featurePath, PATH_LEN);
+    }
+    void SetImagePath(const char *imagePath) { 
+        freeCArray(&(this->imagePath));
+        setCArray(this->imagePath, imagePath, PATH_LEN);
+    }
+
+    virtual void ExcuteInterface() = 0;
+    void CheckInterfaceRet(int expectRet);
 
 
     void CheckFeaturesConfigEqualConfigFile(const char *featuresFileName,
@@ -96,6 +117,16 @@ public:
     void CheckConfigParams(const char *configOrFeaturesFileName,
                            const char *paramName,
                            int expectValue);
+protected:
+    char *configPath;
+    char *groupPath;
+    char *featurePath;
+    char *imagePath;
+    int interRet;
+
+    void setCArray(char *dstArray, const char *srcArray, size_t len);
+    void freeCArray(char **pcArray);
+
 private:
     Json::Value* GetJsonValueByConfigParamName(const char *configOrFeaturesFileName,
                                                const char *paramName);

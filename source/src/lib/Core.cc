@@ -136,13 +136,16 @@ bool EDCCoding::decrypt(_IN unsigned char *pCodingBuf)
     int actMagicKey;
     memcpy(&actMagicKey, ptCoding->pCodingBuff + l_ptCoding->codingBuffLen - 4, MAGIC_KEY_LEN);
     CHECK_NE_RETURN(actMagicKey, magicKey, false);
+
+
+
     return true;
 }
 
 string EDCCoding::encodeToHexString()
 {
     string sRet = "";
-    CHECK_POINTER_NULL_RETUR(this->ptCoding, sRet);
+    CHECK_POINTER_NULL_RETURN(this->ptCoding, sRet);
 
     size_t coding_size = ptCoding->codingBuffLen + sizeof(EDCC_CODING_T);
     size_t pos = 0;

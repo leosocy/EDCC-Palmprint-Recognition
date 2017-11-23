@@ -6,11 +6,18 @@ class ft_get_edcc_coding : public ft_edcc_base {
 public:
     void SetUp();
     void TearDown();
+
+    void ExcuteInterface();
+    void SetPTCodingBuff(unsigned char *pCoding) {
+        this->pCoding = pCoding;
+    }
+    void SetBuffMaxLen(size_t maxLen) {
+        this->bufMaxLen = maxLen;
+    }
     unsigned char *pCoding;
     size_t bufMaxLen;
     size_t bufLen;
 
     unsigned char *pCoding1;
-    size_t codingLen1;
-    size_t bufLen1;
+    unsigned char *pCoding2;
 };
