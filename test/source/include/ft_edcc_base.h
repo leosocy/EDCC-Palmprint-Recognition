@@ -29,11 +29,11 @@ using namespace std;
 #define CONFLICT_IMAGE_GROUP_PATH "..\\test\\example\\group\\trainingSetGroup_ConflictImage_Windows.json"
 #define SOME_IMAGE_ERROR_GROUP_PATH "..\\test\\example\\group\\trainingSetGroupSomeImageError_Windows.json"
 
-#define FEATURES_OUTPUT_PATH "..\\test\\example\\features\\features.json"
-#define FEATURES_INCREMENTAL_OUTPUT_PATH "..\\test\\example\\features\\features_incremental.json"
-#define FEATURES_OUTPUT_PATH_CANT_CREATE "..\\test\\example\\features\\folder\\features.json"
-#define FEATURES_TRAINGING_SET_EXISTS "..\\test\\example\\features\\trainingFeatures.json"
-#define FEATURES_TRAINGING_SET_COING_BEEN_CHANGED  "..\\test\\example\\features\\trainingFeaturesBeenChanged.json"
+#define FEATURES_OUTPUT_PATH "..\\test\\example\\features\\features_Windows.json"
+#define FEATURES_INCREMENTAL_OUTPUT_PATH "..\\test\\example\\features\\features_incremental_Windows.json"
+#define FEATURES_OUTPUT_PATH_CANT_CREATE "..\\test\\example\\features\\folder\\features_Windows.json"
+#define FEATURES_TRAINGING_SET_EXISTS "..\\test\\example\\features\\trainingFeatures_Windows.json"
+#define FEATURES_TRAINGING_SET_COING_BEEN_CHANGED  "..\\test\\example\\features\\trainingFeaturesBeenChanged_Windows.json"
 
 #define ID1_FIRST_PALMPRINT "..\\test\\palmprint_database\\001\\2_01_s.bmp"
 #define ID1_SECOND_PALMPRINT "..\\test\\palmprint_database\\001\\2_02_s.bmp"
@@ -62,11 +62,11 @@ using namespace std;
 #define CONFLICT_IMAGE_GROUP_PATH "../test/example/group/trainingSetGroup_ConflictImage_Linux.json"
 #define SOME_IMAGE_ERROR_GROUP_PATH "../test/example/group/trainingSetGroupSomeImageError_Linux.json"
 
-#define FEATURES_OUTPUT_PATH "../test/example/features/features.json"
-#define FEATURES_INCREMENTAL_OUTPUT_PATH "../test/example/features/features_incremental.json"
-#define FEATURES_OUTPUT_PATH_CANT_CREATE "../test/example/features/folder/features_incremental.json"
-#define FEATURES_TRAINGING_SET_EXISTS "../test/example/features/trainingFeatures.json"
-#define FEATURES_TRAINGING_SET_COING_BEEN_CHANGED "../test/example/features/trainingFeaturesBeenChanged.json"
+#define FEATURES_OUTPUT_PATH "../test/example/features/features_Linux.json"
+#define FEATURES_INCREMENTAL_OUTPUT_PATH "../test/example/features/features_incremental_Linux.json"
+#define FEATURES_OUTPUT_PATH_CANT_CREATE "../test/example/features/folder/features_incremental_Linux.json"
+#define FEATURES_TRAINGING_SET_EXISTS "../test/example/features/trainingFeatures_Linux.json"
+#define FEATURES_TRAINGING_SET_COING_BEEN_CHANGED "../test/example/features/trainingFeaturesBeenChanged_Linux.json"
 
 #define ID1_FIRST_PALMPRINT "../test/palmprint_database/001/1_01_s.bmp"
 #define ID1_SECOND_PALMPRINT "../test/palmprint_database/001/1_02_s.bmp"
