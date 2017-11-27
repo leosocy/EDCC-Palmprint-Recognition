@@ -4,5 +4,8 @@
 
 class ft_get_features : public ft_edcc_base {
 public:
-        
+    void SetUp();
+    void TearDown();
+
+    void ExcuteInterface();
 };

@@ -77,26 +77,47 @@ using namespace std;
 #endif
 
 #define PATH_LEN 128
+#define FREE_CHAR_ARRAY(pArray) do {\
+    if((pArray) != NULL) {\
+        free((pArray));\
+        (pArray) = NULL;\
+    }\
+}while(0)
+#define MALLOC_CHAR_ARRAY(pDstArray, pSrcArray, len) do {\
+    if((pSrcArray) == NULL) {\
+        (pDstArray) = NULL;\
+        return;\
+    }\
+    (pDstArray) = (char*)malloc((len) * sizeof(char));\
+    strncpy((pDstArray), (pSrcArray), (len));\
+}while(0)
+
 class ft_edcc_base : public testing::Test {
 public:
     ft_edcc_base();
-    ~ft_edcc_base();
+    virtual ~ft_edcc_base();
 
-    void SetConfigPath(const char *configPath) { 
-        freeCArray(&(this->configPath));
-        setCArray(this->configPath, configPath, PATH_LEN);
+    virtual void SetUp();
+    virtual void TearDown();
+
+    void SetConfigPath(const char *configPath) {
+        FREE_CHAR_ARRAY(this->configPath);
+        MALLOC_CHAR_ARRAY(this->configPath, configPath, PATH_LEN);
     }
     void SetGroupPath(const char *groupPath) {
-        freeCArray(&(this->groupPath));
-        setCArray(this->groupPath, groupPath, PATH_LEN);
+        FREE_CHAR_ARRAY(this->groupPath);
+        MALLOC_CHAR_ARRAY(this->groupPath, groupPath, PATH_LEN);
     }
     void SetFeaturePath(const char *featurePath) {
-        freeCArray(&(this->featurePath));
-        setCArray(this->featurePath, featurePath, PATH_LEN);
+        FREE_CHAR_ARRAY(this->featurePath);
+        MALLOC_CHAR_ARRAY(this->featurePath, featurePath, PATH_LEN);
     }
     void SetImagePath(const char *imagePath) { 
-        freeCArray(&(this->imagePath));
-        setCArray(this->imagePath, imagePath, PATH_LEN);
+        FREE_CHAR_ARRAY(this->imagePath);
+        MALLOC_CHAR_ARRAY(this->imagePath, imagePath, PATH_LEN);
+    }
+    void SetAllParamsCorrect() {
+        //Do nothing
     }
 
     virtual void ExcuteInterface() = 0;
@@ -123,10 +144,6 @@ protected:
     char *featurePath;
     char *imagePath;
     int interRet;
-
-    void setCArray(char *dstArray, const char *srcArray, size_t len);
-    void freeCArray(char **pcArray);
-
 private:
     Json::Value* GetJsonValueByConfigParamName(const char *configOrFeaturesFileName,
                                                const char *paramName);

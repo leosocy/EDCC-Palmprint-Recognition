@@ -57,8 +57,8 @@ namespace EDCC
                        _IN size_t bufMaxLen, 
                        _IN const map<string, int> &configMap);
         bool decrypt(_IN unsigned char *pCodingBuf);
-        string encodeToHexString();
-        bool decodeFromHexString(const string &hexString);
+        string encodeToHexString(_IN const map<string, int> &configMap);
+        bool decodeFromHexString(_IN const string &hexString);
         
         string zipCodingC;
         string zipCodingCs;

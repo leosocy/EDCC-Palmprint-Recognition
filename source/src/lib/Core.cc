@@ -88,8 +88,10 @@ size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf,
                           _IN size_t bufMaxLen, 
                           _IN const map<string, int> &configMap)
 {
+    CHECK_POINTER_NULL_RETURN(pCodingBuf, 0);
     Check checkHadler;
     if(!checkHadler.checkConfigValid(configMap)) {
+        EDCC_Log("EDCCoding::encrypt config error!\n");
         return 0;
     }
     initPtCoding(Size(configMap.at(IMAGE_SIZE_W), configMap.at(IMAGE_SIZE_H)),
@@ -102,10 +104,10 @@ size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf,
         return 0;
     }
 
-    compressCoding();
     if(zipCodingC.empty()
        || zipCodingCs.empty())
     {
+        EDCC_Log("EDCCoding::encrypt get edcc coding error!\n");
         return 0;
     }
 
@@ -121,48 +123,91 @@ size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf,
         string tmp = comCoding.substr(i*2, 2);
         sscanf(tmp.c_str(), "%02x", ptCoding->pCodingBuff + i);
     }
-    memcpy(ptCoding->pCodingBuff + comCoding.length() / 2, &magicKey, sizeof(int));
+    memcpy(ptCoding->pCodingBuff + comCoding.length() / 2, &magicKey, MAGIC_KEY_LEN);
+    memcpy(pCodingBuf, ptCoding, ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
 
     return sizeof(EDCC_CODING_T) + ptCoding->codingBuffLen;
 }
 
 bool EDCCoding::decrypt(_IN unsigned char *pCodingBuf)
 {
-    if(pCodingBuf == NULL) {
-        return false;
-    }
+    CHECK_POINTER_NULL_RETURN(pCodingBuf, false);
 
     EDCC_CODING_T *l_ptCoding = (EDCC_CODING_T*)pCodingBuf;
     int actMagicKey;
-    memcpy(&actMagicKey, ptCoding->pCodingBuff + l_ptCoding->codingBuffLen - 4, MAGIC_KEY_LEN);
+    memcpy(&actMagicKey, l_ptCoding->pCodingBuff + l_ptCoding->codingBuffLen - MAGIC_KEY_LEN, MAGIC_KEY_LEN);
     CHECK_NE_RETURN(actMagicKey, magicKey, false);
 
+    size_t zipCodingCLen = l_ptCoding->imageSizeW*l_ptCoding->imageSizeH;
+    size_t zipCodingCsLen = (size_t)ceil((double)l_ptCoding->imageSizeW*l_ptCoding->imageSizeH / 4);
 
+    stringstream codingSS;
+    for(size_t i = 0; i < l_ptCoding->codingBuffLen - MAGIC_KEY_LEN; ++i) {
+        char cTmp[3];
+        sprintf(cTmp, "%02x", *(l_ptCoding->pCodingBuff + i));
+        codingSS << cTmp;
+    }
+
+    zipCodingC = codingSS.str().substr(0, zipCodingCLen);
+    if(zipCodingCLen % 2 != 0) {
+        zipCodingCs = codingSS.str().substr(zipCodingCLen + 1, zipCodingCsLen);
+    } else {
+        zipCodingCs = codingSS.str().substr(zipCodingCLen, zipCodingCsLen);
+    }
+
+    zipCodingC = toUpper(zipCodingC.c_str());
+    zipCodingCs = toUpper(zipCodingCs.c_str());
 
     return true;
 }
 
-string EDCCoding::encodeToHexString()
+string EDCCoding::encodeToHexString(_IN const map<string, int> &configMap)
 {
     string sRet = "";
-    CHECK_POINTER_NULL_RETURN(this->ptCoding, sRet);
 
-    size_t coding_size = ptCoding->codingBuffLen + sizeof(EDCC_CODING_T);
+    size_t bufMaxLen = configMap.at(IMAGE_SIZE_W) * configMap.at(IMAGE_SIZE_H);
+    unsigned char* pCoding = (unsigned char*)malloc(sizeof(unsigned char) * bufMaxLen);
+    CHECK_POINTER_NULL_RETURN(pCoding, "");
+    memset(pCoding, 0, sizeof(unsigned char) * bufMaxLen);
+    size_t coding_size = encrypt(pCoding, bufMaxLen, configMap);
+    if(coding_size == 0) {
+        free(pCoding);
+        pCoding = NULL;
+        return "";
+    }
+
     size_t pos = 0;
     stringstream ss;
     while(pos < coding_size) {
         char tmp[3];
-        sprintf(tmp, "%02x", ((unsigned char*)ptCoding)[pos]);
+        sprintf(tmp, "%02x", ((unsigned char*)pCoding)[pos]);
         ss << tmp;
         ++pos;
     }
     sRet = ss.str();
+    free(pCoding);
+    pCoding = NULL;
 
     return sRet;
 }
-bool EDCCoding::decodeFromHexString(const string &hexString)
+bool EDCCoding::decodeFromHexString(_IN const string &hexString)
 {
+    size_t codingLen = hexString.length();
+    CHECK_EQ_RETURN(codingLen, 0, false);
+    unsigned char* pCoding = (unsigned char*)malloc(sizeof(unsigned char) * codingLen);
+    CHECK_POINTER_NULL_RETURN(pCoding, false);
+    memset(pCoding, 0, sizeof(unsigned char) * codingLen);
+    
+    for(size_t i = 0; i < codingLen / 2; ++i) {
+        string tmp = hexString.substr(i * 2, 2);
+        sscanf(tmp.c_str(), "%02x", pCoding + i);
+    }
+    bool bRes = decrypt(pCoding);
+    free(pCoding);
+    pCoding = NULL;
+    CHECK_EQ_RETURN(bRes, false, false);
 
+    return true;
 }
 
 void EDCCoding::compressCoding()
@@ -200,7 +245,7 @@ bool EDCCoding::initPtCoding(_IN const cv::Size &imgSize,
                              _IN int lapKerSize)
 {
     freeCoding();
-    size_t t_coding_size = sizeof(EDCC_CODING_T) + (int)ceil(imgSize.width*imgSize.height / 2) + (int)ceil(imgSize.width*imgSize.height / 8) + MAGIC_KEY_LEN;
+    size_t t_coding_size = sizeof(EDCC_CODING_T) + (int)ceil((double)imgSize.width*imgSize.height / 2) + (int)ceil((double)imgSize.width*imgSize.height / 8) + MAGIC_KEY_LEN;
     this->ptCoding = (EDCC_CODING_T *)malloc(t_coding_size);
     if(this->ptCoding == NULL) {
         return false;
@@ -272,6 +317,7 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
     vector<cv::Mat> resultVec;
     split(gaborResult, resultVec);
     genEDCCoding(resultVec, imgSize, numOfDirections);
+    compressCoding();
 
     return true;
 }

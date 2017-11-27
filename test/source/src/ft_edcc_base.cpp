@@ -1,9 +1,9 @@
 #include <ft_edcc_base.h>
 
-ft_edcc_base::ft_edcc_base() 
+ft_edcc_base::ft_edcc_base()
 {
     CopyDir(EXAMPLE_SRC_DIR, EXAMPLE_DST_DIR);
-
+    
     this->configPath = NULL;
     this->groupPath = NULL;
     this->featurePath = NULL;
@@ -13,28 +13,20 @@ ft_edcc_base::ft_edcc_base()
 ft_edcc_base::~ft_edcc_base()
 {
     //DeleteDir(EXAMPLE_DST_DIR);
-    freeCArray(&(this->configPath));
-    freeCArray(&(this->groupPath));
-    freeCArray(&(this->featurePath));
-    freeCArray(&(this->imagePath));
+    FREE_CHAR_ARRAY(this->configPath);
+    FREE_CHAR_ARRAY(this->groupPath);
+    FREE_CHAR_ARRAY(this->featurePath);
+    FREE_CHAR_ARRAY(this->imagePath);
 }
 
-void ft_edcc_base::setCArray(char *dstArray, const char *srcArray, size_t len)
+void ft_edcc_base::SetUp()
 {
-    if(srcArray = NULL) {
-        dstArray = NULL;
-        return;
-    }
-    dstArray = (char*)malloc(len * sizeof(char));
-    strncpy(dstArray, srcArray, len);
+
 }
 
-void ft_edcc_base::freeCArray(char **pcArray)
+void ft_edcc_base::TearDown()
 {
-    if(*pcArray != NULL) {
-        free(*pcArray);
-        *pcArray = NULL;
-    }
+
 }
 
 void ft_edcc_base::CheckInterfaceRet(int expectRet)
