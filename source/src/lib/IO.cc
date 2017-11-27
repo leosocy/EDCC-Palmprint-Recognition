@@ -161,6 +161,8 @@ bool EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity
             return false;
         }
     }
+
+    return true;
 }
 
 bool EDCC::IO::getEDCCoding(_IN const Json::Value &value, _INOUT PalmprintCode &coding)
