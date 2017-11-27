@@ -29,14 +29,15 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
                   _IN size_t bufMaxLen,
                   _OUT size_t &bufLen)
 {
+    bufLen = 0;
     CHECK_POINTER_NULL_RETURN(palmprintImagePath, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(pCodingBuf, EDCC_NULL_POINTER_ERROR);
 
     IO trainIO;
     int retCode = 0;
     ifstream configIn;
     Check checkHandler;
-    bufLen = 0;
 
     configIn.open(configFileName);
     retCode = trainIO.loadConfig(configIn);
@@ -50,6 +51,7 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
     bufLen = onePalmprint.encrypt(pCodingBuf, bufMaxLen, trainIO.configMap);
+    CHECK_EQ_RETURN(bufLen, 0, EDCC_CODING_BUFF_LEN_NOT_ENOUGH);
 
     return EDCC_SUCCESS;
 }
@@ -170,7 +172,8 @@ int GetTopKMatchScore(_IN const char *palmprintImagePath,
     featuresOrGroupIn.open(trainingSetFeaturesOrPalmprintGroupFileName);
     if(isFeatures) {
         retCode = matchIO.loadPalmprintFeatureData(featuresOrGroupIn, featuresAll);
-        if(!checkHandler.checkPalmprintFeatureData(featuresAll, matchIO.configMap)) {
+        if(retCode != EDCC_SUCCESS
+           || !checkHandler.checkPalmprintFeatureData(featuresAll, matchIO.configMap)) {
             return EDCC_LOAD_FEATURES_FAIL;
         }
     } else {
@@ -233,7 +236,7 @@ size_t BuildUpAllFeaturesWhenIncremental(const vector<PalmprintCode> &originFeat
             ++pcItTmp) {
             if(pcIt->imagePath == pcItTmp->imagePath
                && pcIt->identity == pcIt->identity) {
-                EDCC_Log("----Cover\t%s: %s", pcIt->identity.c_str(), pcIt->imagePath.c_str());
+                EDCC_Log("----Cover\t%s: %s\n", pcIt->identity.c_str(), pcIt->imagePath.c_str());
                 isExists = true;
                 break;
             }

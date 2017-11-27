@@ -111,7 +111,9 @@ int EDCC::IO::loadPalmprintFeatureData(_IN ifstream &in, _INOUT vector<Palmprint
     for(Json::Value::Members::iterator it = members.begin(); it != members.end(); ++it) {
         if(paramsSet.find(*it) == paramsSet.end()
            && root[*it].isObject()) {
-            loadOneIdentityAllPalmprintFeatureData(*it, root[*it], data);
+            if(!loadOneIdentityAllPalmprintFeatureData(*it, root[*it], data)) {
+                return EDCC_LOAD_FEATURES_FAIL;
+            }
         }
     }
 
@@ -143,7 +145,7 @@ int EDCC::IO::savePalmprintFeatureData(_IN ofstream &out, _IN vector<PalmprintCo
     return EDCC_SUCCESS;
 }
 
-void EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity,
+bool EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity,
                                                       _IN const Json::Value &value,
                                                       _INOUT vector<PalmprintCode> &data)
 {
@@ -155,6 +157,8 @@ void EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity
         PalmprintCode instanceCode(identity.c_str(), (*it).c_str());
         if(getEDCCoding(value[*it], instanceCode)) {
             data.push_back(instanceCode);
+        } else {
+            return false;
         }
     }
 }
@@ -172,16 +176,9 @@ bool EDCC::IO::getEDCCoding(_IN const Json::Value &value, _INOUT PalmprintCode &
     int imageSizeW = configMap.at(IMAGE_SIZE_W);
     int imageSizeH = configMap.at(IMAGE_SIZE_H);
 
-    string aesCoding = value["coding"].asString();
-    stringstream aesSS;
-
-    for(size_t i = 0; i < aesCoding.length(); i += 2) {
-        string tmp = aesCoding.substr(i, 2);
-        unsigned char c;
-        sscanf(tmp.c_str(), "%02x", &c);
-        aesSS << c;
-    }
-    coding.decrypt(aesSS.str());
+    string codingHexStr = value["coding"].asString();
+    CHECK_EQ_RETURN(codingHexStr, "", false);
+    CHECK_EQ_RETURN(coding.decodeFromHexString(codingHexStr), false, false);
 
     return true;
 }
@@ -192,7 +189,7 @@ bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _INOUT Json::Value &val
     string imagePath = code.imagePath;
     if(!value[identity].isNull() 
        && !value[identity][imagePath].isNull()) {
-        EDCC_Log("identity: %s\timagepath: %s\tis already exists.\n");
+        EDCC_Log("identity: %s\timagepath: %s\tis already exists.\n", identity.c_str(), imagePath.c_str());
         return false;
     }
     Json::Value codeValue;
@@ -204,14 +201,10 @@ bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _INOUT Json::Value &val
 
 bool EDCC::IO::setEDCCoding(_IN PalmprintCode &coding, _INOUT Json::Value &value)
 {
-    size_t bufMaxLen = configMap[IMAGE_SIZE_W] * configMap[IMAGE_SIZE_H];
-    unsigned char* l_pCoding = (unsigned char*)malloc(sizeof(unsigned char) * bufMaxLen);
-    CHECK_POINTER_NULL_RETURN(l_pCoding, false);
-    memset(l_pCoding, 0, sizeof(unsigned char) * bufMaxLen);
+    string codingHexStr = coding.encodeToHexString(configMap);
+    CHECK_EQ_RETURN(codingHexStr, "", false);
+    value["coding"] = codingHexStr;
 
-    size_t bufLen = coding.encrypt(l_pCoding, bufMaxLen, configMap);
-    CHECK_EQ_RETURN(bufLen, 0, false);
-
-    value["coding"] = coding.encodeToHexString();
+    return true;
 }
 

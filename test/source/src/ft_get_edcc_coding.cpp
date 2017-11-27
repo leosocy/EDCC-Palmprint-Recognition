@@ -3,17 +3,16 @@
 #define CODING_BUFF_IS_CHANGE memcmp(pCoding1, pCoding2, sizeof(unsigned char) * bufMaxLen) != 0
 
 void ft_get_edcc_coding::SetUp()
-{
+{ 
     SetConfigPath(CORRECT_CONFIG_PATH);
     SetGroupPath(CORRECT_GROUP_PATH);
     SetFeaturePath(FEATURES_OUTPUT_PATH);
     SetImagePath(ID1_FIRST_PALMPRINT);
-
     this->bufMaxLen = 1024 * 16;
     this->pCoding1 = (unsigned char*)malloc(sizeof(unsigned char) * bufMaxLen);
     this->pCoding2 = (unsigned char*)malloc(sizeof(unsigned char) * bufMaxLen);
     memset(pCoding1, 0, sizeof(unsigned char) * bufMaxLen);
-    memset(pCoding1, 0, sizeof(unsigned char) * bufMaxLen);
+    memset(pCoding2, 0, sizeof(unsigned char) * bufMaxLen);
 
     SetPTCodingBuff(this->pCoding1);
 }
@@ -30,10 +29,6 @@ void ft_get_edcc_coding::TearDown()
         this->pCoding2 = NULL;
     }
     this->pCoding = NULL;
-    freeCArray(&(this->configPath));
-    freeCArray(&(this->groupPath));
-    freeCArray(&(this->featurePath));
-    freeCArray(&(this->imagePath));
 }
 
 void ft_get_edcc_coding::ExcuteInterface()
@@ -91,7 +86,7 @@ TEST_F(ft_get_edcc_coding, Given_One_Palmprint_Not_Exists_When_GetEDCCCoding_The
 
 TEST_F(ft_get_edcc_coding, Given_ConfigNotExists_When_GetEDCCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    SetImagePath(NOT_EXISTS_CONFIG_PATH);
+    SetConfigPath(NOT_EXISTS_CONFIG_PATH);
 
     ExcuteInterface();
 
@@ -102,7 +97,7 @@ TEST_F(ft_get_edcc_coding, Given_ConfigNotExists_When_GetEDCCCoding_Then_EDCC_LO
 
 TEST_F(ft_get_edcc_coding, Given_ConfigParamsError_When_GetEDCCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    SetImagePath(PARAMS_ERROR_CONFIG_PATH);
+    SetConfigPath(PARAMS_ERROR_CONFIG_PATH);
 
     ExcuteInterface();
 
@@ -113,7 +108,7 @@ TEST_F(ft_get_edcc_coding, Given_ConfigParamsError_When_GetEDCCCoding_Then_EDCC_
 
 TEST_F(ft_get_edcc_coding, Given_ConfigParamsMiss_When_GetEDCCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    SetImagePath(PARAMS_MISS_CONFIG_PATH);
+    SetConfigPath(PARAMS_MISS_CONFIG_PATH);
 
     ExcuteInterface();
 
@@ -124,7 +119,7 @@ TEST_F(ft_get_edcc_coding, Given_ConfigParamsMiss_When_GetEDCCCoding_Then_EDCC_L
 
 TEST_F(ft_get_edcc_coding, Give_ConfigParamsNoDefault_When_GetEDCCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    SetImagePath(PARAMS_NO_DEFAULT_CONFIG_PATH);
+    SetConfigPath(PARAMS_NO_DEFAULT_CONFIG_PATH);
 
     ExcuteInterface();
 
@@ -135,7 +130,7 @@ TEST_F(ft_get_edcc_coding, Give_ConfigParamsNoDefault_When_GetEDCCCoding_Then_ED
 
 TEST_F(ft_get_edcc_coding, Given_ConfigParamsOver_When_GetEDCCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    SetImagePath(PARAMS_OVER_CONFIG_PATH);
+    SetConfigPath(PARAMS_OVER_CONFIG_PATH);
 
     ExcuteInterface();
 
@@ -157,6 +152,8 @@ TEST_F(ft_get_edcc_coding, Given_BufMaxLenNotEnough_When_GetEDCCCoding_Then_EDCC
 
 TEST_F(ft_get_edcc_coding, Given_CorrectInputs_When_GetEDCCCoding_Then_EDCC_SUCCESS_And_BufLenNot0)
 {
+    SetAllParamsCorrect();
+
     ExcuteInterface();
 
     CheckInterfaceRet(EDCC_SUCCESS);
@@ -177,7 +174,10 @@ TEST_F(ft_get_edcc_coding, Given_CorrectInputs_And_TwoDiffPalmprint_When_GetEDCC
     bufLenTmp = bufLen;
 
     SetPTCodingBuff(pCoding2);
+    SetImagePath(ID2_FIRST_PALMPRINT);
+
     ExcuteInterface();
+
     CheckInterfaceRet(EDCC_SUCCESS);
     EXPECT_TRUE(CODING_BUFF_IS_CHANGE);
     EXPECT_NE(bufLen, 0);
