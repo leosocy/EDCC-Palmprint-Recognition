@@ -12,7 +12,7 @@ ft_edcc_base::ft_edcc_base()
 
 ft_edcc_base::~ft_edcc_base()
 {
-    //DeleteDir(EXAMPLE_DST_DIR);
+    DeleteDir(EXAMPLE_DST_DIR);
     FREE_CHAR_ARRAY(this->configPath);
     FREE_CHAR_ARRAY(this->groupPath);
     FREE_CHAR_ARRAY(this->featurePath);
