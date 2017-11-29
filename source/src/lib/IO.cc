@@ -187,8 +187,8 @@ bool EDCC::IO::getEDCCoding(_IN const Json::Value &value, _INOUT PalmprintCode &
 
 bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _INOUT Json::Value &value)
 {
-    string identity = code.identity;
-    string imagePath = code.imagePath;
+    string identity = code.getIdentity();
+    string imagePath = code.getImagePath();
     if(!value[identity].isNull() 
        && !value[identity][imagePath].isNull()) {
         EDCC_Log("identity: %s\timagepath: %s\tis already exists.\n", identity.c_str(), imagePath.c_str());

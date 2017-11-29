@@ -16,13 +16,9 @@ Palmprint::Palmprint(_IN const char *identity, _IN const char *imagePath)
         return ;
     }
 
-    bool bRet = false;
-    bRet = setPalmprintInfo(identity, imagePath);
-    if(bRet == false) {
-        return ;
-    }
+    this->identity = identity;
+    this->imagePath = imagePath;
 }
-
 
 Palmprint::~Palmprint()
 {
@@ -36,15 +32,20 @@ Palmprint& Palmprint::operator =(_IN const Palmprint &src)
     return *this;
 }
 
-bool Palmprint::setPalmprintInfo(_IN const char *identity, _IN const char *imagePath)
+bool Palmprint::operator==(_IN const Palmprint &p) const
 {
-    if(identity == NULL || imagePath == NULL) {
-        EDCC_Log("Identity or imagePath can't be null!\n");
-        return false;
-    }
-    this->identity = identity;
-    this->imagePath = imagePath;
-    return true;
+    return this->identity == p.identity
+        && this->imagePath == p.imagePath;
+}
+
+string Palmprint::getIdentity() const
+{
+    return this->identity;
+}
+
+string Palmprint::getImagePath() const
+{
+    return this->imagePath;
 }
 
 cv::Mat* Palmprint::genOriImg()
@@ -307,7 +308,7 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
     GaborFilter filter(cv::Size(gabKerSize, gabKerSize), numOfDirections);
     Mat *imgRet = genSpecImg(imgSize);
     if(imgRet == NULL) {
-        EDCC_Log("%s not exists!\n", imagePath.c_str());
+        EDCC_Log("%s not exists!\n", getImagePath().c_str());
         return false;
     }
     Mat palmprintImage = *imgRet;

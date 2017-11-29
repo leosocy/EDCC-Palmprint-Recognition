@@ -23,15 +23,17 @@ namespace EDCC
     class Palmprint
     {
     public:
-        string identity;
-        string imagePath;
         Palmprint(_IN const char *identity, _IN const char *imagePath);
         virtual ~Palmprint();	
         virtual Palmprint& operator =(_IN const Palmprint &src);
-        bool setPalmprintInfo(_IN const char *identity, _IN const char *imagePath);
+        virtual bool operator==(_IN const Palmprint &p) const;
+        string getIdentity() const;
+        string getImagePath() const;
         cv::Mat* genOriImg();
         cv::Mat* genSpecImg(_IN const cv::Size &imgSize, _IN bool isGray = true);
     private:    
+        string identity;
+        string imagePath;
         cv::Mat image;
     };
 

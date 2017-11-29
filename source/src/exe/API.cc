@@ -234,9 +234,8 @@ size_t BuildUpAllFeaturesWhenIncremental(const vector<PalmprintCode> &originFeat
         for(pcItTmp = incrementalFeatures.begin();
             pcItTmp != incrementalFeatures.end();
             ++pcItTmp) {
-            if(pcIt->imagePath == pcItTmp->imagePath
-               && pcIt->identity == pcIt->identity) {
-                EDCC_Log("----Cover\t%s: %s\n", pcIt->identity.c_str(), pcIt->imagePath.c_str());
+            if((*pcIt) == (*pcItTmp)) {
+                EDCC_Log("----Cover\t%s: %s\n", pcIt->getIdentity().c_str(), pcIt->getImagePath().c_str());
                 isExists = true;
                 break;
             }
@@ -263,8 +262,8 @@ bool SortTopK(const PalmprintCode &onePalmrpint,
 
     for(size_t i = 0; i < featuresAll.size(); ++i) {
         MatchResult oneResult;
-        oneResult.identity = featuresAll.at(i).identity;
-        oneResult.imagePath = featuresAll.at(i).imagePath;
+        oneResult.identity = featuresAll.at(i).getIdentity();
+        oneResult.imagePath = featuresAll.at(i).getImagePath();
         oneResult.score = featuresAll.at(i).matchWith(onePalmrpint);
         results.push_back(oneResult);
     }

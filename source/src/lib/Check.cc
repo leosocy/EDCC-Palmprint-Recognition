@@ -60,8 +60,8 @@ bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data)
     for(dataIte = data.begin(); dataIte != data.end(); ++dataIte) {
         for(vector<PalmprintCode>::const_iterator dataInnerIte = dataIte + 1;
             dataInnerIte != data.end(); ++dataInnerIte) {
-            if(dataIte->imagePath == dataInnerIte->imagePath) {
-                EDCC_Log("Image Path: %s Conflict!\n", dataIte->imagePath.c_str());
+            if((*dataIte) == (*dataInnerIte)) {
+                EDCC_Log("Image Path: %s Conflict!\n", dataIte->getImagePath().c_str());
                 return false;
             }
         }
