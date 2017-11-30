@@ -87,18 +87,15 @@ EDCCoding::~EDCCoding()
 
 size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf, 
                           _IN size_t bufMaxLen, 
-                          _IN const map<string, int> &configMap)
+                          _IN const EDCC_CFG_T &config)
 {
     CHECK_POINTER_NULL_RETURN(pCodingBuf, 0);
     Check checkHadler;
-    if(!checkHadler.checkConfigValid(configMap)) {
+    if(!checkHadler.checkConfigValid(config)) {
         EDCC_Log("EDCCoding::encrypt config error!\n");
         return 0;
     }
-    initPtCoding(Size(configMap.at(IMAGE_SIZE_W), configMap.at(IMAGE_SIZE_H)),
-                 configMap.at(GABOR_KERNEL_SIZE),
-                 configMap.at(GABOR_DIRECTIONS),
-                 configMap.at(LAPLACE_KERNEL_SIZE));
+    initPtCoding(config);
     if(this->ptCoding == NULL
        || bufMaxLen < ptCoding->codingBuffLen + sizeof(EDCC_CODING_T)) {
         EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!\n");
@@ -139,8 +136,9 @@ bool EDCCoding::decrypt(_IN unsigned char *pCodingBuf)
     memcpy(&actMagicKey, l_ptCoding->pCodingBuff + l_ptCoding->codingBuffLen - MAGIC_KEY_LEN, MAGIC_KEY_LEN);
     CHECK_NE_RETURN(actMagicKey, magicKey, false);
 
-    size_t zipCodingCLen = l_ptCoding->imageSizeW*l_ptCoding->imageSizeH;
-    size_t zipCodingCsLen = (size_t)ceil((double)l_ptCoding->imageSizeW*l_ptCoding->imageSizeH / 4);
+    size_t imageSize = (l_ptCoding->cfg).imageSizeW * (l_ptCoding->cfg).imageSizeH;
+    size_t zipCodingCLen = imageSize;
+    size_t zipCodingCsLen = (size_t)ceil(imageSize/4.0);
 
     stringstream codingSS;
     for(size_t i = 0; i < l_ptCoding->codingBuffLen - MAGIC_KEY_LEN; ++i) {
@@ -162,15 +160,15 @@ bool EDCCoding::decrypt(_IN unsigned char *pCodingBuf)
     return true;
 }
 
-string EDCCoding::encodeToHexString(_IN const map<string, int> &configMap)
+string EDCCoding::encodeToHexString(_IN const EDCC_CFG_T &config)
 {
     string sRet = "";
 
-    size_t bufMaxLen = configMap.at(IMAGE_SIZE_W) * configMap.at(IMAGE_SIZE_H);
+    size_t bufMaxLen = config.imageSizeW * config.imageSizeH;
     unsigned char* pCoding = (unsigned char*)malloc(sizeof(unsigned char) * bufMaxLen);
     CHECK_POINTER_NULL_RETURN(pCoding, "");
     memset(pCoding, 0, sizeof(unsigned char) * bufMaxLen);
-    size_t coding_size = encrypt(pCoding, bufMaxLen, configMap);
+    size_t coding_size = encrypt(pCoding, bufMaxLen, config);
     if(coding_size == 0) {
         free(pCoding);
         pCoding = NULL;
@@ -240,24 +238,18 @@ void EDCCoding::compressCoding()
     zipCodingCs = ssZipCs.str();
 }
 
-bool EDCCoding::initPtCoding(_IN const cv::Size &imgSize,
-                             _IN int gabKerSize,
-                             _IN int numOfDirections,
-                             _IN int lapKerSize)
+bool EDCCoding::initPtCoding(_IN const EDCC_CFG_T &config)
 {
     freeCoding();
-    size_t t_coding_size = sizeof(EDCC_CODING_T) + (int)ceil((double)imgSize.width*imgSize.height / 2) + (int)ceil((double)imgSize.width*imgSize.height / 8) + MAGIC_KEY_LEN;
+    size_t imageSize = config.imageSizeW*config.imageSizeH;
+    size_t t_coding_size = sizeof(EDCC_CODING_T) + (size_t)ceil(imageSize/2.0) + (size_t)ceil(imageSize/8.0) + MAGIC_KEY_LEN;
     this->ptCoding = (EDCC_CODING_T *)malloc(t_coding_size);
     if(this->ptCoding == NULL) {
         return false;
     }
 
     memset(this->ptCoding, 0, t_coding_size);
-    ptCoding->imageSizeW = imgSize.width;
-    ptCoding->imageSizeH = imgSize.height;
-    ptCoding->gaborSize = gabKerSize;
-    ptCoding->directions = numOfDirections;
-    ptCoding->laplaceSize = lapKerSize;
+    memcpy(this->ptCoding, &config, sizeof(EDCC_CFG_T));
     ptCoding->codingBuffLen = t_coding_size - sizeof(EDCC_CODING_T);
 
     return true;
@@ -285,25 +277,25 @@ PalmprintCode& PalmprintCode::operator =(_IN const PalmprintCode &src)
     return *this;
 }
 
-bool PalmprintCode::encodePalmprint(_IN const map< string, int > &configMap)
+bool PalmprintCode::encodePalmprint(_IN const EDCC_CFG_T &config)
 {
     bool bRet = false;
     Check checkHadler;
-    if(!checkHadler.checkConfigValid(configMap)) {
+    if(!checkHadler.checkConfigValid(config)) {
         return false;
     }
 
-    bRet = encodePalmprint(Size(configMap.at(IMAGE_SIZE_W), configMap.at(IMAGE_SIZE_H)),
-                           configMap.at(GABOR_KERNEL_SIZE),
-                           configMap.at(GABOR_DIRECTIONS),
-                           configMap.at(LAPLACE_KERNEL_SIZE));
+    bRet = encodePalmprint(Size(config.imageSizeW, config.imageSizeH),
+                           config.gaborSize,
+                           config.directions,
+                           config.laplaceSize);
     return bRet;
 }
 
 bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
-                                    _IN int gabKerSize,
-                                    _IN int numOfDirections,
-                                    _IN int lapKerSize)
+                                    _IN u_short gabKerSize,
+                                    _IN u_char numOfDirections,
+                                    _IN u_char lapKerSize)
 {
     GaborFilter filter(cv::Size(gabKerSize, gabKerSize), numOfDirections);
     Mat *imgRet = genSpecImg(imgSize);
@@ -325,7 +317,7 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
 
 void PalmprintCode::enhanceImage(_IN const cv::Mat &src, 
                                  _INOUT cv::Mat &dst,
-                                 _IN int lapKerSize)
+                                 _IN u_char lapKerSize)
 {
     Mat gaussian;
     GaussianBlur(src, gaussian, Size(5, 5), 0, 0, BORDER_DEFAULT);
@@ -335,7 +327,7 @@ void PalmprintCode::enhanceImage(_IN const cv::Mat &src,
 
 void PalmprintCode::genEDCCoding(_IN const vector<cv::Mat> &filterResult,
                                  _IN const Size &imgSize,
-                                 _IN int numOfDirections)
+                                 _IN u_char numOfDirections)
 {
     this->C = Mat(imgSize, CV_8S);
     this->Cs = Mat(imgSize, CV_8S);
@@ -344,7 +336,7 @@ void PalmprintCode::genEDCCoding(_IN const vector<cv::Mat> &filterResult,
             double maxResponse = -DBL_MAX;
             int maxDirection = -1;
             int Cleft = -1, Cright = -1;
-            for(int d = 0; d < numOfDirections; ++d) {
+            for(u_char d = 0; d < numOfDirections; ++d) {
                 double response = filterResult[d].at<double>(h, w); 
                 if(response > maxResponse) {
                     maxResponse = response;
@@ -369,7 +361,7 @@ double PalmprintCode::matchWith(_IN const PalmprintCode &cmp) const
 //---------------------------------GaborFilter-----------------------------------
 
 GaborFilter::GaborFilter(_IN const cv::Size &kernelSize,
-                         _IN int numOfDirections)
+                         _IN u_char numOfDirections)
 {
     assert(kernelSize.width %2 == 1 && kernelSize.height % 2 == 1);
     assert(numOfDirections > 0);
@@ -390,7 +382,7 @@ void GaborFilter::doGaborFilter(_IN const cv::Mat &src, _INOUT cv::Mat &dstMerge
     int gaborH = this->kernelSize.height;
     int gaborW = this->kernelSize.width;
     Mat gaborKernel;
-    for(int direction = 0; direction < this->numOfDirections; ++direction) {
+    for(u_char direction = 0; direction < this->numOfDirections; ++direction) {
         getGaborKernelReal(gaborKernel, gaborW, gaborH, 0, direction);
         filter2D(src, dst, CV_64F, gaborKernel);
         normalize(dst, dst, 0, 1, CV_MINMAX);

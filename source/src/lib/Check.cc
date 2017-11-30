@@ -9,42 +9,43 @@
 #include <Core.h>
 using namespace EDCC;
 
-bool Check::checkConfigValid(_IN const map<string, int> &configMap)
+bool Check::checkConfigValid(_IN const EDCC_CFG_T &config)
 {
-    if(configMap.find(IMAGE_SIZE_W) == configMap.end()
+    /*if(configMap.find(IMAGE_SIZE_W) == configMap.end()
        || configMap.find(IMAGE_SIZE_H) == configMap.end()
        || configMap.find(GABOR_KERNEL_SIZE) == configMap.end()
        || configMap.find(GABOR_DIRECTIONS) == configMap.end()
        || configMap.find(LAPLACE_KERNEL_SIZE) == configMap.end()) {
         EDCC_Log("Load config fail, config params miss!\n");
         return false;
-    }
+    }*/
 
-    imageSizeW = configMap.at(IMAGE_SIZE_W);
+    /*imageSizeW = configMap.at(IMAGE_SIZE_W);
     imageSizeH = configMap.at(IMAGE_SIZE_H);
     gaborKernelSize = configMap.at(GABOR_KERNEL_SIZE);
     gaborDirections = configMap.at(GABOR_DIRECTIONS);
-    laplaceKernelSize = configMap.at(LAPLACE_KERNEL_SIZE);
+    laplaceKernelSize = configMap.at(LAPLACE_KERNEL_SIZE);*/
 
-    if(imageSizeW < CONFIG_IMAGE_SIZE_MIN || imageSizeH < CONFIG_IMAGE_SIZE_MIN) {
-        EDCC_Log("ImageSize(%d, %d) can't smaller than %d\n", imageSizeW, imageSizeH, CONFIG_IMAGE_SIZE_MIN);
+    if(config.imageSizeW < CONFIG_IMAGE_SIZE_W_MIN 
+       || config.imageSizeH < CONFIG_IMAGE_SIZE_H_MIN) {
+        EDCC_Log("ImageSize(%d, %d) can't smaller than(%d, %d) %d\n", config.imageSizeW, config.imageSizeH, CONFIG_IMAGE_SIZE_W_MIN, CONFIG_IMAGE_SIZE_H_MIN);
         return false;
     }
-    if(gaborKernelSize > imageSizeW
-       || gaborKernelSize > imageSizeH
-       || gaborKernelSize % 2 == 0) {
+    if(config.gaborSize > config.imageSizeW
+       || config.gaborSize > config.imageSizeH
+       || config.gaborSize % 2 == 0) {
         EDCC_Log("Gabor Kernel Size must be smaller than imageSize.And must be odd!\n");
         return false;
     }
-    if(laplaceKernelSize > imageSizeW
-       || laplaceKernelSize > imageSizeH
-       || laplaceKernelSize % 2 == 0
-       || laplaceKernelSize > CONFIG_VALID_LAPLACE_KERNEL_SIZE_MAX) {
+    if(config.laplaceSize > config.imageSizeW
+       || config.laplaceSize > config.imageSizeH
+       || config.laplaceSize % 2 == 0
+       || config.laplaceSize > CONFIG_VALID_LAPLACE_KERNEL_SIZE_MAX) {
         EDCC_Log("Laplace Kernel Size must be smaller than imageSize.And must be odd and samller than 31!\n");
         return false;
     }
-    if(gaborDirections > CONFIG_VALID_GABOR_DIRECTIONS_MAX
-       || gaborDirections < CONFIG_VALID_GABOR_DIRECTIONS_MIN) {
+    if(config.directions > CONFIG_VALID_GABOR_DIRECTIONS_MAX
+       || config.directions < CONFIG_VALID_GABOR_DIRECTIONS_MIN) {
         EDCC_Log("Gabor Directions must in range [%d, %d]!\n", 
                  CONFIG_VALID_GABOR_DIRECTIONS_MIN, CONFIG_VALID_GABOR_DIRECTIONS_MAX);
         return false;
@@ -71,20 +72,20 @@ bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data)
 }
 
 bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
-                                      _IN const map<string, int> &configMap)
+                                      _IN const EDCC_CFG_T &config)
 {
-    if(!checkConfigValid(configMap)) {
+    if(!checkConfigValid(config)) {
         return false;
     }
 
     vector<PalmprintCode>::const_iterator dataIte;
     for(dataIte = data.begin(); dataIte != data.end(); ++dataIte) {
-        if((dataIte->zipCodingC).length() != imageSizeW * imageSizeH
-            || !checkCodingC(dataIte->zipCodingC)) {
+        if((dataIte->zipCodingC).length() != config.imageSizeW * config.imageSizeH
+            || !checkCodingC(dataIte->zipCodingC, config.directions)) {
             EDCC_Log("EDCCoding C format error!\n");
             return false;
         }
-        if((dataIte->zipCodingCs).length() != (imageSizeW * imageSizeH / 4 + 1)) {
+        if((dataIte->zipCodingCs).length() != (config.imageSizeW * config.imageSizeH / 4 + 1)) {
             EDCC_Log("EDCCoding Cs format error!\n");
             return false;
         }
@@ -93,12 +94,9 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
     return true;
 }
 
-bool Check::checkCodingC(_IN const string &zipCodingC)
+bool Check::checkCodingC(_IN const string &zipCodingC, int gaborDirections)
 {
-    for(size_t i = 0; 
-        i < zipCodingC.length()
-        && gaborDirections < CONFIG_VALID_GABOR_DIRECTIONS_MAX;
-        ++i) {
+    for(size_t i = 0; i < zipCodingC.length(); ++i) {
         if(zipCodingC[i] >= hexArray[gaborDirections]) {
             return false;
         }

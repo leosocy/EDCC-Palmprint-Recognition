@@ -25,10 +25,13 @@ namespace EDCC
     public:
         Palmprint(_IN const char *identity, _IN const char *imagePath);
         virtual ~Palmprint();	
+
         virtual Palmprint& operator =(_IN const Palmprint &src);
         virtual bool operator==(_IN const Palmprint &p) const;
+
         string getIdentity() const;
         string getImagePath() const;
+
         cv::Mat* genOriImg();
         cv::Mat* genSpecImg(_IN const cv::Size &imgSize, _IN bool isGray = true);
     private:    
@@ -37,29 +40,39 @@ namespace EDCC
         cv::Mat image;
     };
 
+    typedef struct tag_EDCC_CFG_T
+    {
+        #define IMAGE_SIZE_W "imageSizeW"
+        u_short imageSizeW;
+        #define IMAGE_SIZE_H "imageSizeH"
+        u_short imageSizeH;
+        #define GABOR_KERNEL_SIZE "gaborKernelSize"
+        u_short gaborSize;
+        #define LAPLACE_KERNEL_SIZE "laplaceKernelSize"
+        u_char laplaceSize;
+        #define GABOR_DIRECTIONS "gaborDirections"
+        u_char directions;
+    } EDCC_CFG_T;
+
+    typedef struct
+    {
+        EDCC_CFG_T cfg;
+        unsigned int codingBuffLen;
+        unsigned char pCodingBuff[0];
+    } EDCC_CODING_T;
+
     class EDCCoding
     {
     public:
         EDCCoding();
         ~EDCCoding();
 
-        typedef struct
-        {
-            int imageSizeW;
-            int imageSizeH;
-            int gaborSize;
-            int laplaceSize;
-            int directions;
-
-            unsigned int codingBuffLen;
-            unsigned char pCodingBuff[0];
-        } EDCC_CODING_T;
-
         size_t encrypt(_INOUT unsigned char *pCodingBuf, 
                        _IN size_t bufMaxLen, 
-                       _IN const map<string, int> &configMap);
+                       _IN const EDCC_CFG_T &config);
         bool decrypt(_IN unsigned char *pCodingBuf);
-        string encodeToHexString(_IN const map<string, int> &configMap);
+
+        string encodeToHexString(_IN const EDCC_CFG_T &config);
         bool decodeFromHexString(_IN const string &hexString);
         
         string zipCodingC;
@@ -71,10 +84,7 @@ namespace EDCC
         #define MAGIC_KEY_LEN sizeof(int)
         int magicKey;
 
-        bool initPtCoding(_IN const cv::Size &imgSize,
-                          _IN int gabKerSize,
-                          _IN int numOfDirections,
-                          _IN int lapKerSize);
+        bool initPtCoding(_IN const EDCC_CFG_T &config);
         void compressCoding();
     private:
         void freeCoding();
@@ -88,30 +98,30 @@ namespace EDCC
         ~PalmprintCode();
         PalmprintCode& operator =(_IN const PalmprintCode &src);
         bool encodePalmprint(_IN const cv::Size &imgSize,
-                             _IN int gabKerSize,
-                             _IN int numOfDirections,
-                             _IN int lapKerSize);
-        bool encodePalmprint(_IN const map<string, int> &configMap);
+                             _IN u_short gabKerSize,
+                             _IN u_char numOfDirections,
+                             _IN u_char lapKerSize);
+        bool encodePalmprint(_IN const EDCC_CFG_T &config);
         double matchWith(_IN const PalmprintCode &cmp) const;
     private:
         void enhanceImage(_IN const cv::Mat &src,
                           _INOUT cv::Mat &dst,
-                          _IN int lapKerSize);
+                          _IN u_char lapKerSize);
         void genEDCCoding(_IN const vector<cv::Mat> &filterResult,
                           _IN const Size &imgSize,
-                          _IN int numOfDirections);
+                          _IN u_char numOfDirections);
     };
 
     class GaborFilter 
     {
     public:
         GaborFilter(_IN const cv::Size &kernelSize, 
-                    _IN int numOfDirections);
+                    _IN u_char numOfDirections);
         ~GaborFilter();
         void doGaborFilter(_IN const cv::Mat &src, _INOUT cv::Mat &dstMerge);
     private:
         cv::Size kernelSize;
-        int numOfDirections;
+        u_char numOfDirections;
         int kernelType;
         void getGaborKernelReal(_INOUT cv::Mat &gaborKernel, _IN int kernelWidth, _IN int kernelHeight,
                                 _IN int dimension, _IN int direction,

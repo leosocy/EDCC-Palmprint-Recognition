@@ -11,7 +11,7 @@
 using namespace EDCC;
 
 size_t EncodeAllPalmprint(vector<PalmprintCode> &allPalmprint,
-                          const map<string, int> &configMap);
+                          const EDCC_CFG_T &config);
 
 size_t BuildUpAllFeaturesWhenIncremental(const vector<PalmprintCode> &originFeatures,
                                          const vector<PalmprintCode> &incrementalFeatures,
@@ -42,15 +42,15 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
     configIn.open(configFileName);
     retCode = trainIO.loadConfig(configIn);
     CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_CONFIG_FAIL);
-    if(!checkHandler.checkConfigValid(trainIO.configMap)) {
+    if(!checkHandler.checkConfigValid(trainIO.config)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
 
     PalmprintCode onePalmprint("identity", palmprintImagePath);
-    if(!onePalmprint.encodePalmprint(trainIO.configMap)) {
+    if(!onePalmprint.encodePalmprint(trainIO.config)) {
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
-    bufLen = onePalmprint.encrypt(pCodingBuf, bufMaxLen, trainIO.configMap);
+    bufLen = onePalmprint.encrypt(pCodingBuf, bufMaxLen, trainIO.config);
     CHECK_EQ_RETURN(bufLen, 0, EDCC_CODING_BUFF_LEN_NOT_ENOUGH);
 
     return EDCC_SUCCESS;
@@ -81,14 +81,14 @@ int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
     configIn.open(configFileName);
     retCode = matchIO.loadConfig(configIn);
     CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_CONFIG_FAIL);
-    if(!checkHandler.checkConfigValid(matchIO.configMap)) {
+    if(!checkHandler.checkConfigValid(matchIO.config)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
 
     PalmprintCode firstPalmprint("identity", firstPalmprintImagePath);
     PalmprintCode secondPalmprint("identity", secondPalmprintImagePath);
-    if(!firstPalmprint.encodePalmprint(matchIO.configMap)
-       || !secondPalmprint.encodePalmprint(matchIO.configMap)) {
+    if(!firstPalmprint.encodePalmprint(matchIO.config)
+       || !secondPalmprint.encodePalmprint(matchIO.config)) {
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
 
@@ -124,11 +124,11 @@ int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
         featuresIn.open(featuresOutputFileName);
         retCode = trainIO.loadPalmprintFeatureData(featuresIn, featuresOrigin);
         if(retCode != EDCC_SUCCESS
-           || !checkHandler.checkPalmprintFeatureData(featuresOrigin, trainIO.configMap)) {
+           || !checkHandler.checkPalmprintFeatureData(featuresOrigin, trainIO.config)) {
             return EDCC_LOAD_FEATURES_FAIL;
         }
     }
-    if(!checkHandler.checkConfigValid(trainIO.configMap)) {
+    if(!checkHandler.checkConfigValid(trainIO.config)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
     
@@ -139,7 +139,7 @@ int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
         return EDCC_LOAD_TAINING_SET_FAIL;
     }
     
-    EncodeAllPalmprint(featuresAll, trainIO.configMap);
+    EncodeAllPalmprint(featuresAll, trainIO.config);
     if(isIncremental) {
         BuildUpAllFeaturesWhenIncremental(featuresOrigin, featuresAll, featuresAll);
     }
@@ -173,7 +173,7 @@ int GetTopKMatchScore(_IN const char *palmprintImagePath,
     if(isFeatures) {
         retCode = matchIO.loadPalmprintFeatureData(featuresOrGroupIn, featuresAll);
         if(retCode != EDCC_SUCCESS
-           || !checkHandler.checkPalmprintFeatureData(featuresAll, matchIO.configMap)) {
+           || !checkHandler.checkPalmprintFeatureData(featuresAll, matchIO.config)) {
             return EDCC_LOAD_FEATURES_FAIL;
         }
     } else {
@@ -188,14 +188,14 @@ int GetTopKMatchScore(_IN const char *palmprintImagePath,
         retCode = matchIO.loadConfig(configIn);
     }
     if(retCode != EDCC_SUCCESS
-       || !checkHandler.checkConfigValid(matchIO.configMap)) {
+       || !checkHandler.checkConfigValid(matchIO.config)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
     if(!isFeatures) {
-        EncodeAllPalmprint(featuresAll, matchIO.configMap);
+        EncodeAllPalmprint(featuresAll, matchIO.config);
     }
     PalmprintCode onePalmprint("identity", palmprintImagePath);
-    if(!onePalmprint.encodePalmprint(matchIO.configMap)) {
+    if(!onePalmprint.encodePalmprint(matchIO.config)) {
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
 
@@ -205,12 +205,12 @@ int GetTopKMatchScore(_IN const char *palmprintImagePath,
 }
 
 size_t EncodeAllPalmprint(vector<PalmprintCode> &allPalmprint,
-                          const map< string, int > &configMap)
+                          const EDCC_CFG_T &config)
 {
     vector<PalmprintCode>::iterator pcIt, pcItTmp;
     for(pcIt = allPalmprint.begin(); pcIt != allPalmprint.end();) {
         bool bRet;
-        bRet = pcIt->encodePalmprint(configMap);
+        bRet = pcIt->encodePalmprint(config);
         if(!bRet) {
             pcItTmp = pcIt;
             pcIt = allPalmprint.erase(pcItTmp);

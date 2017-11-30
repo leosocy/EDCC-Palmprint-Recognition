@@ -14,7 +14,8 @@
 #include <Pub.h>
 using namespace std;
 
-#define CONFIG_IMAGE_SIZE_MIN 29
+#define CONFIG_IMAGE_SIZE_W_MIN 29
+#define CONFIG_IMAGE_SIZE_H_MIN 29
 #define CONFIG_VALID_LAPLACE_KERNEL_SIZE_MAX 31
 #define CONFIG_VALID_GABOR_DIRECTIONS_MIN 4
 #define CONFIG_VALID_GABOR_DIRECTIONS_MAX 16
@@ -22,20 +23,15 @@ using namespace std;
 namespace EDCC
 {
     class PalmprintCode;
+    typedef struct tag_EDCC_CFG_T EDCC_CFG_T;
     class Check {
     public:
-        bool checkConfigValid(_IN const map<string, int> &configMap);
+        bool checkConfigValid(_IN const EDCC_CFG_T &config);
         bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data);
         bool checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
-                                       _IN const map<string, int> &configMap);
+                                       _IN const EDCC_CFG_T &config);
     private:
-        bool checkCodingC(_IN const string &zipCodingC);
-
-        int imageSizeW;
-        int imageSizeH;
-        int gaborKernelSize;
-        int gaborDirections;
-        int laplaceKernelSize;
+        bool checkCodingC(_IN const string &zipCodingC, int gaborDirections);
     };
 }
 

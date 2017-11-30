@@ -13,7 +13,9 @@
 #define _OUT
 #define _INOUT
 
+typedef unsigned char u_char;
 typedef unsigned short u_short;
+typedef unsigned int u_int;
 
 namespace EDCC {
     static const char hexArray[16] =
@@ -21,12 +23,6 @@ namespace EDCC {
     '4', '5', '6', '7',
     '8', '9', 'A', 'B',
     'C', 'D', 'E', 'F'};
-
-    #define IMAGE_SIZE_W "imageSizeW"
-    #define IMAGE_SIZE_H "imageSizeH"
-    #define GABOR_KERNEL_SIZE "gaborKernelSize"
-    #define GABOR_DIRECTIONS "gaborDirections"
-    #define LAPLACE_KERNEL_SIZE "laplaceKernelSize"
 
     #define CHECK_POINTER_NULL_RETURN(pointer, ret) do { \
         if((pointer) == NULL) { \
@@ -61,6 +57,30 @@ namespace EDCC {
     #define CHECK_EQ_RETURN(param1, param2, ret) do { \
         if((param1) == (param2)) { \
             return (ret); \
+        } \
+    } while(0)
+
+    #define CHECK_TRUE_RETURN(param, ret) do { \
+        if((param) == true) { \
+            return (ret); \
+        } \
+    } while(0)
+
+    #define CHECK_FALSE_RETURN(param, ret) do { \
+        if((param) == false) { \
+            return (ret); \
+        } \
+    } while(0)
+
+    #define CHECK_TRUE_RETURN_VOID(param) do { \
+        if((param) == true) { \
+            return; \
+        } \
+    } while(0)
+
+    #define CHECK_FALSE_RETURN_VOID(param) do { \
+        if((param) == false) { \
+            return; \
         } \
     } while(0)
 
