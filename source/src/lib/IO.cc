@@ -21,6 +21,13 @@ EDCC::IO::IO()
     paramsSet.insert(GABOR_KERNEL_SIZE);
     paramsSet.insert(GABOR_DIRECTIONS);
     paramsSet.insert(LAPLACE_KERNEL_SIZE);
+
+    memset(&config, 0, sizeof(config));
+}
+
+EDCC::IO::~IO()
+{
+
 }
 
 int EDCC::IO::loadConfig(_IN ifstream &in)
@@ -40,13 +47,8 @@ int EDCC::IO::loadConfig(_IN ifstream &in)
                      \"default\" label in this file.\n");
             return EDCC_LOAD_CONFIG_FAIL;
         } else {
-            if(paramsSet.find(*it) != paramsSet.end()) {
-                if(configMap.find(*it) != configMap.end()) {
-                    configMap.at(*it) = root[*it]["default"].asInt();
-                } else {
-                    configMap.insert(map<string, int>::value_type(*it, root[*it]["default"].asInt()));
-                }         
-            } else {
+            if(paramsSet.find(*it) == paramsSet.end()
+               || !genConfig(*it, root[*it]["default"].asInt())) {
                 EDCC_Log("Illegal configuration parameters.\n");
                 return EDCC_LOAD_CONFIG_FAIL;
             }
@@ -98,20 +100,20 @@ int EDCC::IO::loadPalmprintFeatureData(_IN ifstream &in, _INOUT vector<Palmprint
     }
     for(set<string>::iterator it = paramsSet.begin(); it != paramsSet.end(); ++it) {
         if(root[*it].isNull() || !root[*it].isInt()) {
-            EDCC_Log("Load Palmprint Features Data failed. Make sure json file has config.\n");
+            EDCC_Log("Load EDCC config from features data failed. Make sure json file has config.\n");
             return EDCC_LOAD_CONFIG_FAIL;
         }
-        if(configMap.find(*it) != configMap.end()) {
-            configMap.at(*it) = root[*it].asInt();
-        } else {
-            configMap.insert(map<string, int>::value_type(*it, root[*it].asInt()));
-        } 
+        if(!genConfig(*it, root[*it].asInt())) {
+            EDCC_Log("Load EDCC config from features data failed. Make sure json file has config.\n");
+            return EDCC_LOAD_CONFIG_FAIL;
+        }
     }
     members = root.getMemberNames();
     for(Json::Value::Members::iterator it = members.begin(); it != members.end(); ++it) {
         if(paramsSet.find(*it) == paramsSet.end()
            && root[*it].isObject()) {
             if(!loadOneIdentityAllPalmprintFeatureData(*it, root[*it], data)) {
+                EDCC_Log("Load EDCC features data failed. Make sure features data has not been changed.\n");
                 return EDCC_LOAD_FEATURES_FAIL;
             }
         }
@@ -128,12 +130,13 @@ int EDCC::IO::savePalmprintFeatureData(_IN ofstream &out, _IN vector<PalmprintCo
     }
     Json::Value root;
     for(set<string>::iterator it = paramsSet.begin(); it != paramsSet.end(); ++it) {
-        if(configMap.find(*it) == configMap.end()) {
+        int value = 0;
+        if(!getConfig(*it, value)) {
             EDCC_Log("If you want to train/predict, load config.json first.\
                     Or if you want incremental training/prediction, load trainData.json first.\n");
             return EDCC_SAVE_FEATURES_FAIL;
         } else {
-            root[*it] = configMap.at(*it);
+            root[*it] = value;
         }
     }
 
@@ -145,6 +148,42 @@ int EDCC::IO::savePalmprintFeatureData(_IN ofstream &out, _IN vector<PalmprintCo
     return EDCC_SUCCESS;
 }
 
+bool EDCC::IO::genConfig(const string &configKey, int configValue)
+{
+    if(configKey == IMAGE_SIZE_W) {
+        config.imageSizeW = configValue;
+    } else if(configKey == IMAGE_SIZE_H) {
+        config.imageSizeH = configValue;
+    } else if(configKey == GABOR_KERNEL_SIZE) {
+        config.gaborSize = configValue;
+    } else if(configKey == LAPLACE_KERNEL_SIZE) {
+        config.laplaceSize = configValue;  
+    } else if(configKey == GABOR_DIRECTIONS) {
+        config.directions = configValue;
+    } else {
+        return false;
+    }
+    return true;
+}
+
+bool EDCC::IO::getConfig(const string &configKey, int &configValue)
+{
+    if(configKey == IMAGE_SIZE_W) {
+        configValue = config.imageSizeW;
+    } else if(configKey == IMAGE_SIZE_H) {
+        configValue = config.imageSizeH;
+    } else if(configKey == GABOR_KERNEL_SIZE) {
+        configValue = config.gaborSize;
+    } else if(configKey == LAPLACE_KERNEL_SIZE) {
+        configValue = config.laplaceSize;
+    } else if(configKey == GABOR_DIRECTIONS) {
+        configValue = config.directions;
+    } else {
+        return false;
+    }
+    return true;
+}
+
 bool EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity,
                                                       _IN const Json::Value &value,
                                                       _INOUT vector<PalmprintCode> &data)
@@ -152,7 +191,7 @@ bool EDCC::IO::loadOneIdentityAllPalmprintFeatureData(_IN const string &identity
     Json::Value::Members imagePathMembers;
     Json::Value::Members::iterator it;
     imagePathMembers = value.getMemberNames();
-
+    
     for(it = imagePathMembers.begin(); it != imagePathMembers.end(); ++it) {
         PalmprintCode instanceCode(identity.c_str(), (*it).c_str());
         if(getEDCCoding(value[*it], instanceCode)) {
@@ -175,13 +214,9 @@ bool EDCC::IO::getEDCCoding(_IN const Json::Value &value, _INOUT PalmprintCode &
         return false;
     }
     
-    int imageSizeW = configMap.at(IMAGE_SIZE_W);
-    int imageSizeH = configMap.at(IMAGE_SIZE_H);
-
     string codingHexStr = value["coding"].asString();
     CHECK_EQ_RETURN(codingHexStr, "", false);
-    CHECK_EQ_RETURN(coding.decodeFromHexString(codingHexStr), false, false);
-
+    CHECK_FALSE_RETURN(coding.decodeFromHexString(codingHexStr), false);
     return true;
 }
 
@@ -203,7 +238,7 @@ bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _INOUT Json::Value &val
 
 bool EDCC::IO::setEDCCoding(_IN PalmprintCode &coding, _INOUT Json::Value &value)
 {
-    string codingHexStr = coding.encodeToHexString(configMap);
+    string codingHexStr = coding.encodeToHexString(config);
     CHECK_EQ_RETURN(codingHexStr, "", false);
     value["coding"] = codingHexStr;
 

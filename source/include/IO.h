@@ -22,10 +22,10 @@ using namespace cv;
 #define LOAD_PALMPRINT_GROUP_FAILURE 1
 #define LOAD_PALMPRINT_GROUP_SUCCESS 0
 
-#define LOAD_PALMPRINT_FEATURE_DATA_FAILURE 1
+#define LOAD_PALMPRINT_FEATURE_DATA_FAILURE 2
 #define LOAD_PALMPRINT_FEATURE_DATA_SUCCESS 0
 
-#define SAVE_PALMPRINT_FEATURE_DATA_FAILURE 1
+#define SAVE_PALMPRINT_FEATURE_DATA_FAILURE 3
 #define SAVE_PALMPRINT_FEATURE_DATA_SUCCESS 0
 
 namespace EDCC
@@ -36,9 +36,10 @@ namespace EDCC
      */
     class IO {
     public:
-        map<string, int> configMap;
-            
         IO();
+        ~IO();
+
+        EDCC_CFG_T config;
 
         int loadConfig(_IN ifstream &in);
         int loadPalmprintGroup(_IN ifstream &in, _INOUT vector<PalmprintCode> &groupVec);
@@ -46,6 +47,8 @@ namespace EDCC
         int savePalmprintFeatureData(_IN ofstream &out, _IN vector<PalmprintCode> &data);
     private:
         set<string> paramsSet;
+        bool genConfig(const string &configKey, int configValue);
+        bool getConfig(const string &configKey, int &configValue);
         bool loadOneIdentityAllPalmprintFeatureData(_IN const string &identity,
                                                     _IN const Json::Value &value,
                                                     _INOUT vector<PalmprintCode> &data);
