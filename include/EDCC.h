@@ -24,6 +24,8 @@
 #define EDCC_LOAD_PALMPRINT_IMAGE_FAIL 400
 
 #define EDCC_CODING_BUFF_LEN_NOT_ENOUGH 500
+#define EDCC_CODING_INVALID 501
+#define EDCC_CODING_DIFF_CONFIG 502
 
 #define _IN
 #define _OUT
@@ -45,8 +47,8 @@ extern "C" {
                       _IN size_t bufMaxLen,
                       _OUT size_t &bufLen);
 
-    int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCoding,
-                                        _IN const unsigned char *secondPalmprintCoding,
+    int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCodingBuf,
+                                        _IN const unsigned char *secondPalmprintCodingBuf,
                                         _OUT double &score);
 
     int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
