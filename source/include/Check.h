@@ -30,8 +30,12 @@ namespace EDCC
         bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data);
         bool checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
                                        _IN const EDCC_CFG_T &config);
+        bool checkTwoPalmprintCodeConfigEQAndValid(_IN const PalmprintCode firstPalmprintCode,
+                                                   _IN const PalmprintCode secondPalmprintCode);
     private:
         bool checkCodingC(_IN const string &zipCodingC, int gaborDirections);
+        bool checkTwoConfigEQAndValid(_IN const EDCC_CFG_T firstConfig,
+                                      _IN const EDCC_CFG_T secondConfig);
     };
 }
 

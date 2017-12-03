@@ -4,16 +4,16 @@
 
 class ft_get_two_palmprint_match_score : public ft_edcc_base {
 public:
-    void SetUp();
-    void TearDown();
+    virtual void SetUp();
+    virtual void TearDown();
 
-    void ExcuteInterface();
+    virtual void ExcuteInterface();
 
-    void SetFirstPalmprintImagePath(const char *path);
-    void SetSecondPalmprintImagePath(const char *path);
+    virtual void SetFirstPalmprintImagePath(const char *path);
+    virtual void SetSecondPalmprintImagePath(const char *path);
 
-    void CheckMatchScoreEQ(double expectScore);
-    void CheckMatchScoreNE(double expectScore);
+    virtual void CheckMatchScoreEQ(double expectScore);
+    virtual void CheckMatchScoreNE(double expectScore);
 private:
     char *firstImagePath;
     char *secondImagePath;

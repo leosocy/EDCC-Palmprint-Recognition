@@ -70,13 +70,14 @@ namespace EDCC
         size_t encrypt(_INOUT unsigned char *pCodingBuf, 
                        _IN size_t bufMaxLen, 
                        _IN const EDCC_CFG_T &config);
-        bool decrypt(_IN unsigned char *pCodingBuf);
+        bool decrypt(_IN const unsigned char *pCodingBuf);
 
         string encodeToHexString(_IN const EDCC_CFG_T &config);
         bool decodeFromHexString(_IN const string &hexString);
         
         string zipCodingC;
         string zipCodingCs;
+        EDCC_CFG_T cfg;
     protected:
         Mat C;
         Mat Cs;

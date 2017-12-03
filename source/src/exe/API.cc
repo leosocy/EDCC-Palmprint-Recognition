@@ -29,15 +29,15 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
                   _IN size_t bufMaxLen,
                   _OUT size_t &bufLen)
 {
-    bufLen = 0;
-    CHECK_POINTER_NULL_RETURN(palmprintImagePath, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(pCodingBuf, EDCC_NULL_POINTER_ERROR);
-
     IO trainIO;
     int retCode = 0;
     ifstream configIn;
     Check checkHandler;
+    bufLen = 0;
+
+    CHECK_POINTER_NULL_RETURN(palmprintImagePath, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(pCodingBuf, EDCC_NULL_POINTER_ERROR);
 
     configIn.open(configFileName);
     retCode = trainIO.loadConfig(configIn);
@@ -56,10 +56,30 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
     return EDCC_SUCCESS;
 }
 
-int GetTwoPalmprintCodingMatchScore(_IN const char *firstPalmprintCoding,
-                                    _IN const char *secondPalmprintCoding,
+int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCodingBuf,
+                                    _IN const unsigned char *secondPalmprintCodingBuf,
                                     _OUT double &score)
 {
+    int retCode = 0;
+    Check checkHandler;
+    score = 0.0;
+
+    CHECK_POINTER_NULL_RETURN(firstPalmprintCodingBuf, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(secondPalmprintCodingBuf, EDCC_NULL_POINTER_ERROR);
+
+    PalmprintCode firstPalmprint("identity", "imagepath");
+    PalmprintCode secondPalmprint("identity", "imagepath");
+    
+    retCode = firstPalmprint.decrypt(firstPalmprintCodingBuf);
+    CHECK_FALSE_RETURN(retCode, EDCC_CODING_INVALID);
+    retCode = secondPalmprint.decrypt(secondPalmprintCodingBuf);
+    CHECK_FALSE_RETURN(retCode, EDCC_CODING_INVALID);
+
+    retCode = checkHandler.checkTwoPalmprintCodeConfigEQAndValid(firstPalmprint, secondPalmprint);
+    CHECK_FALSE_RETURN(retCode, EDCC_CODING_DIFF_CONFIG);
+
+    score = firstPalmprint.matchWith(secondPalmprint);
+
     return EDCC_SUCCESS;
 }
 
@@ -68,15 +88,15 @@ int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
                               _IN const char *configFileName,
                               _OUT double &score)
 {
-    CHECK_POINTER_NULL_RETURN(firstPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(secondPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
-
     IO matchIO;
     int retCode = 0;
     ifstream configIn;
     Check checkHandler;
     score = 0.0;
+
+    CHECK_POINTER_NULL_RETURN(firstPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(secondPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
 
     configIn.open(configFileName);
     retCode = matchIO.loadConfig(configIn);
