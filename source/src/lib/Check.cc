@@ -74,12 +74,11 @@ bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data)
 bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
                                       _IN const EDCC_CFG_T &config)
 {
-    if(!checkConfigValid(config)) {
-        return false;
-    }
+    CHECK_FALSE_RETURN(checkConfigValid(config), false);
 
     vector<PalmprintCode>::const_iterator dataIte;
     for(dataIte = data.begin(); dataIte != data.end(); ++dataIte) {
+        CHECK_FALSE_RETURN(checkTwoConfigEQAndValid(config, dataIte->cfg), false);
         if((dataIte->zipCodingC).length() != config.imageSizeW * config.imageSizeH
             || !checkCodingC(dataIte->zipCodingC, config.directions)) {
             EDCC_Log("EDCCoding C format error!\n");
@@ -102,6 +101,24 @@ bool Check::checkCodingC(_IN const string &zipCodingC, int gaborDirections)
         }
     }
     return true;
+}
+
+bool Check::checkTwoPalmprintCodeConfigEQAndValid(_IN const PalmprintCode firstPalmprintCode,
+                                                  _IN const PalmprintCode secondPalmprintCode)
+{
+    return checkTwoConfigEQAndValid(firstPalmprintCode.cfg, secondPalmprintCode.cfg);
+}
+
+bool Check::checkTwoConfigEQAndValid(_IN const EDCC_CFG_T firstConfig,
+                                     _IN const EDCC_CFG_T secondConfig)
+{
+    return firstConfig.imageSizeW == secondConfig.imageSizeW
+        && firstConfig.imageSizeH == secondConfig.imageSizeH
+        && firstConfig.gaborSize == secondConfig.gaborSize
+        && firstConfig.laplaceSize == secondConfig.laplaceSize
+        && firstConfig.directions == secondConfig.directions
+        && checkConfigValid(firstConfig)
+        && checkConfigValid(secondConfig);
 }
 
 

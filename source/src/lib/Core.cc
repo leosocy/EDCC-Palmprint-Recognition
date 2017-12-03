@@ -127,11 +127,12 @@ size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf,
     return sizeof(EDCC_CODING_T) + ptCoding->codingBuffLen;
 }
 
-bool EDCCoding::decrypt(_IN unsigned char *pCodingBuf)
+bool EDCCoding::decrypt(_IN const unsigned char *pCodingBuf)
 {
     CHECK_POINTER_NULL_RETURN(pCodingBuf, false);
 
-    EDCC_CODING_T *l_ptCoding = (EDCC_CODING_T*)pCodingBuf;
+    const EDCC_CODING_T *l_ptCoding = (EDCC_CODING_T*)pCodingBuf;
+    memcpy(&(this->cfg), l_ptCoding, sizeof(EDCC_CFG_T));
     int actMagicKey;
     memcpy(&actMagicKey, l_ptCoding->pCodingBuff + l_ptCoding->codingBuffLen - MAGIC_KEY_LEN, MAGIC_KEY_LEN);
     CHECK_NE_RETURN(actMagicKey, magicKey, false);
@@ -241,6 +242,7 @@ void EDCCoding::compressCoding()
 bool EDCCoding::initPtCoding(_IN const EDCC_CFG_T &config)
 {
     freeCoding();
+    memcpy(&(this->cfg), &config, sizeof(EDCC_CFG_T));
     size_t imageSize = config.imageSizeW*config.imageSizeH;
     size_t t_coding_size = sizeof(EDCC_CODING_T) + (size_t)ceil(imageSize/2.0) + (size_t)ceil(imageSize/8.0) + MAGIC_KEY_LEN;
     this->ptCoding = (EDCC_CODING_T *)malloc(t_coding_size);
@@ -261,6 +263,7 @@ void EDCCoding::freeCoding()
         free(this->ptCoding);
         this->ptCoding = NULL;
     }
+    memset(&(this->cfg), 0, sizeof(EDCC_CFG_T));
 }
 
 //---------------------------------PalmprintCode--------------------------------
