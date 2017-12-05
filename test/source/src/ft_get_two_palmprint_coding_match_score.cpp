@@ -89,13 +89,13 @@ void ft_get_two_palmprint_coding_match_score::SetSecondPalmprintCoding(unsigned 
     this->secondCodingBuff = codingBuff;
 }
 
-void ft_get_two_palmprint_coding_match_score::ChangePalmprintCodingMagicKey()
+void ft_get_two_palmprint_coding_match_score::ChangePalmprintCoding()
 {
     EXPECT_NE((size_t)secondCodingBuff, (size_t)NULL);
     if(secondCodingBuff == NULL) {
         return;
     }
-    memset(secondCodingBuff + bufLen - 4, 0, 4);
+    memset(secondCodingBuff + bufLen - 8, 0, 8);
 }
 
 void ft_get_two_palmprint_coding_match_score::CheckMatchScoreEQ(double expectScore)
@@ -161,7 +161,7 @@ TEST_F(ft_get_two_palmprint_coding_match_score, Given_Two_PalmprintCoding_With_D
 
 TEST_F(ft_get_two_palmprint_coding_match_score, Given_PalmprintCoding_Invalid_Config_When_Get_Score_Then_EDCC_CODING_INVALID)
 {
-    ChangePalmprintCodingMagicKey();
+    ChangePalmprintCoding();
 
     ExcuteInterface();
 

@@ -127,4 +127,5 @@ TEST_F(ft_get_two_palmprint_match_score, Given_Two_Diff_Image_When_Get_Score_The
 
     CheckInterfaceRet(EDCC_SUCCESS);
     CheckMatchScoreNE(1.0);
+    CheckMatchScoreNE(0.0);
 }
