@@ -36,7 +36,7 @@ int EDCC::IO::loadConfig(_IN ifstream &in)
     Json::Reader reader;
     Json::Value::Members members;
     if(!reader.parse(in, root)) {
-        EDCC_Log("Parse config.json failed, please confirm the file is exists.\n");
+        EDCC_Log("IO::loadConfig Parse %s failed, please confirm the file is exists.\n");
         return EDCC_LOAD_CONFIG_FAIL;
     }
     members = root.getMemberNames();
