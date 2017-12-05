@@ -40,9 +40,7 @@ if(MSVC)
 elseif (UNIX)
 endif()
 
-add_library(${PROJECT_NAME} STATIC 
+add_library(${PROJECT_NAME} STATIC
             ${edcc_include_files}
             ${edcc_src_files})
-#FIND_LIBRARY(LIB_JSONCPP NAMES jsoncpp PATHS ${CMAKE_BINARY_DIR}/thirdparty/jsoncpp/Debug NO_DEFAULT_PATH)
-#message(${LIB_JSONCPP})
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} jsoncpp)

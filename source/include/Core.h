@@ -24,7 +24,7 @@ namespace EDCC
     {
     public:
         Palmprint(_IN const char *identity, _IN const char *imagePath);
-        virtual ~Palmprint();	
+        virtual ~Palmprint();
 
         virtual Palmprint& operator =(_IN const Palmprint &src);
         virtual bool operator==(_IN const Palmprint &p) const;
@@ -34,7 +34,7 @@ namespace EDCC
 
         cv::Mat* genOriImg();
         cv::Mat* genSpecImg(_IN const cv::Size &imgSize, _IN bool isGray = true);
-    private:    
+    private:
         string identity;
         string imagePath;
         cv::Mat image;
@@ -65,7 +65,7 @@ namespace EDCC
     {
     public:
         EDCCoding();
-        ~EDCCoding();
+        virtual ~EDCCoding();
 
         size_t encrypt(_INOUT unsigned char *pCodingBuf, 
                        _IN size_t bufMaxLen, 
@@ -96,7 +96,7 @@ namespace EDCC
     public:
         PalmprintCode(_IN const char *identity, _IN const char *imagePath) :
             Palmprint(identity, imagePath) {};
-        ~PalmprintCode();
+        virtual ~PalmprintCode();
         PalmprintCode& operator =(_IN const PalmprintCode &src);
         bool encodePalmprint(_IN const cv::Size &imgSize,
                              _IN u_short gabKerSize,
@@ -118,7 +118,7 @@ namespace EDCC
     public:
         GaborFilter(_IN const cv::Size &kernelSize, 
                     _IN u_char numOfDirections);
-        ~GaborFilter();
+        virtual ~GaborFilter();
         void doGaborFilter(_IN const cv::Mat &src, _INOUT cv::Mat &dstMerge);
     private:
         cv::Size kernelSize;
