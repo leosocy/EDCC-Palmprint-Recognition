@@ -11,6 +11,19 @@
 #include <map>
 #include <vector>
 
+#ifdef _WINDOWS
+
+#ifdef EDCC_USER
+#define EDCC_API __declspec(dllimport)
+#else
+#define EDCC_API __declspec(dllexport)
+#endif
+
+#else
+#define EDCC_API
+
+#endif
+
 #define EDCC_SUCCESS 0
 #define EDCC_NULL_POINTER_ERROR 1
 
@@ -31,7 +44,7 @@
 #define _OUT
 #define _INOUT
 
-typedef struct  {
+EDCC_API typedef struct  {
     std::string identity;
     std::string imagePath;
     double score;
@@ -41,36 +54,36 @@ typedef struct  {
 extern "C" {
 
     /* Some primitive operation */
-    int GetEDCCCoding(_IN const char *palmprintImagePath,
-                      _IN const char *configFileName,
-                      _INOUT unsigned char *pCodingBuf,
-                      _IN size_t bufMaxLen,
-                      _OUT size_t &bufLen);
+    EDCC_API int GetEDCCCoding(_IN const char *palmprintImagePath,
+                               _IN const char *configFileName,
+                               _INOUT unsigned char *pCodingBuf,
+                               _IN size_t bufMaxLen,
+                               _OUT size_t &bufLen);
 
-    int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCodingBuf,
-                                        _IN const unsigned char *secondPalmprintCodingBuf,
-                                        _OUT double &score);
+    EDCC_API int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCodingBuf,
+                                                 _IN const unsigned char *secondPalmprintCodingBuf,
+                                                 _OUT double &score);
 
-    int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
-                                  _IN const char *secondPalmprintImagePath,
-                                  _IN const char *configFileName,
-                                  _OUT double &score);
+    EDCC_API int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
+                                           _IN const char *secondPalmprintImagePath,
+                                           _IN const char *configFileName,
+                                           _OUT double &score);
     /* primitive operation end */
 
 
 
     /* Some encapsulated APIs which can be used in small-scale data. */
-    int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
-                               _IN const char *configFileName,
-                               _IN const char *featuresOutputFileName,
-                               _IN bool isIncremental = false);
+    EDCC_API int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
+                                        _IN const char *configFileName,
+                                        _IN const char *featuresOutputFileName,
+                                        _IN bool isIncremental = false);
 
-    int GetTopKMatchScore(_IN const char *palmprintImagePath,
-                          _IN const char *trainingSetFeaturesOrPalmprintGroupFileName,
-                          _IN const char *configFileName,
-                          _IN bool isFeatures,
-                          _IN size_t K,
-                          _OUT std::map<size_t, MatchResult> &topKResult);
+    EDCC_API int GetTopKMatchScore(_IN const char *palmprintImagePath,
+                                  _IN const char *trainingSetFeaturesOrPalmprintGroupFileName,
+                                  _IN const char *configFileName,
+                                  _IN bool isFeatures,
+                                  _IN size_t K,
+                                  _OUT std::map<size_t, MatchResult> &topKResult);
     /* encapsulated APIs end */
 }
 
