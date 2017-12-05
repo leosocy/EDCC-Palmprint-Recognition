@@ -6,13 +6,19 @@ set(JSONCPP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/jsoncpp)
 set(EDCC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../source)
 set(EDCC_PUB_HEADER ${CMAKE_SOURCE_DIR}/../include)
 
+set(OpenCV_STATIC OFF)
+set(OpenCV_INCLUDE_DIRS ${OpenCV_DIR}/include)
+set(OpenCV_LIB_PATH ${OpenCV_DIR}/x64/vc15/lib)
+
+find_package(OpenCV REQUIRED)
+
 message(STATUS "——————————————————————————————————————")
 message(STATUS "PROJECT_NAME : " ${PROJECT_NAME})
 message(STATUS "DIR : " ${CMAKE_CURRENT_SOURCE_DIR})
+message(STATUS "OpenCV_LIBS : " ${OpenCV_LIBS})
+message(STATUS "OpenCV_Dir : " ${OpenCV_DIR})
+message(STATUS "OpenCV_STATIC : " ${OpenCV_STATIC})
 message(STATUS "——————————————————————————————————————")
-
-
-find_package(OpenCV REQUIRED)
 
 include_directories(${EDCC_ROOT}/include/)
 include_directories(${EDCC_PUB_HEADER})
@@ -42,7 +48,7 @@ file(GLOB_RECURSE edcc_src_files
 )
 
 if(MSVC)
-	add_compile_options("/MT")
+	add_compile_options("/MD")
 elseif (UNIX)
 endif()
 
@@ -53,6 +59,7 @@ set(srcs ${jsoncpp_include_files} ${jsoncpp_src_files} ${edcc_include_files} ${e
 add_library(${PROJECT_NAME} SHARED ${srcs})
 # 生成静态库目标
 add_library(${PROJECT_NAME}_STATIC STATIC ${srcs})
+target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
 # 指定静态库的输出名称
 set_target_properties(${PROJECT_NAME}_STATIC PROPERTIES OUTPUT_NAME ${PROJECT_NAME}_STATIC)
