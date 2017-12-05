@@ -13,7 +13,7 @@ public:
 
     void SetFirstPalmprintCoding(unsigned char *codingBuff);
     void SetSecondPalmprintCoding(unsigned char *codingBuff);
-    void ChangePalmprintCodingMagicKey();
+    void ChangePalmprintCoding();
 
     void CheckMatchScoreEQ(double expectScore);
     void CheckMatchScoreNE(double expectScore);
