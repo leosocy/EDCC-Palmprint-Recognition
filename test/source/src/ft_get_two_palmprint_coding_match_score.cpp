@@ -30,6 +30,7 @@ void ft_get_two_palmprint_coding_match_score::ExcuteInterface()
     interRet = GetTwoPalmprintCodingMatchScore(this->firstCodingBuff,
                                                this->secondCodingBuff,
                                                this->matchScoreWithPalmprintCoding);
+
     int lRet = GetTwoPalmprintMatchScore(this->firstImagePath,
                                          this->secondImagePath,
                                          this->configPath,

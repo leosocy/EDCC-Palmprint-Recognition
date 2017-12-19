@@ -11,21 +11,6 @@ using namespace EDCC;
 
 bool Check::checkConfigValid(_IN const EDCC_CFG_T &config)
 {
-    /*if(configMap.find(IMAGE_SIZE_W) == configMap.end()
-       || configMap.find(IMAGE_SIZE_H) == configMap.end()
-       || configMap.find(GABOR_KERNEL_SIZE) == configMap.end()
-       || configMap.find(GABOR_DIRECTIONS) == configMap.end()
-       || configMap.find(LAPLACE_KERNEL_SIZE) == configMap.end()) {
-        EDCC_Log("Load config fail, config params miss!\n");
-        return false;
-    }*/
-
-    /*imageSizeW = configMap.at(IMAGE_SIZE_W);
-    imageSizeH = configMap.at(IMAGE_SIZE_H);
-    gaborKernelSize = configMap.at(GABOR_KERNEL_SIZE);
-    gaborDirections = configMap.at(GABOR_DIRECTIONS);
-    laplaceKernelSize = configMap.at(LAPLACE_KERNEL_SIZE);*/
-
     if(config.imageSizeW < CONFIG_IMAGE_SIZE_W_MIN 
        || config.imageSizeH < CONFIG_IMAGE_SIZE_H_MIN) {
         EDCC_Log("ImageSize(%d, %d) can't smaller than(%d, %d) %d\n", config.imageSizeW, config.imageSizeH, CONFIG_IMAGE_SIZE_W_MIN, CONFIG_IMAGE_SIZE_H_MIN);
@@ -79,13 +64,10 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
     vector<PalmprintCode>::const_iterator dataIte;
     for(dataIte = data.begin(); dataIte != data.end(); ++dataIte) {
         CHECK_FALSE_RETURN(checkTwoConfigEQAndValid(config, dataIte->cfg), false);
-        if((dataIte->zipCodingC).length() != config.imageSizeW * config.imageSizeH
-            || !checkCodingC(dataIte->zipCodingC, config.directions)) {
-            EDCC_Log("EDCCoding C format error!\n");
-            return false;
-        }
-        if((dataIte->zipCodingCs).length() != (config.imageSizeW * config.imageSizeH / 4 + 1)) {
-            EDCC_Log("EDCCoding Cs format error!\n");
+        if(dataIte->ptCoding == NULL
+           || !checkCodingMagicKey(*dataIte)
+           || !checkCoding(*dataIte)) {
+            EDCC_Log("EDCCCoding format error!\n");
             return false;
         }
     }
@@ -93,24 +75,35 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
     return true;
 }
 
-bool Check::checkCodingC(_IN const string &zipCodingC, int gaborDirections)
+bool Check::checkCodingMagicKey(_IN const EDCCoding &coding)
 {
-    for(size_t i = 0; i < zipCodingC.length(); ++i) {
-        if(zipCodingC[i] >= hexArray[gaborDirections]) {
+    int actMagicKey = 0;
+    memcpy(&actMagicKey, coding.ptCoding->pCodingBuff + coding.ptCoding->codingBuffLen - MAGIC_KEY_LEN, MAGIC_KEY_LEN);
+    return actMagicKey == coding.magicKey;
+}
+
+bool Check::checkCoding(_IN const EDCCoding &coding)
+{
+    size_t codingCLen = (size_t)ceil(coding.ptCoding->cfg.imageSizeW*coding.ptCoding->cfg.imageSizeH/2.0);
+    u_char gaborDirections = coding.ptCoding->cfg.directions;
+    for(size_t i = 0; i < codingCLen; ++i) {
+        u_char cTmp = *(coding.ptCoding->pCodingBuff + i);
+        if((cTmp & 0x0f) >= gaborDirections
+           || ((cTmp & 0xf0) >> 4) >= gaborDirections) {
             return false;
         }
     }
     return true;
 }
 
-bool Check::checkTwoPalmprintCodeConfigEQAndValid(_IN const PalmprintCode firstPalmprintCode,
-                                                  _IN const PalmprintCode secondPalmprintCode)
+bool Check::checkTwoPalmprintCodeConfigEQAndValid(_IN const PalmprintCode &firstPalmprintCode,
+                                                  _IN const PalmprintCode &secondPalmprintCode)
 {
     return checkTwoConfigEQAndValid(firstPalmprintCode.cfg, secondPalmprintCode.cfg);
 }
 
-bool Check::checkTwoConfigEQAndValid(_IN const EDCC_CFG_T firstConfig,
-                                     _IN const EDCC_CFG_T secondConfig)
+bool Check::checkTwoConfigEQAndValid(_IN const EDCC_CFG_T &firstConfig,
+                                     _IN const EDCC_CFG_T &secondConfig)
 {
     return firstConfig.imageSizeW == secondConfig.imageSizeW
         && firstConfig.imageSizeH == secondConfig.imageSizeH

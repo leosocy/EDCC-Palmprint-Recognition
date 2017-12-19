@@ -9,33 +9,39 @@
 using namespace EDCC;
 
 double Match::matchP2P(_IN const PalmprintCode &instance1,
-                       _IN const PalmprintCode &instance2)
+                       _IN const PalmprintCode &instance2) const
 {
     double score = 0.0;
-    string Cx = instance1.zipCodingC;
-    string Cy = instance2.zipCodingC;
-    string Csx = instance1.zipCodingCs;
-    string Csy = instance2.zipCodingCs;
-    if(Cx.length() != Cy.length()
-       || Csx.length() != Csy.length()
-       || Cx.empty()
-       || Cy.empty()
-       || Csx.empty()
-       || Csy.empty()) {
+    const EDCC_CODING_T *coding_t_1 = instance1.ptCoding;
+    const EDCC_CODING_T *coding_t_2 = instance2.ptCoding;
+    if(coding_t_1 == NULL
+       || coding_t_2 == NULL) {
         EDCC_Log("Two palmprint instance info error.\n");
         return score;
     }
 
-    size_t codingLen = Cx.length();
-    for(size_t i = 0, csIndex = 0; i < codingLen; ++i, csIndex = i / 4) {
-        if(Cx.at(i) == Cy.at(i)) {
+    size_t codingCLen = (size_t)ceil(coding_t_1->cfg.imageSizeW*coding_t_1->cfg.imageSizeH / 2.0);
+    const u_char *cxStartPos = coding_t_1->pCodingBuff;
+    const u_char *cyStartPos = coding_t_2->pCodingBuff;
+    const u_char *csxStartPos = coding_t_1->pCodingBuff+codingCLen;
+    const u_char *csyStartPos = coding_t_2->pCodingBuff+codingCLen;
+
+    size_t cpos = 0;
+    size_t cspos = 0;
+    u_char cMask = 0xf0;
+    u_char csMask = 0x80;
+    while(cpos < codingCLen) {
+        if((cxStartPos[cpos] & cMask) == (cyStartPos[cpos] & cMask)) {
             score += 1.0;
-            unsigned char mask = 1 << (3 - (i % 4));
-            if((Csx.at(csIndex) & mask) == (Csy.at(csIndex) & mask)) {
+            if((csxStartPos[cspos] & csMask) == (csyStartPos[cspos] & csMask)) {
                 score += 1.0;
             }
         }
+        cpos = cMask & 0x0f ? ++cpos : cpos;
+        cspos = csMask & 0x01 ? ++cspos : cspos;
+        cMask = cMask & 0x0f ? 0xf0 : 0x0f;
+        csMask = csMask & 0x01 ? 0x80 : (csMask >> 1);
     }
 
-    return score / (2 * codingLen);
+    return score / (2 * 2 * codingCLen);
 }

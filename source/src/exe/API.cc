@@ -104,13 +104,16 @@ int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
     if(!checkHandler.checkConfigValid(matchIO.config)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
-
+   
     PalmprintCode firstPalmprint("identity", firstPalmprintImagePath);
     PalmprintCode secondPalmprint("identity", secondPalmprintImagePath);
     if(!firstPalmprint.encodePalmprint(matchIO.config)
        || !secondPalmprint.encodePalmprint(matchIO.config)) {
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
+    
+    firstPalmprint.encrypt(matchIO.config);
+    secondPalmprint.encrypt(matchIO.config);
 
     score = firstPalmprint.matchWith(secondPalmprint);
 
@@ -188,7 +191,7 @@ int GetTopKMatchScore(_IN const char *palmprintImagePath,
     ifstream featuresOrGroupIn;
     vector<PalmprintCode> featuresAll;
     Check checkHandler;
-
+    
     featuresOrGroupIn.open(trainingSetFeaturesOrPalmprintGroupFileName);
     if(isFeatures) {
         retCode = matchIO.loadPalmprintFeatureData(featuresOrGroupIn, featuresAll);
@@ -218,6 +221,7 @@ int GetTopKMatchScore(_IN const char *palmprintImagePath,
     if(!onePalmprint.encodePalmprint(matchIO.config)) {
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
+    onePalmprint.encrypt(matchIO.config);
 
     SortTopK(onePalmprint, featuresAll, K, topKResult);
 
@@ -236,6 +240,7 @@ size_t EncodeAllPalmprint(vector<PalmprintCode> &allPalmprint,
             pcIt = allPalmprint.erase(pcItTmp);
             continue;
         }
+        pcIt->encrypt(config);
         ++pcIt;
     }
 

@@ -15,8 +15,8 @@ namespace EDCC {
     class Match 
     {
     public:
-        double matchP2P(_IN const PalmprintCode &instance1, 
-                        _IN const PalmprintCode &instance2);
+    double matchP2P(_IN const PalmprintCode &instance1,
+                    _IN const PalmprintCode &instance2) const;
     };
 }
 

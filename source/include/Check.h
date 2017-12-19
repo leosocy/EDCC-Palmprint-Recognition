@@ -23,6 +23,7 @@ using namespace std;
 namespace EDCC
 {
     class PalmprintCode;
+    class EDCCoding;
     typedef struct tag_EDCC_CFG_T EDCC_CFG_T;
     class Check {
     public:
@@ -30,12 +31,13 @@ namespace EDCC
         bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data);
         bool checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
                                        _IN const EDCC_CFG_T &config);
-        bool checkTwoPalmprintCodeConfigEQAndValid(_IN const PalmprintCode firstPalmprintCode,
-                                                   _IN const PalmprintCode secondPalmprintCode);
+        bool checkTwoPalmprintCodeConfigEQAndValid(_IN const PalmprintCode &firstPalmprintCode,
+                                                   _IN const PalmprintCode &secondPalmprintCode);
     private:
-        bool checkCodingC(_IN const string &zipCodingC, int gaborDirections);
-        bool checkTwoConfigEQAndValid(_IN const EDCC_CFG_T firstConfig,
-                                      _IN const EDCC_CFG_T secondConfig);
+        bool checkCodingMagicKey(_IN const EDCCoding &coding);
+        bool checkCoding(_IN const EDCCoding &coding);
+        bool checkTwoConfigEQAndValid(_IN const EDCC_CFG_T &firstConfig,
+                                      _IN const EDCC_CFG_T &secondConfig);
     };
 }
 

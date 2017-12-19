@@ -26,7 +26,8 @@ namespace EDCC
         Palmprint(_IN const char *identity, _IN const char *imagePath);
         virtual ~Palmprint();
 
-        virtual Palmprint& operator =(_IN const Palmprint &src);
+        Palmprint& operator =(_IN const Palmprint &other);
+        Palmprint(_IN const Palmprint &other);
         virtual bool operator==(_IN const Palmprint &p) const;
 
         string getIdentity() const;
@@ -67,27 +68,36 @@ namespace EDCC
         EDCCoding();
         virtual ~EDCCoding();
 
+        EDCCoding& operator =(_IN const EDCCoding &other);
+        EDCCoding(_IN const EDCCoding &other);
+
         size_t encrypt(_INOUT unsigned char *pCodingBuf, 
                        _IN size_t bufMaxLen, 
                        _IN const EDCC_CFG_T &config);
+        size_t encrypt(_IN const EDCC_CFG_T &config);
         bool decrypt(_IN const unsigned char *pCodingBuf);
 
         string encodeToHexString(_IN const EDCC_CFG_T &config);
-        bool decodeFromHexString(_IN const string &hexString);
+        bool decodeFromHexString(_IN const string &hexString);  
+        //string zipCodingC;
+        //string zipCodingCs;
         
-        string zipCodingC;
-        string zipCodingCs;
         EDCC_CFG_T cfg;
     protected:
         Mat C;
         Mat Cs;
+
         EDCC_CODING_T *ptCoding;
         #define MAGIC_KEY_LEN sizeof(int)
         int magicKey;
-
         bool initPtCoding(_IN const EDCC_CFG_T &config);
-        void compressCoding();
+        
+        //void compressCoding();
+        void genCodingBytes();
     private:
+        friend Check;
+        friend Match;
+
         void freeCoding();
     };
     
@@ -97,7 +107,10 @@ namespace EDCC
         PalmprintCode(_IN const char *identity, _IN const char *imagePath) :
             Palmprint(identity, imagePath) {};
         virtual ~PalmprintCode();
-        PalmprintCode& operator =(_IN const PalmprintCode &src);
+
+        PalmprintCode& operator =(_IN const PalmprintCode &other);
+        PalmprintCode(_IN const PalmprintCode &other) : Palmprint(other), EDCCoding(other) {}
+
         bool encodePalmprint(_IN const cv::Size &imgSize,
                              _IN u_short gabKerSize,
                              _IN u_char numOfDirections,
