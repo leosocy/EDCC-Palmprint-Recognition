@@ -5,6 +5,7 @@ import os
 from EDCCApiAdapter import *
 from PalmprintImageFactory import *
 from PalmprintCodeRepository import *
+import time
 
 class PalmprintCodeDTO(object):
     def __init__(self, ID, instanceID, imagePath, code):
@@ -23,8 +24,9 @@ class EDCCSample(object):
     def runSample(self):
         self.__initDB__()
         self.__readDB__()
-        predictGroup = self._factory.predictGroup[500:1000]
+        predictGroup = self._factory.predictGroup[1000:1500]
         for predict in predictGroup:
+            timeBegin = time.time()
             predictPalmprintCode, codingLen = self._edcc_api.GetEDCCCoding(predict.imagePath, self._configPath)
             K = 5
             topKMatchScore = []
@@ -37,10 +39,12 @@ class EDCCSample(object):
                 topKMatchScore = sorted(topKMatchScore, key=lambda p:p["score"], reverse = True)
                 if len(topKMatchScore) > K:
                     topKMatchScore.pop()
-            self.statisticsResult(predict, topKMatchScore)
+            timeEnd = time.time()
+            costTime = (timeEnd - timeBegin) * 1000
+            self.statisticsResult(predict, topKMatchScore, costTime)
         print("\n\nPredict Over. Total:%d\tPredictCorrect:%d\tAccuracy:%lf%%" % (len(predictGroup), self._succNum, float(self._succNum) / len(predictGroup) * 100))
     
-    def statisticsResult(self, predict, topKMatchScore):
+    def statisticsResult(self, predict, topKMatchScore, costTime):
         resultsDict = {}
         for result in topKMatchScore:
             palmprintCodeInstance = result["instance"]
@@ -52,7 +56,7 @@ class EDCCSample(object):
         bestMatchID = resultsDict[0][0].palmprint.id
         bestMatchInstanceID = resultsDict[0][0].palmprint.instanceID
         bestMatchScore = resultsDict[0][1]
-        print("Predict:\tID:%s\tInstanceID:%s\t\nBestMatch:\tID:%s\tInstanceID:%s\t\nMatchScore:%lf" % (predict.id, predict.instanceID, bestMatchID, bestMatchInstanceID, bestMatchScore))
+        print("Predict:\tID:%s\tInstanceID:%s\t\nBestMatch:\tID:%s\tInstanceID:%s\t\nMatchScore:%lf\tCostTime:%lfms" % (predict.id, predict.instanceID, bestMatchID, bestMatchInstanceID, bestMatchScore, costTime))
         if bestMatchID == predict.id:
             self._succNum = self._succNum + 1
             print("Correct Match\n\n")
