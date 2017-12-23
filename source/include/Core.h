@@ -77,28 +77,23 @@ namespace EDCC
         size_t encrypt(_IN const EDCC_CFG_T &config);
         bool decrypt(_IN const unsigned char *pCodingBuf);
 
-        string encodeToHexString(_IN const EDCC_CFG_T &config);
-        bool decodeFromHexString(_IN const string &hexString);  
-        //string zipCodingC;
-        //string zipCodingCs;
-        
-        EDCC_CFG_T cfg;
+        string encryptToHexString(_IN const EDCC_CFG_T &config);
+        bool decryptFromHexString(_IN const string &hexString);  
     protected:
         Mat C;
         Mat Cs;
 
-        EDCC_CODING_T *ptCoding;
+        EDCC_CODING_T *m_ptCoding;
         #define MAGIC_KEY_LEN sizeof(int)
         int magicKey;
-        bool initPtCoding(_IN const EDCC_CFG_T &config);
-        
-        //void compressCoding();
+
         void genCodingBytes();
     private:
         friend Check;
         friend Match;
 
-        void freeCoding();
+        void initSelfCoding(_IN const EDCC_CFG_T &config);
+        void freeSelfCoding();
     };
     
     class PalmprintCode : public Palmprint, public EDCCoding

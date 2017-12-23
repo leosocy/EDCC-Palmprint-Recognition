@@ -10,6 +10,7 @@ class PalmprintDTO(object):
         self.instanceID = instanceID
         self.imagePath = imagePath
 
+edcc_database_base_path = os.path.normpath(os.path.join(os.getcwd(), "../../database"))
 
 '''
 Construct palmprint image list
@@ -22,7 +23,7 @@ Construct palmprint image list
 每次采集两只手掌的20 张图片，因此每个受试者采集了来自 2 只手掌的 40 张图像，一共包含了 12000 个图像样本。
 可以当作600个人，每个人20张图片。
 '''
-tongji_palmprint_image_dir = "E:\\GraduationProject\\Database\\Tongji\\ROI"
+tongji_palmprint_image_dir = os.path.normpath(os.path.join(edcc_database_base_path, "Tongji/ROI"))
 tongji_people_num = 600
 tongji_one_session_image_num = 10
 
@@ -33,7 +34,7 @@ tongji_one_session_image_num = 10
 总的来说数据库包含 4 个光谱，每个光谱包括 500 个不同手掌的 6000 张图像。
 取G I当作两组不同的人，所以，PolyU数据库可以当作1000个人，每个人12张图像。
 '''
-polyu_palmprint_image_dir = "E:\\GraduationProject\\Database\\PolyU"
+polyu_palmprint_image_dir = os.path.normpath(os.path.join(edcc_database_base_path, "PolyU"))
 polyu_one_spec_people_num = 500
 
 class PalmprintImageFactory(object):
@@ -52,10 +53,11 @@ class PalmprintImageFactory(object):
     def __loadTongjiPalmprintImageList__(self):
         if not os.path.exists(tongji_palmprint_image_dir):
             raise RuntimeError("%s palmprint data dir not exsits" % tongji_palmprint_image_dir)
-        for session in ["session1", "session2"]:
-            sessionDir = os.path.join(tongji_palmprint_image_dir, session)
-            for p in range(0, tongji_people_num):
-                for i in range(0, tongji_one_session_image_num):
+
+        for p in range(0, tongji_people_num):
+            for i in range(0, tongji_one_session_image_num):
+                for session in ["session1", "session2"]:
+                    sessionDir = os.path.join(tongji_palmprint_image_dir, session)
                     ID = "tongji_%d" % (p+1)
                     instanceID = "%s_%d" % (session, i+1)
                     imageName = "%05d.bmp" % (p * tongji_one_session_image_num + i + 1)
@@ -66,7 +68,7 @@ class PalmprintImageFactory(object):
     def __loadPolyUPalmprintImageList__(self):
         if not os.path.exists(polyu_palmprint_image_dir):
             raise RuntimeError("%s palmprint data dir not exsits" % polyu_palmprint_image_dir)
-        for spec in ['Multispectral_G', 'Multispectral_I']:
+        for spec in ['Multispectral_I']:
             specDir = os.path.join(polyu_palmprint_image_dir, spec)
             for p in range(0, polyu_one_spec_people_num):
                 specIDDir = os.path.join(specDir, "%03d" % (p + 1))

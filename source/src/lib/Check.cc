@@ -9,7 +9,7 @@
 #include <Core.h>
 using namespace EDCC;
 
-bool Check::checkConfigValid(_IN const EDCC_CFG_T &config)
+bool Check::checkConfigValid(_IN const EDCC_CFG_T &config) const
 {
     if(config.imageSizeW < CONFIG_IMAGE_SIZE_W_MIN 
        || config.imageSizeH < CONFIG_IMAGE_SIZE_H_MIN) {
@@ -39,7 +39,7 @@ bool Check::checkConfigValid(_IN const EDCC_CFG_T &config)
     return true;
 }
 
-bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data)
+bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data) const
 {
     
     vector<PalmprintCode>::const_iterator dataIte;
@@ -57,15 +57,14 @@ bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data)
 }
 
 bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
-                                      _IN const EDCC_CFG_T &config)
+                                      _IN const EDCC_CFG_T &config) const
 {
     CHECK_FALSE_RETURN(checkConfigValid(config), false);
 
     vector<PalmprintCode>::const_iterator dataIte;
     for(dataIte = data.begin(); dataIte != data.end(); ++dataIte) {
-        CHECK_FALSE_RETURN(checkTwoConfigEQAndValid(config, dataIte->cfg), false);
-        if(dataIte->ptCoding == NULL
-           || !checkCodingMagicKey(*dataIte)
+        CHECK_FALSE_RETURN(checkTwoConfigEQAndValid(config, dataIte->m_ptCoding->cfg), false);
+        if(dataIte->m_ptCoding == NULL
            || !checkCoding(*dataIte)) {
             EDCC_Log("EDCCCoding format error!\n");
             return false;
@@ -75,41 +74,38 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
     return true;
 }
 
-bool Check::checkCodingMagicKey(_IN const EDCCoding &coding)
+bool Check::checkCoding(_IN const EDCCoding &coding) const
 {
+    CHECK_POINTER_NULL_RETURN(coding.m_ptCoding, false);
     int actMagicKey = 0;
-    memcpy(&actMagicKey, coding.ptCoding->pCodingBuff + coding.ptCoding->codingBuffLen - MAGIC_KEY_LEN, MAGIC_KEY_LEN);
-    return actMagicKey == coding.magicKey;
-}
+    memcpy(&actMagicKey, coding.m_ptCoding->pCodingBuff + coding.m_ptCoding->codingBuffLen - MAGIC_KEY_LEN, MAGIC_KEY_LEN);
+    CHECK_NE_RETURN(actMagicKey, coding.magicKey, false);
 
-bool Check::checkCoding(_IN const EDCCoding &coding)
-{
-    size_t codingCLen = (size_t)ceil(coding.ptCoding->cfg.imageSizeW*coding.ptCoding->cfg.imageSizeH/2.0);
-    u_char gaborDirections = coding.ptCoding->cfg.directions;
+    size_t codingCLen = (size_t)ceil(coding.m_ptCoding->cfg.imageSizeW*coding.m_ptCoding->cfg.imageSizeH/2.0);
+    u_char gaborDirections = coding.m_ptCoding->cfg.directions;
     for(size_t i = 0; i < codingCLen; ++i) {
-        u_char cTmp = *(coding.ptCoding->pCodingBuff + i);
+        u_char cTmp = *(coding.m_ptCoding->pCodingBuff + i);
         if((cTmp & 0x0f) >= gaborDirections
            || ((cTmp & 0xf0) >> 4) >= gaborDirections) {
             return false;
         }
     }
+
     return true;
 }
 
 bool Check::checkTwoPalmprintCodeConfigEQAndValid(_IN const PalmprintCode &firstPalmprintCode,
-                                                  _IN const PalmprintCode &secondPalmprintCode)
+                                                  _IN const PalmprintCode &secondPalmprintCode) const
 {
-    return checkTwoConfigEQAndValid(firstPalmprintCode.cfg, secondPalmprintCode.cfg);
+    CHECK_POINTER_NULL_RETURN(firstPalmprintCode.m_ptCoding, false);
+    CHECK_POINTER_NULL_RETURN(secondPalmprintCode.m_ptCoding, false);
+    return checkTwoConfigEQAndValid(firstPalmprintCode.m_ptCoding->cfg, secondPalmprintCode.m_ptCoding->cfg);
 }
 
 bool Check::checkTwoConfigEQAndValid(_IN const EDCC_CFG_T &firstConfig,
-                                     _IN const EDCC_CFG_T &secondConfig)
+                                     _IN const EDCC_CFG_T &secondConfig) const
 {
-    return firstConfig.imageSizeW == secondConfig.imageSizeW
-        && firstConfig.imageSizeH == secondConfig.imageSizeH
-        && firstConfig.gaborSize == secondConfig.gaborSize
-        && firstConfig.laplaceSize == secondConfig.laplaceSize
-        && firstConfig.directions == secondConfig.directions
+    return !memcmp(&firstConfig, &secondConfig, sizeof(EDCC_CFG_T))
         && checkConfigValid(firstConfig)
         && checkConfigValid(secondConfig);
 }

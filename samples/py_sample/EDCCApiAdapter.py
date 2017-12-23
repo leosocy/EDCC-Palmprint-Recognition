@@ -4,9 +4,13 @@
 import os
 import platform
 from ctypes import *
+import sys
 
-edcc_windows_dll_path = os.path.join(os.getcwd(), "windows-lib/EDCC.dll")
-edcc_unix_so_path = os.path.join(os.getcwd(), "unix-lib/EDCC.so")
+runtime_path = os.getcwd()
+edcc_windows_dll_path = os.path.join(os.getcwd(), "windows-lib")
+edcc_unix_so_path = os.path.join(os.getcwd(), "unix-lib")
+edcc_windows_dll_name = os.path.join(edcc_windows_dll_path, "EDCC.dll")
+edcc_unix_so_name = os.path.join(edcc_unix_so_path, "EDCC.so")
 
 class EDCC_API(object):
     def __init__(self):
@@ -15,9 +19,13 @@ class EDCC_API(object):
     
     def __loadEDCCLib__(self):
         if self.__isWindows__():
-            self.edcc_api = cdll.LoadLibrary(edcc_windows_dll_path)
+            os.chdir(edcc_windows_dll_path)
+            self.edcc_api = cdll.LoadLibrary(edcc_windows_dll_name)
+            os.chdir(runtime_path)
         elif self.__isUnix__():
-            self.edcc_api = cdll.LoadLibrary(edcc_unix_so_path)
+            os.chdir(edcc_unix_so_path)
+            self.edcc_api = cdll.LoadLibrary(edcc_unix_so_name)
+            os.chdir(runtime_path)
         else:
             raise RuntimeError("Unkown system platform.")
     
