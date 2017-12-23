@@ -148,7 +148,7 @@ TEST_F(ft_get_two_palmprint_coding_match_score, Given_Two_Same_PalmprintCoding_W
     CheckMatchScoreEQToPalmprint();
 }
 
-TEST_F(ft_get_two_palmprint_coding_match_score, Given_Two_PalmprintCoding_With_Diff_Config_When_Get_Score_Then_EDCC_CODING_DIFF_CONFIG)
+TEST_F(ft_get_two_palmprint_coding_match_score, Given_Two_PalmprintCoding_With_Diff_Config_When_Get_Score_Then_EDCC_CODINGS_DIFF_CONFIG)
 {
     GenFirstPalmprintCodingBuff(ID1_FIRST_PALMPRINT);
     SetConfigPath(INCREMENTAL_CONFIG_PATH);
@@ -156,7 +156,7 @@ TEST_F(ft_get_two_palmprint_coding_match_score, Given_Two_PalmprintCoding_With_D
 
     ExcuteInterface();
 
-    CheckInterfaceRet(EDCC_CODING_DIFF_CONFIG);
+    CheckInterfaceRet(EDCC_CODINGS_DIFF_CONFIG);
     CheckMatchScoreEQ(0.0);
 }
 

@@ -80,13 +80,13 @@ cv::Mat* Palmprint::genSpecImg(_IN const cv::Size &imgSize, _IN bool isGray)
 
 EDCCoding::EDCCoding()
 {
-    ptCoding = NULL;
+    m_ptCoding = NULL;
     magicKey = 0x0622520a;
 }
 
 EDCCoding::~EDCCoding()
 {
-    freeCoding();
+    freeSelfCoding();
 }
 
 EDCCoding& EDCCoding::operator =(_IN const EDCCoding &other)
@@ -100,12 +100,11 @@ EDCCoding::EDCCoding(_IN const EDCCoding &other)
 {
     this->C = other.C.clone();
     this->Cs = other.Cs.clone();
-    memcpy(&this->cfg, &other.cfg, sizeof(EDCC_CFG_T));
     this->magicKey = other.magicKey;
-    this->ptCoding = NULL;
-    if(other.ptCoding != NULL) {
-        this->ptCoding = (EDCC_CODING_T*)malloc(other.ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
-        memcpy(this->ptCoding, other.ptCoding, other.ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
+    this->m_ptCoding = NULL;
+    if(other.m_ptCoding != NULL) {
+        this->m_ptCoding = (EDCC_CODING_T*)malloc(other.m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
+        memcpy(this->m_ptCoding, other.m_ptCoding, other.m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
     }
 }
 
@@ -114,81 +113,73 @@ size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf,
                           _IN const EDCC_CFG_T &config)
 {
     CHECK_POINTER_NULL_RETURN(pCodingBuf, 0);
-    if(ptCoding != NULL)
+    if(m_ptCoding != NULL)
     {
-        memcpy(pCodingBuf, ptCoding, ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
-        return ptCoding->codingBuffLen + sizeof(EDCC_CODING_T);
+        if(bufMaxLen < m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T)) {
+            EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!\n");
+            return 0;
+        }
+        memcpy(pCodingBuf, m_ptCoding, m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
+        return m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T);
     }
     
-    size_t coding_size = encrypt(config);
-    if(coding_size == 0
-       || bufMaxLen < ptCoding->codingBuffLen + sizeof(EDCC_CODING_T)) {
+    size_t codingLen = encrypt(config);
+    if(codingLen == 0
+       || bufMaxLen < codingLen) {
         EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!\n");
         return 0;
     }
-    memcpy(pCodingBuf, ptCoding, coding_size);
+    memcpy(pCodingBuf, m_ptCoding, codingLen);
     
-    return coding_size;
+    return codingLen;
 }
 
 
 size_t EDCCoding::encrypt(_IN const EDCC_CFG_T &config)
 {
-    CHECK_NE_RETURN(ptCoding, NULL, ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
+    CHECK_NE_RETURN(m_ptCoding, NULL, m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
 
     Check checkHadler;
     if(!checkHadler.checkConfigValid(config)) {
         EDCC_Log("EDCCoding::encrypt config error!\n");
         return 0;
     }
-    initPtCoding(config);
-    if(this->ptCoding == NULL) {
-        return 0;
-    }
+    initSelfCoding(config);
+    CHECK_POINTER_NULL_RETURN(m_ptCoding, 0);
+
     genCodingBytes();
 
-    stringstream ss;
-    size_t pos = 0;
-    while(pos < ptCoding->codingBuffLen + sizeof(EDCC_CODING_T)) {
-        char tmp[3];
-        sprintf(tmp, "%02x", ((unsigned char*)ptCoding)[pos]);
-        ss << tmp;
-        ++pos;
-    }
-
-    return sizeof(EDCC_CODING_T) + ptCoding->codingBuffLen;
+    return sizeof(EDCC_CODING_T) + m_ptCoding->codingBuffLen;
 }
 
 bool EDCCoding::decrypt(_IN const unsigned char *pCodingBuf)
 {
     CHECK_POINTER_NULL_RETURN(pCodingBuf, false);
+    Check checkHandler;
 
     const EDCC_CODING_T *l_ptCoding = (EDCC_CODING_T*)pCodingBuf;
+    size_t codingLen = l_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T);
     int actMagicKey = 0;
     memcpy(&actMagicKey, l_ptCoding->pCodingBuff + l_ptCoding->codingBuffLen - MAGIC_KEY_LEN, MAGIC_KEY_LEN);
     CHECK_NE_RETURN(actMagicKey, magicKey, false);
 
-    initPtCoding(l_ptCoding->cfg);
-    if(this->ptCoding == NULL) {
+    initSelfCoding(l_ptCoding->cfg);
+    if(m_ptCoding == NULL) {
         EDCC_Log("EDCCoding::decrypt failed!\n");
         return false;
     }
-    memcpy(this->ptCoding, l_ptCoding, l_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
+    memcpy(m_ptCoding, l_ptCoding, codingLen);
 
+    //return checkHandler.checkCoding(*this);
     return true;
 }
 
-string EDCCoding::encodeToHexString(_IN const EDCC_CFG_T &config)
+string EDCCoding::encryptToHexString(_IN const EDCC_CFG_T &config)
 {
     string sRet = "";
     size_t bufMaxLen = config.imageSizeW * config.imageSizeH;
-    unsigned char* pCoding = (unsigned char*)malloc(sizeof(unsigned char) * bufMaxLen);
-    CHECK_POINTER_NULL_RETURN(pCoding, "");
-    memset(pCoding, 0, sizeof(unsigned char) * bufMaxLen);
-    size_t coding_size = encrypt(pCoding, bufMaxLen, config);
+    size_t coding_size = encrypt(config);
     if(coding_size == 0) {
-        free(pCoding);
-        pCoding = NULL;
         return "";
     }
 
@@ -196,17 +187,15 @@ string EDCCoding::encodeToHexString(_IN const EDCC_CFG_T &config)
     stringstream ss;
     while(pos < coding_size) {
         char tmp[3];
-        sprintf(tmp, "%02x", ((unsigned char*)pCoding)[pos]);
+        sprintf(tmp, "%02x", ((unsigned char*)m_ptCoding)[pos]);
         ss << tmp;
         ++pos;
     }
     sRet = ss.str();
-    free(pCoding);
-    pCoding = NULL;
 
     return sRet;
 }
-bool EDCCoding::decodeFromHexString(_IN const string &hexString)
+bool EDCCoding::decryptFromHexString(_IN const string &hexString)
 {
     size_t codingLen = hexString.length() / 2;
     CHECK_EQ_RETURN(codingLen, 0, false);
@@ -228,8 +217,8 @@ bool EDCCoding::decodeFromHexString(_IN const string &hexString)
 
 void EDCCoding::genCodingBytes()
 {
-    CHECK_POINTER_NULL_RETURN_VOID(ptCoding);
-    memset(ptCoding->pCodingBuff, 0, ptCoding->codingBuffLen);
+    CHECK_POINTER_NULL_RETURN_VOID(m_ptCoding);
+    memset(m_ptCoding->pCodingBuff, 0, m_ptCoding->codingBuffLen);
 
     size_t buffOffset = 0;
     int counter = 0;
@@ -240,7 +229,7 @@ void EDCCoding::genCodingBytes()
             if(counter % 2 != 0) {
                 codingC <<= 4;
             }
-            *(ptCoding->pCodingBuff + buffOffset) |= codingC;
+            *(m_ptCoding->pCodingBuff + buffOffset) |= codingC;
             if(counter == C.rows*C.cols
                || counter % 2 == 0) {
                 ++buffOffset;
@@ -252,7 +241,7 @@ void EDCCoding::genCodingBytes()
     for(int h = 0; h < Cs.rows; ++h) {
         for(int w = 0; w < Cs.cols; ++w) {
             unsigned char codingCs = Cs.at<char>(h, w);
-            *(ptCoding->pCodingBuff + buffOffset) |= (codingCs << (7 - (counter % 8)));
+            *(m_ptCoding->pCodingBuff + buffOffset) |= (codingCs << (7 - (counter % 8)));
             ++counter;
             if(counter == Cs.rows*Cs.cols
                || counter % 8 == 0)
@@ -262,65 +251,32 @@ void EDCCoding::genCodingBytes()
         }
     }
 
-    memcpy(ptCoding->pCodingBuff + buffOffset, &magicKey, MAGIC_KEY_LEN);
+    memcpy(m_ptCoding->pCodingBuff + buffOffset, &magicKey, MAGIC_KEY_LEN);
 }
 
-/*void EDCCoding::compressCoding()
+void EDCCoding::initSelfCoding(_IN const EDCC_CFG_T &config)
 {
-    int width = C.cols;
-    int height = C.rows;
-    unsigned char comCodingCs = 0x00;
-    int csCount = 3;
-    stringstream ssZipC, ssZipCs;
-    for(int h = 0; h < height; ++h) {
-        for(int w = 0; w < width; ++w) {
-            unsigned char codingC = C.at<char>(h, w);
-            ssZipC << hexArray[codingC];
-            unsigned char codingCs = Cs.at<char>(h, w);
-            if(csCount == -1) {
-                ssZipCs << hexArray[comCodingCs];
-                csCount = 3;
-                comCodingCs = 0x00;
-            }
-            comCodingCs |= (codingCs << csCount);
-            --csCount;
-        }
-    }
-    if(csCount != 3) {
-        ssZipCs << hexArray[comCodingCs];
-    }
-
-    zipCodingC = ssZipC.str();
-    zipCodingCs = ssZipCs.str();
-}*/
-
-bool EDCCoding::initPtCoding(_IN const EDCC_CFG_T &config)
-{
-    freeCoding();
-    memcpy(&(this->cfg), &config, sizeof(EDCC_CFG_T));
+    freeSelfCoding();
 
     size_t imageSize = config.imageSizeW*config.imageSizeH;
-    size_t t_coding_size = sizeof(EDCC_CODING_T) + (size_t)ceil(imageSize/2.0) + (size_t)ceil(imageSize/8.0) + MAGIC_KEY_LEN;
-    this->ptCoding = (EDCC_CODING_T *)malloc(t_coding_size);
-    if(this->ptCoding == NULL) {
-        return false;
-    }
-
-    memset(this->ptCoding, 0, t_coding_size);
-    memcpy(&(this->ptCoding->cfg), &config, sizeof(EDCC_CFG_T));
-    ptCoding->codingBuffLen = t_coding_size - sizeof(EDCC_CODING_T);
-
-    return true;
+    size_t codingLen = sizeof(EDCC_CODING_T) 
+                        + (size_t)ceil(imageSize / 2.0) 
+                        + (size_t)ceil(imageSize / 8.0) 
+                        + MAGIC_KEY_LEN;
+    m_ptCoding = (EDCC_CODING_T *)malloc(codingLen);
+    CHECK_POINTER_NULL_RETURN_VOID(m_ptCoding);
+    memset(m_ptCoding, 0, codingLen);
+    
+    memcpy(&(m_ptCoding->cfg), &config, sizeof(EDCC_CFG_T));
+    m_ptCoding->codingBuffLen = codingLen - sizeof(EDCC_CODING_T);
 }
 
-
-void EDCCoding::freeCoding()
+void EDCCoding::freeSelfCoding()
 {
-    if(this->ptCoding != NULL) {
-        free(this->ptCoding);
-        this->ptCoding = NULL;
+    if(m_ptCoding != NULL) {
+        free(m_ptCoding);
+        m_ptCoding = NULL;
     }
-    memset(&(this->cfg), 0, sizeof(EDCC_CFG_T));
 }
 
 //---------------------------------PalmprintCode--------------------------------
@@ -370,7 +326,6 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
     vector<cv::Mat> resultVec;
     split(gaborResult, resultVec);
     genEDCCoding(resultVec, imgSize, numOfDirections);
-    //compressCoding();
 
     return true;
 }
@@ -444,8 +399,8 @@ void GaborFilter::doGaborFilter(_IN const cv::Mat &src, _INOUT cv::Mat &dstMerge
     Mat gaborKernel;
     for(u_char direction = 0; direction < this->numOfDirections; ++direction) {
         getGaborKernelReal(gaborKernel, gaborW, gaborH, 0, direction);
+        normalize(gaborKernel, gaborKernel, 0, 1, CV_MINMAX);
         filter2D(src, dst, CV_64F, gaborKernel);
-        normalize(dst, dst, 0, 1, CV_MINMAX);
         dstVec.push_back(dst.clone());
     }
     merge(dstVec, dstMerge);
@@ -467,8 +422,8 @@ void GaborFilter::getGaborKernelReal(_INOUT cv::Mat &gaborKernel,
     double postmean = exp(-sqsigma / 2);
     Mat kernel(kernelWidth, kernelHeight, ktype);
     double tmp1, tmp2;
-    for(int i = -halfHeight; i <= halfHeight; i++) {
-        for(int j = -halfWidth; j <= halfWidth; j++) {
+    for(int i = -halfHeight; i <= halfHeight; ++i) {
+        for(int j = -halfWidth; j <= halfWidth; ++j) {
             tmp1 = exp(-(Kv * Kv * (i * i + j * j)) / (2 * sqsigma));
             tmp2 = cos(Kv * cos(Qu) * j + Kv * sin(Qu) * i) - postmean;
             if(ktype == CV_32F) {

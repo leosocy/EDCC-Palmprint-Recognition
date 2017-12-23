@@ -10,6 +10,9 @@
 #include <EDCC.h>
 using namespace EDCC;
 
+#define EDCC_DEFAULT_ID ("defaultID")
+#define EDCC_DEFAULT_IMAGEPATH ("defaultImagePath")
+
 size_t EncodeAllPalmprint(vector<PalmprintCode> &allPalmprint,
                           const EDCC_CFG_T &config);
 
@@ -30,7 +33,6 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
                   _OUT size_t &bufLen)
 {
     IO trainIO;
-    int retCode = 0;
     ifstream configIn;
     Check checkHandler;
     bufLen = 0;
@@ -40,13 +42,14 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
     CHECK_POINTER_NULL_RETURN(pCodingBuf, EDCC_NULL_POINTER_ERROR);
 
     configIn.open(configFileName);
-    retCode = trainIO.loadConfig(configIn);
-    CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_CONFIG_FAIL);
+    if(EDCC_SUCCESS != trainIO.loadConfig(configIn)) {
+        return EDCC_LOAD_CONFIG_FAIL;
+    }
     if(!checkHandler.checkConfigValid(trainIO.config)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
 
-    PalmprintCode onePalmprint("identity", palmprintImagePath);
+    PalmprintCode onePalmprint(EDCC_DEFAULT_ID, palmprintImagePath);
     if(!onePalmprint.encodePalmprint(trainIO.config)) {
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
@@ -60,15 +63,15 @@ int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCodin
                                     _IN const unsigned char *secondPalmprintCodingBuf,
                                     _OUT double &score)
 {
+    CHECK_POINTER_NULL_RETURN(firstPalmprintCodingBuf, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(secondPalmprintCodingBuf, EDCC_NULL_POINTER_ERROR);
+
     int retCode = 0;
     Check checkHandler;
     score = 0.0;
 
-    CHECK_POINTER_NULL_RETURN(firstPalmprintCodingBuf, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(secondPalmprintCodingBuf, EDCC_NULL_POINTER_ERROR);
-
-    PalmprintCode firstPalmprint("identity", "imagepath");
-    PalmprintCode secondPalmprint("identity", "imagepath");
+    PalmprintCode firstPalmprint(EDCC_DEFAULT_ID, EDCC_DEFAULT_IMAGEPATH);
+    PalmprintCode secondPalmprint(EDCC_DEFAULT_ID, EDCC_DEFAULT_IMAGEPATH);
     
     retCode = firstPalmprint.decrypt(firstPalmprintCodingBuf);
     CHECK_FALSE_RETURN(retCode, EDCC_CODING_INVALID);
@@ -76,7 +79,7 @@ int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCodin
     CHECK_FALSE_RETURN(retCode, EDCC_CODING_INVALID);
 
     retCode = checkHandler.checkTwoPalmprintCodeConfigEQAndValid(firstPalmprint, secondPalmprint);
-    CHECK_FALSE_RETURN(retCode, EDCC_CODING_DIFF_CONFIG);
+    CHECK_FALSE_RETURN(retCode, EDCC_CODINGS_DIFF_CONFIG);
 
     score = firstPalmprint.matchWith(secondPalmprint);
 
@@ -88,25 +91,25 @@ int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
                               _IN const char *configFileName,
                               _OUT double &score)
 {
-    IO matchIO;
-    int retCode = 0;
-    ifstream configIn;
-    Check checkHandler;
-    score = 0.0;
-
     CHECK_POINTER_NULL_RETURN(firstPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(secondPalmprintImagePath, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(configFileName, EDCC_NULL_POINTER_ERROR);
 
+    IO matchIO;
+    ifstream configIn;
+    Check checkHandler;
+    score = 0.0;
+
     configIn.open(configFileName);
-    retCode = matchIO.loadConfig(configIn);
-    CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_CONFIG_FAIL);
+    if(EDCC_SUCCESS != matchIO.loadConfig(configIn)) {
+        return EDCC_LOAD_CONFIG_FAIL;
+    }
     if(!checkHandler.checkConfigValid(matchIO.config)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
    
-    PalmprintCode firstPalmprint("identity", firstPalmprintImagePath);
-    PalmprintCode secondPalmprint("identity", secondPalmprintImagePath);
+    PalmprintCode firstPalmprint(EDCC_DEFAULT_ID, firstPalmprintImagePath);
+    PalmprintCode secondPalmprint(EDCC_DEFAULT_ID, secondPalmprintImagePath);
     if(!firstPalmprint.encodePalmprint(matchIO.config)
        || !secondPalmprint.encodePalmprint(matchIO.config)) {
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
@@ -158,7 +161,8 @@ int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
     ifstream trainingSetIn;
     trainingSetIn.open(trainingSetPalmprintGroupFileName);
     retCode = trainIO.loadPalmprintGroup(trainingSetIn, featuresAll);
-    if(retCode != EDCC_SUCCESS || !checkHandler.checkPalmprintGroupValid(featuresAll)) {
+    if(retCode != EDCC_SUCCESS 
+       || !checkHandler.checkPalmprintGroupValid(featuresAll)) {
         return EDCC_LOAD_TAINING_SET_FAIL;
     }
     

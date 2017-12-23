@@ -27,17 +27,16 @@ namespace EDCC
     typedef struct tag_EDCC_CFG_T EDCC_CFG_T;
     class Check {
     public:
-        bool checkConfigValid(_IN const EDCC_CFG_T &config);
-        bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data);
+        bool checkConfigValid(_IN const EDCC_CFG_T &config) const;
+        bool checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data) const;
         bool checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
-                                       _IN const EDCC_CFG_T &config);
+                                       _IN const EDCC_CFG_T &config) const;
+        bool checkCoding(_IN const EDCCoding &coding) const;
         bool checkTwoPalmprintCodeConfigEQAndValid(_IN const PalmprintCode &firstPalmprintCode,
-                                                   _IN const PalmprintCode &secondPalmprintCode);
+                                                   _IN const PalmprintCode &secondPalmprintCode) const;
     private:
-        bool checkCodingMagicKey(_IN const EDCCoding &coding);
-        bool checkCoding(_IN const EDCCoding &coding);
         bool checkTwoConfigEQAndValid(_IN const EDCC_CFG_T &firstConfig,
-                                      _IN const EDCC_CFG_T &secondConfig);
+                                      _IN const EDCC_CFG_T &secondConfig) const;
     };
 }
 

@@ -8,7 +8,7 @@ public:
     void TearDown();
 
     void ExcuteInterface();
-    void SetPTCodingBuff(unsigned char *pCoding) {
+    void Setm_ptCodingBuff(unsigned char *pCoding) {
         this->pCoding = pCoding;
     }
     void SetBuffMaxLen(size_t maxLen) {

@@ -8,6 +8,8 @@
 #include <iostream>
 #include <assert.h>
 
+#define CODING_FIELD "coding"
+
 #define PALMPRINT_GROUP_FORMAT  "{\n\
 \"identity\" : [\n\
     \"path1\"\n\
@@ -46,12 +48,11 @@ int EDCC::IO::loadConfig(_IN ifstream &in)
             EDCC_Log("Parse config.json failed, you can only change the value of \
                      \"default\" label in this file.\n");
             return EDCC_LOAD_CONFIG_FAIL;
-        } else {
-            if(paramsSet.find(*it) == paramsSet.end()
-               || !genConfig(*it, root[*it]["default"].asInt())) {
-                EDCC_Log("Illegal configuration parameters.\n");
-                return EDCC_LOAD_CONFIG_FAIL;
-            }
+        }
+        if(paramsSet.find(*it) == paramsSet.end()
+            || !genConfig(*it, root[*it]["default"].asInt())) {
+            EDCC_Log("Illegal configuration parameters.\n");
+            return EDCC_LOAD_CONFIG_FAIL;
         }
     }
 
@@ -208,15 +209,16 @@ bool EDCC::IO::getEDCCoding(_IN const Json::Value &value, _INOUT PalmprintCode &
 {
     if(value.isNull() 
        || !value.isObject()
-       || value["coding"].isNull()
-       || !value["coding"].isString()) {
+       || value[CODING_FIELD].isNull()
+       || !value[CODING_FIELD].isString()) {
         EDCC_Log("Load Palmprint Features Data failed. Don't change the json format.\n");
         return false;
     }
     
-    string codingHexStr = value["coding"].asString();
+    string codingHexStr = value[CODING_FIELD].asString();
     CHECK_EQ_RETURN(codingHexStr, "", false);
-    CHECK_FALSE_RETURN(coding.decodeFromHexString(codingHexStr), false);
+    CHECK_FALSE_RETURN(coding.decryptFromHexString(codingHexStr), false);
+
     return true;
 }
 
@@ -238,9 +240,9 @@ bool EDCC::IO::insert2JsonValue(_IN PalmprintCode &code, _INOUT Json::Value &val
 
 bool EDCC::IO::setEDCCoding(_IN PalmprintCode &coding, _INOUT Json::Value &value)
 {
-    string codingHexStr = coding.encodeToHexString(config);
+    string codingHexStr = coding.encryptToHexString(config);
     CHECK_EQ_RETURN(codingHexStr, "", false);
-    value["coding"] = codingHexStr;
+    value[CODING_FIELD] = codingHexStr;
 
     return true;
 }
