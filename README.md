@@ -4,9 +4,9 @@
 
 Advantages of `EDCC` algorithm:
 
-1. Less training samples.
-1. Faster recognition speed.
-1. Higher recognition accuracy.
+1. **Less training samples.**
+1. **Faster recognition speed.**
+1. **Higher recognition accuracy.**
 
 [**More details of `EDCC`**](https://leosocy.github.io/2017/10/18/EDCC%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/)
 
