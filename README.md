@@ -1,23 +1,39 @@
-# EDCC: 高效、准确的掌纹识别算法
+# EDCC: An efficient and accurate algorithm for palmprint-recognition
 
-`EDCC( Enhanced and Discriminative Competitive Code, 增强的、有辨识度的竞争编码)`算法，用于掌纹的识别。
+`EDCC(Enhanced and Discriminative Competitive Code)`, which is used for palmprint-recognition.
 
-**使用更少的训练样本，获得更高的准确率。**
+Advantages of `EDCC` algorithm:
 
-了解EDCC算法: [EDCC算法详解](https://leosocy.github.io/2017/10/18/EDCC%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/)
+1. Less training samples.
+1. Faster recognition speed.
+1. Higher recognition accuracy.
 
-## 目录结构
+[**More details of `EDCC`**](https://leosocy.github.io/2017/10/18/EDCC%E7%AE%97%E6%B3%95%E8%AF%A6%E8%A7%A3/)
 
-- `include`:包含算法API的头文件以及API说明。
-- `source`:EDCC算法的源代码以及代码架构。
-- `test`:程序的FT用例。
-- `thirdparty`:第三方库，包括jsoncpp和gtest。
-- `lib`:一个CMakeList用于生成EDCC静态和动态链接库。
-- `APIInputExample`:EDCC API使用的一些json[文件示例](https://github.com/Leosocy/EDCC/tree/master/APIInputExample)。
+## How to use `EDCC` in your project
 
-## How to use EDCC in your project
+### Use existing library
 
-### 生成EDCC静态库&&动态库
+1. `git clone https://github.com/Leosocy/EDCC.git`
+1. `cd EDCC/lib`
+
+There is existing library in [`lib`](https://github.com/Leosocy/EDCC/tree/master/lib) directory, include Windows/Linux. EDCC api header is in [`include`](https://github.com/Leosocy/EDCC/tree/master/include) directory.
+
+You can use the following methods to use EDCC in your project:
+
+- Add *.a *.so to system lib directory, such as /usr/lib; add EDCC.h to system include directory, such as /usr/include.
+- Add EDCC library directory path to your system environment varibles.
+-   Edit your CMakeLists.txt
+    ```cmake
+    find_package(OpenCV REQUIRED)
+    include_directories(EDCC.h)
+    ······
+    link_directories(${EDCC_LIB_PATH})
+    target_link_libraries(${PROJECT} EDCC ${OpenCV_LIBS})
+    ```
+- Put EDCC library and EDCC.h in the same folder as your project.
+
+### Generate library and use it
 
 1. `git clone https://github.com/Leosocy/EDCC.git`
 1. `cd EDCC/lib`
@@ -25,21 +41,20 @@
 1. `cmake ..`
 1. `make -j`
 
-在`edcc_lib`目录下会生成`libEDCC_STATIC.a`以及`libEDCC.so`
+`libEDCC_STATIC.a` and `libEDCC.so` will be generated in `edcc_lib` directory.
 
-编译库过程常见问题[FAQ](https://github.com/Leosocy/EDCC/tree/master/lib)
+Compile library process frequently asked questions [FAQ](https://github.com/Leosocy/EDCC/tree/master/lib)
 
-### 链接EDCC库
+## API Instructions
 
-1. 将生成的\*.a和\*.so以及EDCC/include/EDCC.h拷贝到自己的项目目录
-1. 编辑您的CMakeLists.txt
-    ```cmake
-    find_package(OpenCV REQUIRED)
-    include_directories(EDCC.h)
-    ······
-    target_link_libraries(${PROJECT} EDCC ${OpenCV_LIBS})
-    ```
+[Instructions](https://github.com/Leosocy/EDCC/tree/master/include)
 
-### 使用EDCC API
+## Directory Structure
 
-[API使用说明](https://github.com/Leosocy/EDCC/tree/master/include)
+- `include`: Contain the EDCC api header and api instructions.
+- `source`: EDCC algorithm source code and code architecture.
+- `samples`: Some samples about how to use EDCC api, include `python`, `C++`.
+- `test`: functions test.
+- `thirdparty`: Third party library, include `gtest` and `jsoncpp`
+- `lib`: A CMakeList used to generate EDCC static and dynamic link libraries. And two directories include windows and linux libraries.
+- `APIInputExample`: Some json files which are used in EDCC api.[example](https://github.com/Leosocy/EDCC/tree/master/APIInputExample)。
