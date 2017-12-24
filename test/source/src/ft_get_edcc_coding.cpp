@@ -14,7 +14,7 @@ void ft_get_edcc_coding::SetUp()
     memset(pCoding1, 0, sizeof(unsigned char) * bufMaxLen);
     memset(pCoding2, 0, sizeof(unsigned char) * bufMaxLen);
 
-    Setm_ptCodingBuff(this->pCoding1);
+    SetCodingBuff(this->pCoding1);
 }
 
 void ft_get_edcc_coding::TearDown()
@@ -64,7 +64,7 @@ TEST_F(ft_get_edcc_coding, Given_NULLConfig_When_GetEDCCCoding_Then_EDCC_NULL_PO
 
 TEST_F(ft_get_edcc_coding, Given_NULLCodingBuf_When_GetEDCCCoding_Then_EDCC_NULL_POINTER_ERROR)
 {
-    Setm_ptCodingBuff(NULL);
+    SetCodingBuff(NULL);
 
     ExcuteInterface();
 
@@ -164,7 +164,7 @@ TEST_F(ft_get_edcc_coding, Given_CorrectInputs_When_GetEDCCCoding_Then_EDCC_SUCC
 TEST_F(ft_get_edcc_coding, Given_CorrectInputs_And_TwoDiffPalmprint_When_GetEDCCCoding_Then_EDCC_SUCCESS_And_TwoCodingLenEQ)
 {
     size_t bufLenTmp;
-    Setm_ptCodingBuff(pCoding1);
+    SetCodingBuff(pCoding1);
 
     ExcuteInterface();
 
@@ -173,7 +173,7 @@ TEST_F(ft_get_edcc_coding, Given_CorrectInputs_And_TwoDiffPalmprint_When_GetEDCC
     EXPECT_NE(bufLen, 0);
     bufLenTmp = bufLen;
 
-    Setm_ptCodingBuff(pCoding2);
+    SetCodingBuff(pCoding2);
     SetImagePath(ID2_FIRST_PALMPRINT);
 
     ExcuteInterface();

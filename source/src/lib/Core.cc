@@ -170,8 +170,7 @@ bool EDCCoding::decrypt(_IN const unsigned char *pCodingBuf)
     }
     memcpy(m_ptCoding, l_ptCoding, codingLen);
 
-    //return checkHandler.checkCoding(*this);
-    return true;
+    return checkHandler.checkCoding(*this);
 }
 
 string EDCCoding::encryptToHexString(_IN const EDCC_CFG_T &config)
@@ -227,7 +226,8 @@ void EDCCoding::genCodingBytes()
             ++counter;
             unsigned char codingC = C.at<char>(h, w);
             if(counter % 2 != 0) {
-                codingC <<= 4;
+                codingC <<= 4; 
+                codingC &= 0xf0;
             }
             *(m_ptCoding->pCodingBuff + buffOffset) |= codingC;
             if(counter == C.rows*C.cols
