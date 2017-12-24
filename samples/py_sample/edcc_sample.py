@@ -15,8 +15,10 @@ class PalmprintCodeDTO(object):
 class EDCCSample(object):
     def __init__(self):
         self._edcc_api = EDCC_API()
-        self._factory = PalmprintImageFactory(4)
-        self._palmprintcodeRepository = PalmprintCodeRepo("./R_PALMPRINTCODE.db")
+        self._factory = PalmprintImageFactory(8)
+        self._dbPath = "./R_PALMPRINTCODE.db"
+        os.remove(self._dbPath)
+        self._palmprintcodeRepository = PalmprintCodeRepo(self._dbPath)
         self._configPath = os.path.normpath(os.path.join(os.getcwd(), "edcc_config/config.json"))
         self._succNum = 0
         self._failNum = 0
@@ -74,6 +76,7 @@ class EDCCSample(object):
 
     def __initDB__(self):
         print("Init PalmprintCodeDB")
+       
         self._palmprintcodeRepository.startExecute()
         for train in self._factory.trainGroup:
             results = self._palmprintcodeRepository.selectPalmprintByIDInstamceID(train.id, train.instanceID)
