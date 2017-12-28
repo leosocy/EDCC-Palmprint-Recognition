@@ -4,7 +4,6 @@ set(PROJECT_NAME EDCC)
 project(${PROJECT_NAME})
 set(JSONCPP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/jsoncpp)
 set(EDCC_PUB_HEADER ${CMAKE_SOURCE_DIR}/../include)
-set(AES_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/aes)
 
 message(STATUS "——————————————————————————————————————")
 message(STATUS "PROJECT_NAME : " ${PROJECT_NAME})
@@ -21,19 +20,44 @@ include_directories(${JSONCPP_ROOT}/include)
 include_directories(${AES_ROOT}/include)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-file(GLOB_RECURSE edcc_include_files 
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
+macro(group_src_by_dir src_files)
+    foreach(file_path ${${src_files}})
+        message(${file_path})
+        string(REGEX REPLACE ${CMAKE_CURRENT_SOURCE_DIR}/\(.*\) \\1 relative_path ${file_path})
+        string(REGEX REPLACE "(.+)\\..*" \\1 relative_group ${relative_path})
+        list(FIND c_groups ${relative_group} index)
+        if(NOT index LESS 0)
+            message(${relative_group})
+            string(REPLACE "/" "\\" relative_group ${relative_group})
+            source_group(${relative_group} FILES ${file_path})
+        else()
+            string(REGEX MATCH "(.+)/.*" has_group ${relative_path})
+            if(has_group)
+                string(REGEX REPLACE "(.+)/.*" \\1 group ${relative_path})
+                string(REPLACE "/" "\\" group ${group})
+                message(${group})
+                source_group(${group} FILES ${file_path})
+            else()
+                message("")
+                source_group("" FILES ${file_path})
+            endif()
+        endif()
+    endforeach(file_path)
+endmacro(group_src_by_dir)
+
+file(GLOB_RECURSE HEADER_FILES 
+    *.h
+    *.hpp
 )
 
-file(GLOB_RECURSE edcc_src_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
+file(GLOB_RECURSE SRC_FILES 
+    *.c
+    *.cpp
+    *.cc
 )
-if(MSVC)
-    source_group(include FILES ${edcc_include_files})
-    source_group(src FILES ${edcc_src_files}) 
-endif()
+
+group_src_by_dir(HEADER_FILES)
+group_src_by_dir(SRC_FILES)
 
 if(MSVC)
     add_compile_options("/MT")
@@ -41,6 +65,6 @@ elseif (UNIX)
 endif()
 
 add_library(${PROJECT_NAME} STATIC
-            ${edcc_include_files}
-            ${edcc_src_files})
+            ${HEADER_FILES}
+            ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} jsoncpp)

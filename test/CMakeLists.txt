@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 2.8 )
 
-set(PROJECT_NAME ft_edcc)
+set(PROJECT_NAME FT_EDCC)
 project(${PROJECT_NAME})
 
 #find_package(OpenCV REQUIRED)
@@ -23,26 +23,50 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/source/include)
 include_directories(${JSONCPP_ROOT}/include)
 include_directories(${GTEST_ROOT}/include)
 
-file(GLOB_RECURSE test_include_files 
-    ${CMAKE_CURRENT_SOURCE_DIR}/source/include/*.h
-    ${EDCC_PUB_HEADER}/*.h
-)
-file(GLOB_RECURSE test_src_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/source/src/*.c
-)
-if(MSVC)
-    source_group(include FILES ${test_include_files})
-    source_group(src FILES ${test_src_files}) 
-endif()
+macro(group_src_by_dir src_files)
+    foreach(file_path ${${src_files}})
+        message(${file_path})
+        string(REGEX REPLACE ${CMAKE_CURRENT_SOURCE_DIR}/\(.*\) \\1 relative_path ${file_path})
+        string(REGEX REPLACE "(.+)\\..*" \\1 relative_group ${relative_path})
+        list(FIND c_groups ${relative_group} index)
+        if(NOT index LESS 0)
+            message(${relative_group})
+            string(REPLACE "/" "\\" relative_group ${relative_group})
+            source_group(${relative_group} FILES ${file_path})
+        else()
+            string(REGEX MATCH "(.+)/.*" has_group ${relative_path})
+            if(has_group)
+                string(REGEX REPLACE "(.+)/.*" \\1 group ${relative_path})
+                string(REPLACE "/" "\\" group ${group})
+                message(${group})
+                source_group(${group} FILES ${file_path})
+            else()
+                message("")
+                source_group("" FILES ${file_path})
+            endif()
+        endif()
+    endforeach(file_path)
+endmacro(group_src_by_dir)
 
+file(GLOB_RECURSE HEADER_FILES 
+    *.h
+    *.hpp
+)
+
+file(GLOB_RECURSE SRC_FILES 
+    *.c
+    *.cpp
+    *.cc
+)
+
+group_src_by_dir(HEADER_FILES)
+group_src_by_dir(SRC_FILES)
 if(MSVC)
     add_compile_options("/MT")
 elseif (UNIX)
 endif()
 
-add_executable(${PROJECT_NAME} ${test_include_files} ${test_src_files})
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SRC_FILES})
 
 #FIND_LIBRARY(LIB_GTEST gtest.a ${CMAKE_BINARY_DIR} NO_DEFAULT_PATH)
 #link_directories(${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/../lib)
