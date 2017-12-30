@@ -51,8 +51,10 @@ EDCC_API typedef struct  {
     size_t rank;
 } MatchResult;
 
-extern "C" {
-
+#ifdef __cplusplus
+extern "C"
+{
+#endif
     /* Some primitive operation */
     EDCC_API int GetEDCCCoding(_IN const char *palmprintImagePath,
                                _IN const char *configFileName,
@@ -85,6 +87,9 @@ extern "C" {
                                   _IN size_t K,
                                   _OUT std::map<size_t, MatchResult> &topKResult);
     /* encapsulated APIs end */
+
+#ifdef __cplusplus
 }
+#endif
 
 #endif
