@@ -1,13 +1,13 @@
-# python项目中使用EDCC示例
+# Use EDCC library in python project
 
-## EDCC API适配
+## EDCC API Adapter
 
-根据平台类型(Windows/Linux)，选择要加载的动态库，可以参考示例中EDCCApiAdapter.py调用方法。
+According to the type of platform (Windows / Linux), select the dynamic library to load, you can refer to the example EDCCApiAdapter.py call method.
 
-## 建立掌纹图像工厂
+## Create a palm print image factory
 
-用于生产一个与掌纹图像编码数据相关的三元组(ID, instanceID, imagePath)，其中ID可以是人的标识，例如姓名；instanceID是掌纹图像对应的实例ID，例如R_01；imagePath是掌纹图像的路径，可以是绝对路径，或是相对于EDCC动态库的路径。
+For generating a triples (ID, instanceID, imagePath) associated with the palmprint image encoded data, where the ID can be a human ID, such as a name; instanceID is an instance ID corresponding to the palmprint image, for example, R_01; The image path, either absolute or relative to the EDCC dynamic library.
 
-## 建立掌纹图像仓储
+## Create palmprint image storage
 
-用于存取掌纹图像编码数据。
+Used to access the palmprint image encoded data.
