@@ -1,12 +1,12 @@
-# API说明
+# API Description
 
 ## `GetEDCCCoding`
 
-### 功能
+### Application
 
-获得一幅掌纹图像的EDCC特征编码，您可以将获得的数据存入数据库形成掌纹特征库。
+Obtain a palmprint EDCC feature code, you can get the data stored in the database to form a palmprint library.
 
-### 入参说明
+### Parameters
 
 ```C++
 int GetEDCCCoding(_IN const char *palmprintImagePath,
@@ -16,15 +16,15 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
                   _OUT size_t &bufLen);
 ```
 
-- **palmprintImagePath**: 一幅掌纹图像的路径。
-- **configFileName**: EDCC算法参数配置的文件路径。
-- **pCodingBuf**: 编码特征字节流缓冲区的地址。
-- **bufMaxLen**: 缓冲区的最大存储长度，建议和config中配置的图片大小相等，e.g. ImageSize = (100, 100) => bufMaxLen = 10000。
-- **bufLen**: EDCC特征编码字节流的真实长度， bufLen < bufMaxLen。
+- **palmprintImagePath**: A palmprint image of the path.
+- **configFileName**: File path of EDCC algorithm parameter configuration.
+- **pCodingBuf**: The address of the encoding feature byte stream buffer pointer.
+- **bufMaxLen**: The maximum storage length of the buffer is recommended to be equal to the size of the image configured in config, e.g. ImageSize = (100, 100) => bufMaxLen = 10000.
+- **bufLen**: The actual length of the EDCC feature encoding byte stream, bufLen < bufMaxLen.
 
-### 用法
+### Usage
 
-e.g. `config.json`中配置imageSizeW = 100, imageSizeH = 100, 则bufMaxLen可以设置为100*100左右
+e.g. `config.json` configure imageSizeW = 100, imageSizeH = 100, then bufMaxLen can be set to about 100 * 100.
 
 ```C++
 size_t bufMaxLen = 1024 * 10;
@@ -39,11 +39,11 @@ int ret = GetEDCCCoding("../test/palmprint_database/001/1_01_s.bmp",
 
 ## `GetTwoPalmprintCodingMatchScore`
 
-### 功能
+### Application
 
-获得两个掌纹编码(通过GetEDCCCoding获得)的匹配得分(相似度)，得分越接近1表明两个掌纹相似度越高。
+Obtained two palmprint code (obtained by GetEDCCCoding) matching score (similarity), the score closer to 1 indicates that the two palmprint similarity is higher.
 
-### 入参说明
+### Parameters
 
 ```C++
 int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCoding,
@@ -51,11 +51,11 @@ int GetTwoPalmprintCodingMatchScore(_IN const unsigned char *firstPalmprintCodin
                                     _OUT double &score);
 ```
 
-- **firstPalmprintCoding**: 一幅掌纹图像的编码。
-- **secondPalmprintCoding**: 另一幅掌纹图像的编码。
-- **score**: 获得的匹配得分。
+- **firstPalmprintCoding**: A palmprint image encoding.
+- **secondPalmprintCoding**: Another palmprint image encoding.
+- **score**: Match score.
 
-### 用法
+### Usage
 
 ```C++
 size_t bufMaxLen = 1024 * 10;
@@ -79,15 +79,15 @@ ret = GetTwoPalmprintCodingMatchScore(pCodingBuf1,
                                       score);
 ```
 
-`Tips`: 您也可以通过从掌纹特征数据库中读取特征编码。
+`Tips`: You can also read feature codes from the palmprint database.
 
 ## `GetTwoPalmprintMatchScore`
 
-### 功能
+### Application
 
-获得两幅掌纹图像的匹配得分(相似度)，得分越接近1表明两个掌纹相似度越高。
+Obtained two palmprint image matching score (similarity), the score closer to 1 indicates that the two palmprint similarity is higher.
 
-### 入参说明
+### Parameters
 
 ```C++
 int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
@@ -96,12 +96,12 @@ int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
                               _INOUT double &score);
 ```
 
-- **firstPalmprintImagePath**: 一幅掌纹图像的路径。
-- **secondPalmprintImagePath**: 另一幅掌纹图像的路径。
-- **configFileName**: EDCC算法参数配置的文件路径。
-- **score**: 获得的匹配得分。
+- **firstPalmprintImagePath**: A palmprint image of the path.
+- **secondPalmprintImagePath**: Another palmprint image of the path.
+- **configFileName**: File path of EDCC algorithm parameter configuration.
+- **score**: Match score.
 
-### 用法
+### Usage
 
 ```C++
 double matchScore = 0.0
@@ -113,11 +113,11 @@ int ret = GetTwoPalmprintMatchScore("../test/palmprint_database/001/1_01_s.bmp",
 
 ## `GetTrainingSetFeatures`
 
-### 功能
+### Application
 
-计算一个训练集中所有掌纹图像的特征，并生成每一个身份对应的掌纹特征库。
+Obtain the features of all palmprint images in a training set and generate the palmprint database corresponding to each identity.
 
-### 入参说明
+### Parameters
 
 ```C++
 int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
@@ -126,20 +126,18 @@ int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
                            _IN bool isIncremental = false);
 ```
 
-- **trainingSetPalmprintGroupFileName**: 掌纹训练集文件的路径，存储了身份与对应的掌纹图像路径信息。若某个掌纹图像路径不存在或者存在重复，该掌纹将会被忽略。
-- **configFileName**: EDCC算法参数配置的文件路径。
-- **featuresOutputFileName**: 掌纹特征的存储路径。
-- **isIncremental**: 是否增量提取特征。
-  - 是：`configFileName`参数将被忽略。读取`featuresOutputFileName`中存储的特征以及对应的算法参数，然后提取`configFileName`中的掌纹特征并加入到`featuresOutputFileName`中。
-  - 否：无条件覆盖`featuresOutputFileName`的数据。
+- **trainingSetPalmprintGroupFileName**: Palmprint training set file path, stored identity and the corresponding palmprint image path information. If a palmprint image path does not exist or there is duplication, the palmprint will be ignored.
+- **configFileName**: File path of EDCC algorithm parameter configuration.
+- **featuresOutputFileName**: Palmprint features storage path.
+- **isIncremental**: Whether to incrementally extract features.
+  - True: `configFileName` parameter will be ignored. Read the features stored in featuresOutputFileName and the corresponding algorithm parameters, then extract the palmprint feature in `configFileName` and add it to `featuresOutputFileName`.
+  - False: Unconditionally override the data of featuresOutputFileName.
 
-查看以上输入文件的模板[请点击](https://github.com/Leosocy/EDCC/tree/master/APIInputExample)
+View the template above the input file[Click](https://github.com/Leosocy/EDCC/tree/master/APIInputExample)
 
-### 用法
+### Usage
 
-非增量运行，`isIncremental = false`，
-EDCC算法根据`config.json`中的配置计算`trainingSet.json`中的掌纹特征，
-并存储到`trainingSetFeatures.json`中。
+Non-incremental runs, `isIncremental = false`, the EDCC algorithm computes the palmprint features in `trainingSet.json` based on the configuration in `config.json` and stores them in `trainingSetFeatures.json`.
 
 ```C++
 int ret = GetTrainingSetFeatures("./trainingSet.json,
@@ -148,9 +146,7 @@ int ret = GetTrainingSetFeatures("./trainingSet.json,
                                  false);
 ```
 
-增量运行，`isIncremental = true`，
-EDCC算法加载`trainingSetFeatures.json`中已有的特征数据和配置参数，而`config.json`中的配置将被忽略，
-在计算`trainingSet.json`中的掌纹特征后，将新增的掌纹特征加入到`trainingSetFeatures.json`中。
+Incremental run, `isIncremental = true`, the EDCC algorithm loads the existing feature data and configuration parameters in `trainingSetFeatures.json` and the configuration in `config.json` will be ignored and in computing `trainingSet.json` after the palmprint feature, add the new palmprint feature to `trainingSetFeatures.json`.
 
 ```C++
 int ret = GetTrainingSetFeatures("./trainingSet.json",
@@ -161,11 +157,11 @@ int ret = GetTrainingSetFeatures("./trainingSet.json",
 
 ## `GetTopKMatchScore`
 
-### 功能
+### Application
 
-获得一幅掌纹图像与一组掌纹训练集(或者掌纹特征库)的前K高匹配得分及对应的身份。
+Obtain a Top-K-high matching score and a corresponding identity of a palmprint image with a set of palmprint training sets (or palmprint database).
 
-### 入参说明
+### Parameters
 
 ```C++
 int GetTopKMatchScore(_IN const char *onePalmprintImagePath,
@@ -176,23 +172,23 @@ int GetTopKMatchScore(_IN const char *onePalmprintImagePath,
                       _INOUT std::map<size_t, MatchResult> &topKResult);
 ```
 
-- **onePalmprintImagePath**: 一幅掌纹图像的路径。
-- **trainingSetFeaturesOrPalmprintGroupFileName**: 掌纹图像训练集或者掌纹特征库的文件路径。
-- **configFileName**: EDCC算法参数配置的文件路径。
-- **isFeatures**: 入参`trainingSetFeaturesOrPalmprintGroupFileName`是否为掌纹特征库。
-- **K**: 获取前K高的匹配的分。
-- **topKResult**: 匹配的结果，map中按匹配得分从高至低排序,e.g. topKResult.at(1)为匹配得分第1的匹配结果。
+- **onePalmprintImagePath**: A palmprint image of the path.
+- **trainingSetFeaturesOrPalmprintGroupFileName**: File path of palm print image training set or palmprint database.
+- **configFileName**: File path of EDCC algorithm parameter configuration.
+- **isFeatures**: Participation `trainingSetFeaturesOrPalmprintGroupFileName` is a palmprint feature library.
+- **K**: Get the score of the top K high match.
+- **topKResult**: Matches the results, sorted according to the matching score from high to low in map, eg. TopKResult.at (1) is the first matching result of matching score.
 
-MatchResult结构体中的参数说明:
+Parameters in the MatchResult structure:
 
-- `identity`: 掌纹身份
-- `imagePath`: 掌纹图像路径
-- `score`: 匹配得分
-- `rank`: 此项匹配结果在K个结果中的得分排名
+- `identity`: Palmprint identity.
+- `imagePath`: Palmprint image path.
+- `score`: Match score.
+- `rank`: The result of this match ranks among the K results.
 
-### 用法
+### Usage
 
-匹配掌纹特征库中的掌纹
+Match the palmprint in the palmprint database.
 
 ```C++
 size_t K = 10;
@@ -205,7 +201,7 @@ int ret = GetTopKMatchScore("../test/palmprint_database/001/1_01_s.bmp",
                             topKResult);
 ```
 
-匹配掌纹训练集中的掌纹
+Match palmprint in the training set.
 
 ```C++
 size_t K = 10;
@@ -218,58 +214,72 @@ int ret = GetTopKMatchScore("../test/palmprint_database/001/1_01_s.bmp",
                             topKResult);
 ```
 
-## 返回值说明
+## EDCC return value description
 
-- **EDCC_SUCCESS**: EDCC API处理成功。
-- **EDCC_NULL_POINTER_ERROR**: API入参存在空指针。
-- **EDCC_LOAD_CONFIG_FAIL**: 加载EDCC算法配置文件出错。
+- **EDCC_SUCCESS**: EDCC API processing is successful.
+- **EDCC_NULL_POINTER_ERROR**: API into parameters exist null pointer.
+- **EDCC_LOAD_CONFIG_FAIL**: Load EDCC algorithm configuration file failed.
 
-    可能原因：
+    Possible Causes:
 
-        1. 路径不存在
-        1. 配置文件中的算法参数名非法或缺失
-        1. 配置文件中的算法配置值非法
-        1. 特征库文件中的参数值非法
-        1. json文件格式问题
+        1. Path does not exist.
+        2. The algorithm parameter name in the configuration file is invalid or missing.
+        3. The configuration value of the algorithm in the configuration file is invalid.
+        4. The value of the parameter in the signature library file is illegal.
+        5. The json file format problem.
 
-    `Tips`: 如果API返回此失败码，可以参考此[算法配置文件](https://github.com/Leosocy/EDCC/blob/master/APIInputExample/config.json)
+    `Tips`: If the API returns this failure code, you can refer to this [config.json](https://github.com/Leosocy/EDCC/blob/master/APIInputExample/config.json)
 
-- **EDCC_LOAD_TAINING_SET_FAIL**: 加载掌纹训练集文件出错。
+- **EDCC_LOAD_TAINING_SET_FAIL**: Fail to load palm print training set file.
 
-    可能原因：
+    Possible Causes:
 
-        1. 路径不存在
-        1. json文件格式问题
+        1. Path does not exist.
+        2. The json file format problem.
 
-    `Tips`: 如果API返回此失败码，可以参考此[掌纹训练集文件](https://github.com/Leosocy/EDCC/blob/master/APIInputExample/trainingSet.json)
+    `Tips`: If the API returns this failure code, you can refer to this [Palmprint Set](https://github.com/Leosocy/EDCC/blob/master/APIInputExample/trainingSet.json)
 
-- **EDCC_LOAD_FEATURES_FAIL**: 加载掌纹特征库文件出错。
+- **EDCC_LOAD_FEATURES_FAIL**: Load palmprint feature library file failed.
 
-    可能原因:
+    Possible Causes:
 
-        1. 通常不会出现此错误，除非您手动修改了掌纹特征库文件
+        1. This error usually does not occur unless you manually modified the palmprint library file.
 
-    `Tips`: 请勿修改掌纹特征库文件
+    `Tips`: Do not modify the palmprint library file.
 
-- **EDCC_SAVE_FEATURES_FAIL**: 保存掌纹特征库出错。
+- **EDCC_SAVE_FEATURES_FAIL**: Save palmprint features database failed.
 
-    可能原因:
+    Possible Causes:
 
-        1. 特征库的保存路径文件无法创建
+        1. The features file can not be saved.
 
-    `Tips`: 请确保当前用户有权限操作对应的路径
+    `Tips`: Please ensure that the current user has permission to operate the corresponding path.
 
-- **EDCC_LOAD_PALMPRINT_IMAGE_FAIL**: 加载掌纹图像失败。
+- **EDCC_LOAD_PALMPRINT_IMAGE_FAIL**: Loaded palmprint image failed.
 
-    可能原因:
+    Possible Causes:
 
-        1. 掌纹图像的路径不存在
-        1. 该文件路径不是OpenCV可以解析的格式
+        1. Palmprint image path does not exist.
+        2. This file path is not a format that OpenCV can parse.
 
-- **EDCC_CODING_BUFF_LEN_NOT_ENOUGH**: 字节流长度不足。
+- **EDCC_CODING_BUFF_LEN_NOT_ENOUGH**: The byte stream is not long enough.
 
-    可能原因:
+    Possible Causes:
 
-        1. 调用`GetEDCCCoding`时传入的缓冲区大小不足。
+        1. The buffer size passed in when calling GetEDCCCoding is not enough.
 
-    `Tips`: bufMaxLen可以通过配置的输入掌纹图像大小来计算。
+    `Tips`: BufMaxLen can be configured by entering the palmprint image size to calculate.
+
+- **EDCC_CODING_INVALID**: The EDCC coding has been modified.
+
+    Possible Causes:
+
+        1. The edcc coding has been modified and does not meet the standard.
+
+    `Tips`: Do not changed EDCC coding.
+
+- **EDCC_CODINGS_DIFF_CONFIG**: Two EDCC coding use different config.
+
+    Possible Causes:
+
+        1. When you use GetTwoPalmprintCodingMatchScore, please make sure two EDCC coding use same config.

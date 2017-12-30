@@ -1,33 +1,33 @@
-# 代码架构
+# Code structure
 
 ## API
 
-- EDCC.h中提供的API对应的实现
+- The implementation of the APIs provided in EDCC.h.
 
 ## Pub
 
-- 一些公用的函数和宏
+- Some common functions and macros.
 
 ## IO
 
-- 加载EDCC算法的配置文件`loadConfig`(配置文件为JSON格式)
-- 加载掌纹训练集`loadPalmprintGroup`
-- 加载掌纹训练集特征库`loadPalmprintFeatureData`
-- 保存掌纹训练集特征库`savePalmprintFeatureData`
+- Load the configuration file of the EDCC algorithm `loadConfig` (configuration file in JSON format).
+- Loads palmprint training set `loadPalmprintGroup`.
+- Load palmprint training set feature library `loadPalmprintFeatureData`.
+- Save the palmprint training set signature library `savePalmprintFeatureData`.
 
 ## Check
 
-- 检查EDCC算法参数合法性`checkConfigValid`
-- 检查训练集掌纹路径合法性`checkPalmprintGroupValid`
-- 检查特征库合法性`checkPalmprintFeatureData`
+- Check the legitimacy of the EDCC algorithm `checkConfigValid`.
+- Check the training set palmprint legality checkPalmprintGroupValid`.
+- Check signature library validation `checkPalmprintFeatureData`.
 
 ## Core
 
-- 手掌`Palmprint`
-- EDCC编码`EDCCoding`
-- Gabor滤波器`GaborFilter`
-- 掌纹编码`PalmprintCode`
+- `Palmprint`
+- `EDCCoding`
+- `GaborFilter`
+- `PalmprintCode`
 
 ## Match
 
-- 两个掌纹编码点对点匹配`matchP2P`
+- Two palm prints encode point-to-point matches `matchP2P`.

@@ -1,14 +1,29 @@
-# FAQ
+# About EDCC library FAQ
 
-## 如何生成EDCC库
+## Available EDCC library
+
+### For Windows
+
+bin: Include `EDCC.dll` and dependent `OpenCV dll`
+
+lib: Inlucde `EDCC.lib`
+
+### For Linux
+
+bin: Include `EDCC.so` and dependent `OpenCV so`
+
+lib: Inlucde `EDCC.a`
+
+## How to generate EDCC library
 
 ### Windows
 
-注意事项:
-1. cmake要生成64位
-1. 环境变量要设置OpenCV安装路径
-1. OpenCV要生成64位动态链接库
+Precautions:
 
-### Unix
+1. Need to generate 64-bit cmake.
+1. Need to set the OpenCV installation path to environment variables.
+1. Need to generate a 64-bit dynamic link library for OpenCV.
+
+### Linux
 
 ## OpenCV相关错误

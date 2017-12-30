@@ -1,30 +1,32 @@
-# 说明
+# Description
 
 ## Config
 
-用于对EDCC算法的参数进行配置。共有五个参数：
+Used to configure the parameters of EDCC algorithm. There are five parameters:
 
-- `imageSizeW`:作为输入的掌纹ROI图像宽度
-- `imageSizeH`:作为输入的掌纹ROI图像高度
-- `gaborKernelSize`:EDCC使用的2DGabor小波核尺寸
-- `gaborDirections`:EDCC使用的2DGabor方向个数
-- `laplaceKernelSize`:EDCC使用的拉普拉斯图像增强算子核尺寸
+- `imageSizeW`: Palmprint ROI image width.
+- `imageSizeH`: Palmprint ROI image height.
+- `gaborKernelSize`: The kernel size of 2DGabor wavelet.
+- `gaborDirections`: The number of directions of 2DGabor wavelet.
+- `laplaceKernelSize`: The kernel size of laplacian.
 
-`Tips`: 您可以通过更改这些参数，调试以获得最高的识别准确率。
+`Tips`: You can change these parameters to get the highest palmprint recognition accuracy.
 
 ## TrainingSet
 
-用于描述训练集的ID与掌纹实例的对应关系。需要遵守如下规则：
+Used to describe the correspondence between training set IDs and palmprint instances. The following rules need to be observed:
 
-- 一个ID可以对应n个掌纹实例，但是掌纹图像路径不能重复。
-- 两个不同ID中不能有相同的掌纹图像路径。
+- An ID can correspond to n palm-print instances, but the palmprint image path can not be repeated.
+- You can not have the same palmprint image path in two different IDs.
 
-`Tips`: 此文件可以作为小数据量掌纹库的训练集输入。
+`Tips`: This file can be entered as a training set for a small data volume palmprint.
 
 ## Features
 
-EDCC算法提取的掌纹特征。该文件在调用`GetTrainingSetFeatures`API后生成。
+The palmprint features extracted by EDCC algorithm. This file is generated after calling `GetTrainingSetFeatures`API.
 
-**请勿手动修改！**
+**Do not manually modify!**
 
-`Tips`: 此文件可以作为小数据量掌纹库的训练集特征库，但是存储空间和读取效率都比较低。如果数据量大，则需要调用原语`GetEDCCCoding`获得掌纹特征编码，存入数据库。
+`Tips`: This file can be used as a training set feature library for small data volume palm, but the storage space and read efficiency are relatively low.
+
+If the amount of data is large, you need to call the primitive `GetEDCCCoding` to obtain the palmprint feature code and save it in the database.
