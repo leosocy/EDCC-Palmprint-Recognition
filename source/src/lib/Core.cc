@@ -91,7 +91,16 @@ EDCCoding::~EDCCoding()
 
 EDCCoding& EDCCoding::operator =(_IN const EDCCoding &other)
 {
-    EDCCoding::EDCCoding(other);
+    if(this != &other) {
+        this->C = other.C.clone();
+        this->Cs = other.Cs.clone();
+        this->magicKey = other.magicKey;
+        freeSelfCoding();
+        if(other.m_ptCoding != NULL) {
+            this->m_ptCoding = (EDCC_CODING_T*)malloc(other.m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
+            memcpy(this->m_ptCoding, other.m_ptCoding, other.m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
+        }
+    }
 
     return *this;
 }
