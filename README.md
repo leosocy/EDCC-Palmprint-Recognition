@@ -2,6 +2,16 @@
 
 `EDCC(Enhanced and Discriminative Competitive Code)`, which is used for palmprint-recognition.
 
+Use the `EDCC` algorithm to validate on several published palmprint databases(`multispectral`, `tongji`), using `N (N = 5, 6, 7, 8)` pictures as the training set and the rest as the test set, the recognition accuracy is as follows:
+
+|       Database      |   N=5   |   N=6   |   N=7   |   N=8   |
+|      :-------:      | :-----: | :-----: | :-----: | :-----: |
+|  `Multispectral_B`  |97.9429% |98.0333% |99.6400% |99.9800% |
+|  `Multispectral_G`  |98.1714% |98.1667% |99.6400% |99.9500% |
+|  `Multispectral_I`  |98.7429% |98.7667% |99.8400% |99.9500% |
+|  `Multispectral_R`  |98.4857% |98.5000% |99.6000% |99.8500% |
+|       `Tongji`      |99.8111% |99.9405% |99.9744% |99.9722% |
+
 Advantages of `EDCC` algorithm:
 
 1. **Less training samples.**
@@ -23,7 +33,7 @@ You can use the following methods to use EDCC in your project:
 
 - Add *.a *.so to system lib directory, such as /usr/lib; add EDCC.h to system include directory, such as /usr/include.
 - Add EDCC library directory path to your system environment varibles.
--   Edit your CMakeLists.txt
+- Edit your CMakeLists.txt
     ```cmake
     find_package(OpenCV REQUIRED)
     include_directories(EDCC.h)
@@ -55,6 +65,6 @@ Compile library process frequently asked questions [FAQ](https://github.com/Leos
 - `source`: EDCC algorithm source code and code architecture.
 - `samples`: Some samples about how to use EDCC api, include `python`, `C++`.
 - `test`: functions test.
-- `thirdparty`: Third party library, include `gtest` and `jsoncpp`
+- `thirdparty`: Third party library, include `gtest` and `jsoncpp`.
 - `lib`: A CMakeList used to generate EDCC static and dynamic link libraries. And two directories include windows and linux libraries.
-- `APIInputExample`: Some json files which are used in EDCC api.[example](https://github.com/Leosocy/EDCC/tree/master/APIInputExample)。
+- `APIInputExample`: Some json files [examples](https://github.com/Leosocy/EDCC/tree/master/APIInputExample) which are used in EDCC api.
