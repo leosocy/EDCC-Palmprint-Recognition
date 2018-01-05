@@ -68,7 +68,7 @@ int ret = GetEDCCCoding("../test/palmprint_database/001/1_01_s.bmp",
                         pCodingBuf1,
                         bufMaxLen,
                         bufLen1);
-ret = etEDCCCoding("../test/palmprint_database/001/1_01_s.bmp",
+ret = GetEDCCCoding("../test/palmprint_database/001/1_01_s.bmp",
                    "./config.json",
                    pCodingBuf2,
                    bufMaxLen,
