@@ -2,7 +2,7 @@
 
 `EDCC(Enhanced and Discriminative Competitive Code)`, which is used for palmprint-recognition.
 
-Use the `EDCC` algorithm to validate on several published palmprint databases(`multispectral`, `tongji`), using `N (N = 5, 6, 7, 8)` pictures as the training set and the rest as the test set, the recognition accuracy is as follows:
+Use the `EDCC` algorithm to validate on several published palmprint databases(`multispectral`, `tongji`), the first `N(N = 1, 2, 3, 4)` palmprint images of each palm are employed as training samples and the remaining palmprint images form the test sample set. Each sample in the test sample set is compared with all samples of each class in the training set to calculate the matching score. The class that produces the highest matching score is treated as the class of the test sample.
 
 |       Database      |   N=5   |   N=6   |   N=7   |   N=8   |
 |      :-------:      | :-----: | :-----: | :-----: | :-----: |
