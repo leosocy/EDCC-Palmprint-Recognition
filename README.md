@@ -2,15 +2,15 @@
 
 `EDCC(Enhanced and Discriminative Competitive Code)`, which is used for palmprint-recognition.
 
-Use the `EDCC` algorithm to validate on several published palmprint databases(`multispectral`, `tongji`), the first `N(N = 1, 2, 3, 4)` palmprint images of each palm are employed as training samples and the remaining palmprint images form the test sample set. Each sample in the test sample set is compared with all samples of each class in the training set to calculate the matching score. The class that produces the highest matching score is treated as the class of the test sample.
+Use the `EDCC` algorithm to validate on several published palmprint databases(`multispectral`, `tongji`), the first `N(N = 2, 4, 6, 8)` palmprint images of each palm are employed as training samples and the remaining palmprint images form the test sample set. Each sample in the test sample set is compared with all samples of each class in the training set to calculate the matching score. The class that produces the highest matching score is treated as the class of the test sample.
 
-|       Database      |   N=5   |   N=6   |   N=7   |   N=8   |
+|       Database      |   N=2   |   N=4   |   N=6   |   N=8   |
 |      :-------:      | :-----: | :-----: | :-----: | :-----: |
-|  `Multispectral_B`  |97.9429% |98.0333% |99.6400% |99.9800% |
-|  `Multispectral_G`  |98.1714% |98.1667% |99.6400% |99.9500% |
-|  `Multispectral_I`  |98.7429% |98.7667% |99.8400% |99.9500% |
-|  `Multispectral_R`  |98.4857% |98.5000% |99.6000% |99.8500% |
-|       `Tongji`      |99.8111% |99.9405% |99.9744% |99.9722% |
+|  `Multispectral_B`  |98.6800% |99.8750% |99.9667% |99.9800% |
+|  `Multispectral_G`  |98.8400% |99.8500% |99.9333% |99.9500% |
+|  `Multispectral_I`  |98.9200% |99.9000% |99.9000% |99.9000% |
+|  `Multispectral_R`  |98.8400% |99.7500% |99.8667% |99.9000% |
+|       `Tongji`      |98.8056% |99.6979% |99.9881% |99.9861% |
 
 Advantages of `EDCC` algorithm:
 
