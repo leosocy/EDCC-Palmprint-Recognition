@@ -12,6 +12,10 @@ message(STATUS "—————————————————————�
 
 add_subdirectory(${JSONCPP_ROOT} ${CMAKE_BINARY_DIR}/thirdparty/jsoncpp)
 
+set(OpenCV_STATIC OFF)
+set(OpenCV_INCLUDE_DIRS ${OpenCV_DIR}/include)
+set(OpenCV_LIB_PATH ${OpenCV_DIR}/x64/vc15/lib)
+
 find_package(OpenCV REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)

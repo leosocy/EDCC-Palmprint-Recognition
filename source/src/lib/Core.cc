@@ -346,7 +346,6 @@ void PalmprintCode::enhanceImage(_IN const cv::Mat &src,
     Mat gaussian;
     GaussianBlur(src, gaussian, Size(5, 5), 0, 0, BORDER_DEFAULT);
     Laplacian(gaussian, dst, CV_64F, lapKerSize);
-    normalize(dst, dst, 0, 1, CV_MINMAX);
 }
 
 void PalmprintCode::genEDCCoding(_IN const vector<cv::Mat> &filterResult,
@@ -356,7 +355,7 @@ void PalmprintCode::genEDCCoding(_IN const vector<cv::Mat> &filterResult,
     this->C = Mat(imgSize, CV_8S);
     this->Cs = Mat(imgSize, CV_8S);
     for(int h = 0; h < imgSize.height; ++h) {
-        for(int w = 0; w < imgSize.width; ++w) {
+        for(int w = 0; w < imgSize.width; ++w) { 
             double maxResponse = -DBL_MAX;
             int maxDirection = -1;
             int Cleft = -1, Cright = -1;
@@ -408,11 +407,11 @@ void GaborFilter::doGaborFilter(_IN const cv::Mat &src, _INOUT cv::Mat &dstMerge
     Mat gaborKernel;
     for(u_char direction = 0; direction < this->numOfDirections; ++direction) {
         getGaborKernelReal(gaborKernel, gaborW, gaborH, 0, direction);
-        normalize(gaborKernel, gaborKernel, 0, 1, CV_MINMAX);
         filter2D(src, dst, CV_64F, gaborKernel);
         dstVec.push_back(dst.clone());
     }
     merge(dstVec, dstMerge);
+    normalize(dstMerge, dstMerge, 0, 1, CV_MINMAX);
 }
 
 void GaborFilter::getGaborKernelReal(_INOUT cv::Mat &gaborKernel,
