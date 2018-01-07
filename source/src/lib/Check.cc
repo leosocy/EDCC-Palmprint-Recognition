@@ -66,7 +66,7 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
         CHECK_FALSE_RETURN(checkTwoConfigEQAndValid(config, dataIte->m_ptCoding->cfg), false);
         if(dataIte->m_ptCoding == NULL
            || !checkCoding(*dataIte)) {
-            EDCC_Log("EDCCCoding format error!\n");
+            EDCC_Log("EDCCoding format error!\n");
             return false;
         }
     }

@@ -22,13 +22,17 @@ Palmprint::Palmprint(_IN const char *identity, _IN const char *imagePath)
 
 Palmprint::~Palmprint()
 {
+    ;
 }
 
 Palmprint& Palmprint::operator =(_IN const Palmprint &other)
 {
-    this->identity = other.identity;
-    this->imagePath = other.imagePath;
-    this->image = other.image.clone();
+    if(this != &other) {
+        this->identity = other.identity;
+        this->imagePath = other.imagePath;
+        this->image = other.image.clone();
+    }
+
     return *this;
 }
 
@@ -62,6 +66,7 @@ cv::Mat* Palmprint::genOriImg()
         EDCC_Log("Read image failed!\n");
         return NULL;
     }
+
     return &image;
 }
 
@@ -73,6 +78,7 @@ cv::Mat* Palmprint::genSpecImg(_IN const cv::Size &imgSize, _IN bool isGray)
     if(isGray) {
         cvtColor(*ptOriImg, *ptOriImg, CV_BGR2GRAY);
     }
+
     return ptOriImg;
 }
 

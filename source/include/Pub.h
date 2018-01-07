@@ -26,12 +26,14 @@ namespace EDCC {
 
     #define CHECK_POINTER_NULL_RETURN(pointer, ret) do { \
         if((pointer) == NULL) { \
+            EDCC_Log("File: %s\tFunc: %s\tLine: %lu\tPointer is NULL.\n", __FILE__, __FUNCTION__, __LINE__); \
             return (ret); \
         } \
     } while(0)
 
     #define CHECK_POINTER_NULL_RETURN_VOID(pointer) do { \
         if((pointer) == NULL) { \
+            EDCC_Log("File: %s\tFunc: %s\tLine: %lu\tPointer is NULL.\n", __FILE__, __FUNCTION__, __LINE__); \
             return ; \
         } \
     } while(0)
