@@ -15,7 +15,7 @@ class PalmprintCodeDTO(object):
 class EDCCSample(object):
     def __init__(self):
         self._edcc_api = EDCC_API()
-        self._factory = PalmprintImageFactory(8)
+        self._factory = PalmprintImageFactory(4)
         self._dbPath = "./R_PALMPRINTCODE.db"
         os.remove(self._dbPath)
         self._palmprintcodeRepository = PalmprintCodeRepo(self._dbPath)
