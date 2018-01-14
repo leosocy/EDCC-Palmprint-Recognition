@@ -49,6 +49,7 @@ macro(group_src_by_dir src_files)
 endmacro(group_src_by_dir)
 
 file(GLOB_RECURSE HEADER_FILES 
+    ${EDCC_PUB_HEADER}/*.h
     *.h
     *.hpp
 )
