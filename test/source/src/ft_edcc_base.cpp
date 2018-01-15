@@ -2,31 +2,30 @@
 
 ft_edcc_base::ft_edcc_base()
 {
+}
+
+ft_edcc_base::~ft_edcc_base()
+{
+}
+
+void ft_edcc_base::SetUp()
+{
     CopyDir(EXAMPLE_SRC_DIR, EXAMPLE_DST_DIR);
-    
+
     this->configPath = NULL;
     this->groupPath = NULL;
     this->featurePath = NULL;
     this->imagePath = NULL;
 }
 
-ft_edcc_base::~ft_edcc_base()
+void ft_edcc_base::TearDown()
 {
     DeleteDir(EXAMPLE_DST_DIR);
+
     FREE_CHAR_ARRAY(this->configPath);
     FREE_CHAR_ARRAY(this->groupPath);
     FREE_CHAR_ARRAY(this->featurePath);
     FREE_CHAR_ARRAY(this->imagePath);
-}
-
-void ft_edcc_base::SetUp()
-{
-
-}
-
-void ft_edcc_base::TearDown()
-{
-
 }
 
 void ft_edcc_base::CheckInterfaceRet(int expectRet)

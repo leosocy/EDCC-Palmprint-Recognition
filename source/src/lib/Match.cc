@@ -16,7 +16,7 @@ double Match::matchP2P(_IN const PalmprintCode &instance1,
     const EDCC_CODING_T *coding_t_2 = instance2.m_ptCoding;
     if(coding_t_1 == NULL
        || coding_t_2 == NULL) {
-        EDCC_Log("Two palmprint instance info error.\n");
+        EDCC_Log("Two palmprint instance info error.");
         return score;
     }
 

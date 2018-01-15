@@ -2,6 +2,8 @@
 
 void ft_get_two_palmprint_match_score::SetUp()
 {
+    ft_edcc_base::SetUp();
+
     this->firstImagePath = NULL;
     this->secondImagePath = NULL;
     SetConfigPath(CORRECT_CONFIG_PATH);
@@ -11,6 +13,8 @@ void ft_get_two_palmprint_match_score::SetUp()
 
 void ft_get_two_palmprint_match_score::TearDown()
 {
+    ft_edcc_base::TearDown();
+
     FREE_CHAR_ARRAY(this->firstImagePath);
     FREE_CHAR_ARRAY(this->secondImagePath);
 }

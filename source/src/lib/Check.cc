@@ -13,25 +13,25 @@ bool Check::checkConfigValid(_IN const EDCC_CFG_T &config) const
 {
     if(config.imageSizeW < CONFIG_IMAGE_SIZE_W_MIN 
        || config.imageSizeH < CONFIG_IMAGE_SIZE_H_MIN) {
-        EDCC_Log("ImageSize(%d, %d) can't smaller than(%d, %d) %d\n", config.imageSizeW, config.imageSizeH, CONFIG_IMAGE_SIZE_W_MIN, CONFIG_IMAGE_SIZE_H_MIN);
+        EDCC_Log("ImageSize(%d, %d) can't smaller than(%d, %d) %d", config.imageSizeW, config.imageSizeH, CONFIG_IMAGE_SIZE_W_MIN, CONFIG_IMAGE_SIZE_H_MIN);
         return false;
     }
     if(config.gaborSize > config.imageSizeW
        || config.gaborSize > config.imageSizeH
        || config.gaborSize % 2 == 0) {
-        EDCC_Log("Gabor Kernel Size must be smaller than imageSize.And must be odd!\n");
+        EDCC_Log("Gabor Kernel Size must be smaller than imageSize.And must be odd!");
         return false;
     }
     if(config.laplaceSize > config.imageSizeW
        || config.laplaceSize > config.imageSizeH
        || config.laplaceSize % 2 == 0
        || config.laplaceSize > CONFIG_VALID_LAPLACE_KERNEL_SIZE_MAX) {
-        EDCC_Log("Laplace Kernel Size must be smaller than imageSize.And must be odd and samller than 31!\n");
+        EDCC_Log("Laplace Kernel Size must be smaller than imageSize.And must be odd and samller than 31!");
         return false;
     }
     if(config.directions > CONFIG_VALID_GABOR_DIRECTIONS_MAX
        || config.directions < CONFIG_VALID_GABOR_DIRECTIONS_MIN) {
-        EDCC_Log("Gabor Directions must in range [%d, %d]!\n", 
+        EDCC_Log("Gabor Directions must in range [%d, %d]!", 
                  CONFIG_VALID_GABOR_DIRECTIONS_MIN, CONFIG_VALID_GABOR_DIRECTIONS_MAX);
         return false;
     }
@@ -47,7 +47,7 @@ bool Check::checkPalmprintGroupValid(_IN const vector<PalmprintCode> &data) cons
         for(vector<PalmprintCode>::const_iterator dataInnerIte = dataIte + 1;
             dataInnerIte != data.end(); ++dataInnerIte) {
             if((*dataIte) == (*dataInnerIte)) {
-                EDCC_Log("Image Path: %s Conflict!\n", dataIte->getImagePath().c_str());
+                EDCC_Log("Image Path: %s Conflict!", dataIte->getImagePath().c_str());
                 return false;
             }
         }
@@ -66,7 +66,7 @@ bool Check::checkPalmprintFeatureData(_IN const vector<PalmprintCode> &data,
         CHECK_FALSE_RETURN(checkTwoConfigEQAndValid(config, dataIte->m_ptCoding->cfg), false);
         if(dataIte->m_ptCoding == NULL
            || !checkCoding(*dataIte)) {
-            EDCC_Log("EDCCoding format error!\n");
+            EDCC_Log("EDCCoding format error!");
             return false;
         }
     }

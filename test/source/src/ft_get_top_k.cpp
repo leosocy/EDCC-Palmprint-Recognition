@@ -2,6 +2,8 @@
 
 void ft_get_top_k::SetUp()
 {
+    ft_edcc_base::SetUp();
+
     SetConfigPath(CORRECT_CONFIG_PATH);
     SetGroupPath(CORRECT_GROUP_PATH);
     SetFeaturePath(FEATURES_OUTPUT_PATH);
@@ -12,7 +14,7 @@ void ft_get_top_k::SetUp()
 
 void ft_get_top_k::TearDown()
 {
-
+    ft_edcc_base::TearDown();
 }
 
 void ft_get_top_k::ExcuteInterface()

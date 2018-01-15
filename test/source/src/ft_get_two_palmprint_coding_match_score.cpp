@@ -2,6 +2,8 @@
 
 void ft_get_two_palmprint_coding_match_score::SetUp()
 {
+    ft_edcc_base::SetUp();
+
     bufMaxLen = 1024 * 16;
     this->firstCodingBuff = (unsigned char*)malloc(sizeof(unsigned char) * bufMaxLen);
     this->secondCodingBuff = (unsigned char*)malloc(sizeof(unsigned char) * bufMaxLen);
@@ -19,6 +21,8 @@ void ft_get_two_palmprint_coding_match_score::SetUp()
 }
 void ft_get_two_palmprint_coding_match_score::TearDown()
 {
+    ft_edcc_base::TearDown();
+
     FREE_CHAR_ARRAY(this->firstCodingBuff);
     FREE_CHAR_ARRAY(this->secondCodingBuff);
     FREE_CHAR_ARRAY(this->firstImagePath);

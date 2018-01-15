@@ -12,7 +12,7 @@ using namespace EDCC;
 Palmprint::Palmprint(_IN const char *identity, _IN const char *imagePath)
 {
     if(identity == NULL || imagePath == NULL) {
-        EDCC_Log("Identity or imagePath can't be null!\n");
+        EDCC_Log("Identity or imagePath can't be null!");
         return ;
     }
 
@@ -63,7 +63,7 @@ cv::Mat* Palmprint::genOriImg()
 {
     image = imread(this->imagePath, CV_LOAD_IMAGE_COLOR);
     if(!image.data) {
-        EDCC_Log("Read image failed!\n");
+        EDCC_Log("Read image failed!");
         return NULL;
     }
 
@@ -131,7 +131,7 @@ size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf,
     if(m_ptCoding != NULL)
     {
         if(bufMaxLen < m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T)) {
-            EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!\n");
+            EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!");
             return 0;
         }
         memcpy(pCodingBuf, m_ptCoding, m_ptCoding->codingBuffLen + sizeof(EDCC_CODING_T));
@@ -141,7 +141,7 @@ size_t EDCCoding::encrypt(_INOUT unsigned char *pCodingBuf,
     size_t codingLen = encrypt(config);
     if(codingLen == 0
        || bufMaxLen < codingLen) {
-        EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!\n");
+        EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!");
         return 0;
     }
     memcpy(pCodingBuf, m_ptCoding, codingLen);
@@ -156,7 +156,7 @@ size_t EDCCoding::encrypt(_IN const EDCC_CFG_T &config)
 
     Check checkHadler;
     if(!checkHadler.checkConfigValid(config)) {
-        EDCC_Log("EDCCoding::encrypt config error!\n");
+        EDCC_Log("EDCCoding::encrypt config error!");
         return 0;
     }
     initSelfCoding(config);
@@ -180,7 +180,7 @@ bool EDCCoding::decrypt(_IN const unsigned char *pCodingBuf)
 
     initSelfCoding(l_ptCoding->cfg);
     if(m_ptCoding == NULL) {
-        EDCC_Log("EDCCoding::decrypt failed!\n");
+        EDCC_Log("EDCCoding::decrypt failed!");
         return false;
     }
     memcpy(m_ptCoding, l_ptCoding, codingLen);
@@ -331,7 +331,7 @@ bool PalmprintCode::encodePalmprint(_IN const cv::Size &imgSize,
     GaborFilter filter(cv::Size(gabKerSize, gabKerSize), numOfDirections);
     Mat *imgRet = genSpecImg(imgSize);
     if(imgRet == NULL) {
-        EDCC_Log("%s not exists!\n", getImagePath().c_str());
+        EDCC_Log("%s not exists!", getImagePath().c_str());
         return false;
     }
     Mat palmprintImage = *imgRet;
