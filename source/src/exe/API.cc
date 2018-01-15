@@ -264,7 +264,7 @@ size_t BuildUpAllFeaturesWhenIncremental(const vector<PalmprintCode> &originFeat
             pcItTmp != incrementalFeatures.end();
             ++pcItTmp) {
             if((*pcIt) == (*pcItTmp)) {
-                EDCC_Log("----Cover\t%s: %s\n", pcIt->getIdentity().c_str(), pcIt->getImagePath().c_str());
+                EDCC_Log("----Cover\t%s: %s", pcIt->getIdentity().c_str(), pcIt->getImagePath().c_str());
                 isExists = true;
                 break;
             }

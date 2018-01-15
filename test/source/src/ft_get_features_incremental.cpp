@@ -2,6 +2,8 @@
 
 void ft_get_features_incremental::SetUp()
 {
+    ft_edcc_base::SetUp();
+
     SetConfigPath(CORRECT_CONFIG_PATH);
     SetGroupPath(CORRECT_GROUP_PATH);
     SetFeaturePath(FEATURES_OUTPUT_PATH);
@@ -11,7 +13,7 @@ void ft_get_features_incremental::SetUp()
 
 void ft_get_features_incremental::TearDown()
 {
-
+    ft_edcc_base::TearDown();
 }
 
 void ft_get_features_incremental::ExcuteInterface()

@@ -28,7 +28,9 @@ void EDCC::EDCC_Log(_IN const char *format, ...)
     char log[1024] = {0};
     va_list args;
     va_start(args, format);
-    vsnprintf(log, sizeof(log), format, args);
+    std::string formatStr = format;
+    formatStr = "[EDCC Debug]\t" + formatStr + "\n";
+    vsnprintf(log, sizeof(log), formatStr.c_str(), args);
     va_end(args);
 
     #ifdef _WINDOWS

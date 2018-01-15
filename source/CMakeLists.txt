@@ -21,7 +21,6 @@ find_package(OpenCV REQUIRED)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
 include_directories(${EDCC_PUB_HEADER})
 include_directories(${JSONCPP_ROOT}/include)
-include_directories(${AES_ROOT}/include)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 macro(group_src_by_dir src_files)

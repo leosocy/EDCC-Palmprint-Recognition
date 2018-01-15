@@ -4,6 +4,8 @@
 
 void ft_get_edcc_coding::SetUp()
 { 
+    ft_edcc_base::SetUp();
+
     SetConfigPath(CORRECT_CONFIG_PATH);
     SetGroupPath(CORRECT_GROUP_PATH);
     SetFeaturePath(FEATURES_OUTPUT_PATH);
@@ -19,6 +21,8 @@ void ft_get_edcc_coding::SetUp()
 
 void ft_get_edcc_coding::TearDown()
 {
+    ft_edcc_base::TearDown();
+
     this->bufMaxLen = 0;
     if(this->pCoding1 != NULL) {
         free(this->pCoding);

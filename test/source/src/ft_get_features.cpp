@@ -2,6 +2,8 @@
 
 void ft_get_features::SetUp()
 {
+    ft_edcc_base::SetUp();
+
     SetConfigPath(CORRECT_CONFIG_PATH);
     SetGroupPath(CORRECT_GROUP_PATH);
     SetFeaturePath(FEATURES_OUTPUT_PATH);
@@ -10,7 +12,7 @@ void ft_get_features::SetUp()
 
 void ft_get_features::TearDown()
 {
-
+    ft_edcc_base::TearDown();
 }
 
 void ft_get_features::ExcuteInterface()
