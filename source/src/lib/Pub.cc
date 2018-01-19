@@ -5,9 +5,6 @@
     > Created Time: 2017/10/5 11:12:26
 ************************************************************************/
 #include <Pub.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
 using namespace EDCC;
 
 std::string EDCC::toUpper(_IN const char *src)
@@ -23,14 +20,12 @@ std::string EDCC::toUpper(_IN const char *src)
     return str;
 }
 
-void EDCC::EDCC_Log(_IN const char *format, ...)
+void EDCC::EDCC_Log_Func(_IN const char *format, ...)
 {
     char log[1024] = {0};
     va_list args;
     va_start(args, format);
-    std::string formatStr = format;
-    formatStr = "[EDCC Debug]\t" + formatStr + "\n";
-    vsnprintf(log, sizeof(log), formatStr.c_str(), args);
+    vsnprintf(log, sizeof(log), format, args);
     va_end(args);
 
     #ifdef _WINDOWS
