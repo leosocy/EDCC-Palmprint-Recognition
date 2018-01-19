@@ -42,6 +42,7 @@ int GetEDCCCoding(_IN const char *palmprintImagePath,
     CHECK_POINTER_NULL_RETURN(pCodingBuf, EDCC_NULL_POINTER_ERROR);
 
     configIn.open(configFileName);
+    CHECK_FALSE_RETURN(configIn.is_open(), EDCC_LOAD_CONFIG_FAIL);
     if(EDCC_SUCCESS != trainIO.loadConfig(configIn)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
@@ -101,6 +102,7 @@ int GetTwoPalmprintMatchScore(_IN const char *firstPalmprintImagePath,
     score = 0.0;
 
     configIn.open(configFileName);
+    CHECK_FALSE_RETURN(configIn.is_open(), EDCC_LOAD_CONFIG_FAIL);
     if(EDCC_SUCCESS != matchIO.loadConfig(configIn)) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
@@ -143,11 +145,13 @@ int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
     if(!isIncremental) {
         ifstream configIn;
         configIn.open(configFileName);
+        CHECK_FALSE_RETURN(configIn.is_open(), EDCC_LOAD_CONFIG_FAIL);
         retCode = trainIO.loadConfig(configIn);
         CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_LOAD_CONFIG_FAIL);
     } else {
         ifstream featuresIn;
         featuresIn.open(featuresOutputFileName);
+        CHECK_FALSE_RETURN(featuresIn.is_open(), EDCC_LOAD_FEATURES_FAIL);
         retCode = trainIO.loadPalmprintFeatureData(featuresIn, featuresOrigin);
         if(retCode != EDCC_SUCCESS
            || !checkHandler.checkPalmprintFeatureData(featuresOrigin, trainIO.config)) {
@@ -160,6 +164,7 @@ int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
     
     ifstream trainingSetIn;
     trainingSetIn.open(trainingSetPalmprintGroupFileName);
+    CHECK_FALSE_RETURN(trainingSetIn.is_open(), EDCC_LOAD_TAINING_SET_FAIL);
     retCode = trainIO.loadPalmprintGroup(trainingSetIn, featuresAll);
     if(retCode != EDCC_SUCCESS 
        || !checkHandler.checkPalmprintGroupValid(featuresAll)) {
@@ -173,6 +178,7 @@ int GetTrainingSetFeatures(_IN const char *trainingSetPalmprintGroupFileName,
 
     ofstream featuresOutStream;
     featuresOutStream.open(featuresOutputFileName);
+    CHECK_FALSE_RETURN(featuresOutStream.is_open(), EDCC_SAVE_FEATURES_FAIL);
     retCode = trainIO.savePalmprintFeatureData(featuresOutStream, featuresAll);
     CHECK_NE_RETURN(retCode, EDCC_SUCCESS, EDCC_SAVE_FEATURES_FAIL);
 
@@ -197,6 +203,7 @@ int GetTopKMatchScore(_IN const char *palmprintImagePath,
     Check checkHandler;
     
     featuresOrGroupIn.open(trainingSetFeaturesOrPalmprintGroupFileName);
+    CHECK_FALSE_RETURN(featuresOrGroupIn.is_open(), EDCC_LOAD_FEATURES_FAIL);
     if(isFeatures) {
         retCode = matchIO.loadPalmprintFeatureData(featuresOrGroupIn, featuresAll);
         if(retCode != EDCC_SUCCESS
@@ -212,6 +219,7 @@ int GetTopKMatchScore(_IN const char *palmprintImagePath,
 
         ifstream configIn;
         configIn.open(configFileName);
+        CHECK_FALSE_RETURN(configIn.is_open(), EDCC_LOAD_CONFIG_FAIL);
         retCode = matchIO.loadConfig(configIn);
     }
     if(retCode != EDCC_SUCCESS
