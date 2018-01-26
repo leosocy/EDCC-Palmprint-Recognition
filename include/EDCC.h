@@ -9,7 +9,6 @@
 
 #include <string>
 #include <map>
-#include <vector>
 
 #ifdef _WINDOWS
 
