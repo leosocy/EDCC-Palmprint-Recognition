@@ -1,13 +1,16 @@
-/*************************************************************************
-    > File Name: Pub.cc
-    > Author: Leosocy
-    > Mail: 513887568@qq.com
-    > Created Time: 2017/10/5 11:12:26
-************************************************************************/
-#include <Pub.h>
-using namespace EDCC;
+// Copyright (c) 2017 Leosocy. All rights reserved.
+// Use of this source code is governed by a MIT-style license 
+// that can be found in the LICENSE file.
 
-std::string EDCC::toUpper(_IN const char *src)
+#include "util/pub.h"
+
+#include <stdio.h>
+#include <stdarg.h>
+
+namespace edcc
+{
+
+std::string toUpper(_IN const char *src)
 {
     std::string str;
     CHECK_POINTER_NULL_RETURN(src, str);
@@ -20,7 +23,7 @@ std::string EDCC::toUpper(_IN const char *src)
     return str;
 }
 
-void EDCC::EDCC_Log_Func(_IN const char *format, ...)
+void EDCC_Log_Func(_IN const char *format, ...)
 {
     char log[1024] = {0};
     va_list args;
@@ -28,14 +31,15 @@ void EDCC::EDCC_Log_Func(_IN const char *format, ...)
     vsnprintf(log, sizeof(log), format, args);
     va_end(args);
 
-    #ifdef _WINDOWS
+#ifdef _WINDOWS
     printf("%s", log);
-
-    #else // DEBUG
+#else // DEBUG
     FILE *outFile;
     outFile = fopen("./edcc.log", "a+");
     CHECK_POINTER_NULL_RETURN_VOID(outFile);
     fwrite(log, strlen(log), 1, outFile);
     fclose(outFile);
-    #endif
+#endif
 }
+
+} // namespace edcc
