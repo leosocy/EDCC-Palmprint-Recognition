@@ -14,8 +14,8 @@ double Match::MatchPoint2Point(const PalmprintCode &lhs,
                                const PalmprintCode &rhs) const
 {
     int score = 0;
-    const EDCC_CODING_T *l_coding = lhs.coding()->coding_buffer();
-    const EDCC_CODING_T *r_coding = rhs.coding()->coding_buffer();
+    const EDCC_CODING_T *l_coding = lhs.coding()->buffer();
+    const EDCC_CODING_T *r_coding = rhs.coding()->buffer();
     if (l_coding == NULL
         || r_coding == NULL)
     {

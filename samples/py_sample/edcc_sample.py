@@ -6,6 +6,8 @@ from EDCCApiAdapter import *
 from PalmprintImageFactory import *
 from PalmprintCodeRepository import *
 import time
+import win_unicode_console
+win_unicode_console.enable()
 
 class PalmprintCodeDTO(object):
     def __init__(self, ID, instanceID, imagePath, code):
@@ -17,7 +19,8 @@ class EDCCSample(object):
         self._edcc_api = EDCC_API()
         self._factory = PalmprintImageFactory(4)
         self._dbPath = "./R_PALMPRINTCODE.db"
-        os.remove(self._dbPath)
+        if os.path.exists(self._dbPath):
+            os.remove(self._dbPath)
         self._palmprintcodeRepository = PalmprintCodeRepo(self._dbPath)
         self._configPath = os.path.normpath(os.path.join(os.getcwd(), "edcc_config/config.json"))
         self._succNum = 0

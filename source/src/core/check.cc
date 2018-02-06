@@ -15,23 +15,27 @@
 namespace edcc
 {
 
-namespace
+using std::vector;
+
+namespace limit
 {
 
-const u_short kMinImageWidth = 29;
-const u_short kMinImageHeight = 29;
-const u_char kMaxLaplaceKernelSize = 31;
-const u_char kMinGaborDirections = 4;
-const u_char kMaxGabotDirections = 16;
+static const u_short kMinImageWidth = 29;
+static const u_short kMinImageHeight = 29;
+static const u_char kMaxLaplaceKernelSize = 31;
+static const u_char kMinGaborDirections = 4;
+static const u_char kMaxGabotDirections = 16;
 
-} // namespace
+} // namespace limit
 
 bool Check::CheckConfig(const EDCC_CFG_T &config) const
 {
-    if (config.imageSizeW < kMinImageWidth
-        || config.imageSizeH < kMinImageHeight)
+    if (config.imageSizeW < limit::kMinImageWidth
+        || config.imageSizeH < limit::kMinImageHeight)
     {
-        EDCC_Log("ImageSize(%d, %d) can't smaller than(%d, %d) %d", config.imageSizeW, config.imageSizeH, kMinImageWidth, kMinImageHeight);
+        EDCC_Log("ImageSize(%d, %d) can't smaller than(%d, %d) %d",
+                 config.imageSizeW, config.imageSizeH,
+                 limit::kMinImageWidth, limit::kMinImageHeight);
         return false;
     }
     if (config.gaborSize > config.imageSizeW
@@ -44,16 +48,16 @@ bool Check::CheckConfig(const EDCC_CFG_T &config) const
     if (config.laplaceSize > config.imageSizeW
         || config.laplaceSize > config.imageSizeH
         || config.laplaceSize % 2 == 0
-        || config.laplaceSize > kMaxLaplaceKernelSize)
+        || config.laplaceSize > limit::kMaxLaplaceKernelSize)
     {
         EDCC_Log("Laplace Kernel Size must be smaller than imageSize.And must be odd and samller than 31!");
         return false;
     }
-    if (config.directions > kMaxGabotDirections
-        || config.directions < kMinGaborDirections)
+    if (config.directions > limit::kMaxGabotDirections
+        || config.directions < limit::kMinGaborDirections)
     {
         EDCC_Log("Gabor Directions must in range [%d, %d]!",
-                 kMinGaborDirections, kMaxGabotDirections);
+                 limit::kMinGaborDirections, limit::kMaxGabotDirections);
         return false;
     }
 
@@ -85,7 +89,7 @@ bool Check::CheckFeatureData(const vector<PalmprintCode> &data,
     for (vector<PalmprintCode>::const_iterator data_iter = data.begin();
          data_iter != data.end(); ++data_iter)
     {
-        const EDCC_CODING_T *coding_buffer = data_iter->coding()->coding_buffer();
+        const EDCC_CODING_T *coding_buffer = data_iter->coding()->buffer();
         if (coding_buffer == NULL
             || !CheckTwoConfigEQAndValid(config, coding_buffer->cfg)
             || !CheckCoding(*data_iter->coding()))
@@ -100,36 +104,37 @@ bool Check::CheckFeatureData(const vector<PalmprintCode> &data,
 
 bool Check::CheckCoding(const EDCCoding &coding) const
 {
-    CHECK_POINTER_NULL_RETURN(coding.coding_buffer(), false);
+    const EDCC_CODING_T *coding_buffer = coding.buffer();
+    CHECK_POINTER_NULL_RETURN(coding_buffer, false);
     int actual_magic_key = 0;
-    const void *src_addr = static_cast<const void*>(coding.coding_buffer()->data \
-                                                    + coding.coding_buffer()->len - EDCCoding::kMagicKeyLen);
-    void *dst_addr = static_cast<void*>(&actual_magic_key);
-    memcpy(dst_addr, src_addr, EDCCoding::kMagicKeyLen);
+    const void *src_addr = static_cast<const void*>(coding_buffer->data \
+                                                    + coding_buffer->len - EDCCoding::kMagicKeyLen);
+    memcpy(&actual_magic_key, src_addr, EDCCoding::kMagicKeyLen);
     CHECK_NE_RETURN(actual_magic_key, coding.magic_key(), false);
-
-    size_t coding_c_len = static_cast<size_t>(ceil(coding.coding_buffer()->cfg.imageSizeW \
-                                                   * coding.coding_buffer()->cfg.imageSizeH / 2.0));
-    u_char gabor_directions = coding.coding_buffer()->cfg.directions;
+    size_t coding_c_len = static_cast<size_t>(ceil(coding_buffer->cfg.imageSizeW \
+                                                   * coding_buffer->cfg.imageSizeH / 2.0));
+    u_char gabor_directions = coding_buffer->cfg.directions;
     for (size_t i = 0; i < coding_c_len; ++i)
     {
-        u_char cTmp = *(coding.coding_buffer()->data + i);
-        if ((cTmp & 0x0f) >= gabor_directions
-            || ((cTmp & 0xf0) >> 4) >= gabor_directions)
+        u_char c_tmp = *(coding_buffer->data + i);
+        if ((c_tmp & 0x0f) >= gabor_directions
+            || ((c_tmp & 0xf0) >> 4) >= gabor_directions)
         {
             return false;
         }
     }
+
     return true;
 }
 
 bool Check::CheckTwoPalmprintCodeConfigEqualAndValid(const PalmprintCode &first_palmprintcode,
                                                      const PalmprintCode &second_palmprintcode) const
 {
-    CHECK_POINTER_NULL_RETURN(first_palmprintcode.coding()->coding_buffer(), false);
-    CHECK_POINTER_NULL_RETURN(second_palmprintcode.coding()->coding_buffer(), false);
-    return CheckTwoConfigEQAndValid(first_palmprintcode.coding()->coding_buffer()->cfg,
-                                    second_palmprintcode.coding()->coding_buffer()->cfg);
+    CHECK_POINTER_NULL_RETURN(first_palmprintcode.coding()->buffer(), false);
+    CHECK_POINTER_NULL_RETURN(second_palmprintcode.coding()->buffer(), false);
+
+    return CheckTwoConfigEQAndValid(first_palmprintcode.coding()->buffer()->cfg,
+                                    second_palmprintcode.coding()->buffer()->cfg);
 }
 
 bool Check::CheckTwoConfigEQAndValid(const EDCC_CFG_T &first_config,

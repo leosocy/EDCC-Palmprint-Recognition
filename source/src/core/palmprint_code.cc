@@ -13,15 +13,22 @@
 namespace edcc
 {
 
+using namespace std;
+
 namespace
 {
 
 class GaborFilter 
 {
 public:
-    GaborFilter(const cv::Size &kernel_size, 
-                u_char directions);
-    virtual ~GaborFilter();
+    GaborFilter(const cv::Size &kernel_size,
+                u_char directions)
+    {
+        assert(kernel_size.width % 2 == 1 && kernel_size.height % 2 == 1);
+        assert(directions > 0);
+        kernel_size_ = kernel_size;
+        directions_ = directions;
+    }
     void Handle(const cv::Mat &src, cv::Mat *merge);
 private:
     cv::Size kernel_size_;
@@ -31,20 +38,6 @@ private:
                             double kmax = CV_PI / 2, double f = sqrt(2.0),
                             double sigma = 2 * CV_PI, int ktype = CV_64F);
 };
-
-GaborFilter::GaborFilter(const cv::Size &kernel_size,
-                         u_char directions)
-{
-    assert(kernel_size.width % 2 == 1 && kernel_size.height % 2 == 1);
-    assert(directions > 0);
-
-    kernel_size_ = kernel_size;
-    directions_ = directions;
-}
-
-GaborFilter::~GaborFilter()
-{
-}
 
 void GaborFilter::Handle(const cv::Mat &src, cv::Mat *merge)
 {
@@ -103,22 +96,16 @@ void GaborFilter::GetGaborKernelReal(cv::Mat *kernel,
 } // namespace
 
 PalmprintCode::PalmprintCode(const char *identity, const char *image_path)
+    : palmprint_(new Palmprint(identity, image_path)),
+    coding_(new EDCCoding())
+
 {
-    Init(identity, image_path);
 }
 
-PalmprintCode::~PalmprintCode()
+PalmprintCode::PalmprintCode(const PalmprintCode &other)
+    : palmprint_(new Palmprint(*other.palmprint_)),
+    coding_(new EDCCoding(*other.coding_))
 {
-    if (palmprint_)
-    {
-        delete palmprint_;
-        palmprint_ = NULL;
-    }
-    if (coding_)
-    {
-        delete coding_;
-        coding_ = NULL;
-    }
 }
 
 PalmprintCode& PalmprintCode::operator =(const PalmprintCode &other)
@@ -133,13 +120,18 @@ PalmprintCode& PalmprintCode::operator =(const PalmprintCode &other)
     return *this;
 }
 
-PalmprintCode::PalmprintCode(const PalmprintCode &other)
+PalmprintCode::~PalmprintCode()
 {
-    assert(other.palmprint_ && other.coding_);
-    Init(other.palmprint_->identity().c_str(), 
-         other.palmprint_->image_path().c_str());
-    *palmprint_ = *other.palmprint_;
-    *coding_ = *other.coding_;
+    if (palmprint_)
+    {
+        delete palmprint_;
+        palmprint_ = NULL;
+    }
+    if (coding_)
+    {
+        delete coding_;
+        coding_ = NULL;
+    }
 }
 
 Status PalmprintCode::Encode(const EDCC_CFG_T &config)
@@ -214,8 +206,6 @@ void PalmprintCode::Init(const char *identity, const char *image_path)
 {
     palmprint_ = NULL;
     coding_ = NULL;
-    palmprint_ = new Palmprint(identity, image_path);
-    coding_ = new EDCCoding();
 }
 
 void PalmprintCode::EnhanceImage(const cv::Mat &src,

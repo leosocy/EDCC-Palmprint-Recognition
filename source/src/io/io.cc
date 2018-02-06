@@ -11,6 +11,7 @@
 #include "core/edccoding.h"
 #include "core/palmprint.h"
 #include "core/palmprint_code.h"
+#include "core/config.h"
 
 using namespace std;
 
@@ -28,11 +29,11 @@ namespace edcc
 
 IO::IO()
 {
-    params_.insert(IMAGE_SIZE_W);
-    params_.insert(IMAGE_SIZE_H);
-    params_.insert(GABOR_KERNEL_SIZE);
-    params_.insert(GABOR_DIRECTIONS);
-    params_.insert(LAPLACE_KERNEL_SIZE);
+    params_.insert(config::kImageWidth);
+    params_.insert(config::kImageHeight);
+    params_.insert(config::kGaborKernelSize);
+    params_.insert(config::kGaborDirections);
+    params_.insert(config::kLaplaceKernelSize);
 
     memset(&config_, 0, sizeof(config_));
 }
@@ -189,23 +190,23 @@ int IO::SavePalmprintFeatureData(ofstream &out, vector<PalmprintCode> &feature_d
 
 bool IO::GenConfig(const string &config_key, int config_value)
 {
-    if (config_key == IMAGE_SIZE_W)
+    if (config_key == config::kImageWidth)
     {
         config_.imageSizeW = config_value;
     }
-    else if (config_key == IMAGE_SIZE_H)
+    else if (config_key == config::kImageHeight)
     {
         config_.imageSizeH = config_value;
     }
-    else if (config_key == GABOR_KERNEL_SIZE)
+    else if (config_key == config::kGaborKernelSize)
     {
         config_.gaborSize = config_value;
     }
-    else if (config_key == LAPLACE_KERNEL_SIZE)
+    else if (config_key == config::kLaplaceKernelSize)
     {
         config_.laplaceSize = config_value;
     }
-    else if (config_key == GABOR_DIRECTIONS)
+    else if (config_key == config::kGaborDirections)
     {
         config_.directions = config_value;
     }
@@ -218,23 +219,23 @@ bool IO::GenConfig(const string &config_key, int config_value)
 
 bool IO::GetConfig(const string &config_key, int *config_value)
 {
-    if (config_key == IMAGE_SIZE_W)
+    if (config_key == config::kImageWidth)
     {
         *config_value = config_.imageSizeW;
     }
-    else if (config_key == IMAGE_SIZE_H)
+    else if (config_key == config::kImageHeight)
     {
         *config_value = config_.imageSizeH;
     }
-    else if (config_key == GABOR_KERNEL_SIZE)
+    else if (config_key == config::kGaborKernelSize)
     {
         *config_value = config_.gaborSize;
     }
-    else if (config_key == LAPLACE_KERNEL_SIZE)
+    else if (config_key == config::kLaplaceKernelSize)
     {
         *config_value = config_.laplaceSize;
     }
-    else if (config_key == GABOR_DIRECTIONS)
+    else if (config_key == config::kGaborDirections)
     {
         *config_value = config_.directions;
     }

@@ -10,8 +10,6 @@
 namespace edcc
 {
 
-using std::vector;
-
 class PalmprintCode;
 class EDCCoding;
 typedef struct tag_EDCC_CFG_T EDCC_CFG_T;

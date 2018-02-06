@@ -21,7 +21,6 @@ public:
     Palmprint(const char *identity, const char *image_path);
     explicit Palmprint(const Palmprint &rhs);
     Palmprint& operator =(const Palmprint &rhs);
-    virtual ~Palmprint();
     virtual bool operator==(const Palmprint &rhs) const;
 
     string identity() const { return identity_; }

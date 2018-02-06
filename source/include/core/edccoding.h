@@ -7,6 +7,7 @@
 
 #include <string>
 #include <opencv2/opencv.hpp>
+#include "core/config.h"
 #include "util/pub.h"
 
 #pragma warning(disable : 4200)
@@ -20,20 +21,6 @@ using cv::Size;
 
 class PalmprintCode;
 
-typedef struct tag_EDCC_CFG_T
-{
-#define IMAGE_SIZE_W "imageSizeW"
-    u_short imageSizeW;
-#define IMAGE_SIZE_H "imageSizeH"
-    u_short imageSizeH;
-#define GABOR_KERNEL_SIZE "gaborKernelSize"
-    u_short gaborSize;
-#define LAPLACE_KERNEL_SIZE "laplaceKernelSize"
-    u_char laplaceSize;
-#define GABOR_DIRECTIONS "gaborDirections"
-    u_char directions;
-} EDCC_CFG_T;
-
 typedef struct
 {
     EDCC_CFG_T cfg;
@@ -45,7 +32,7 @@ class EDCCoding
 {
 public:
     static const size_t kMagicKeyLen = sizeof(int);
-    EDCCoding() : coding_buffer_(NULL), magic_key_(0x0622520a) { }
+    EDCCoding();
     explicit EDCCoding(const EDCCoding &rhs);
     EDCCoding& operator =(const EDCCoding &rhs);
     virtual ~EDCCoding();
@@ -56,9 +43,9 @@ public:
     Status EncodeToHexString(const EDCC_CFG_T &config, string *hex_str);
     Status Decode(const u_char *coding_buffer);
     Status DecodeFromHexString(const string &hex_str);
-    size_t buffer_len() const { return coding_buffer_->len + sizeof(EDCC_CODING_T); }
+    size_t buffer_len() const { return buffer_->len + sizeof(EDCC_CODING_T); }
     int magic_key() const { return magic_key_; }
-    const EDCC_CODING_T* coding_buffer() const { return coding_buffer_; }
+    const EDCC_CODING_T* buffer() const { return buffer_; }
 private:
     friend PalmprintCode;
     void GenCodingBytes();
@@ -68,7 +55,7 @@ private:
 
     cv::Mat c_;
     cv::Mat cs_;
-    EDCC_CODING_T *coding_buffer_;
+    EDCC_CODING_T *buffer_;
     int magic_key_;
 };
 

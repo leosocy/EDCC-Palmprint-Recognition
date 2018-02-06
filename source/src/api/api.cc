@@ -8,7 +8,7 @@
 #include "edcc.h"
 
 #include "io/io.h"
-#include "core/edccoding.h"
+#include "core/config.h"
 #include "core/palmprint.h"
 #include "core/palmprint_code.h"
 #include "core/check.h"
@@ -103,7 +103,6 @@ int GetTwoPalmprintMatchScore(const char *firstPalmprintImagePath,
     Status api_ret = 0;
     IO matchIO;
     ifstream configIn;
-    Check checkHandler;
     score = 0.0;
 
     configIn.open(configFileName);

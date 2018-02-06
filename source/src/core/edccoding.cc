@@ -11,16 +11,25 @@
 namespace edcc
 {
 
-EDCCoding::EDCCoding(const EDCCoding &rhs)
+using namespace std;
+
+EDCCoding::EDCCoding()
+    :buffer_(NULL),
+    magic_key_(0x0622520a)
 {
-    c_ = rhs.c_.clone();
-    cs_ = rhs.cs_.clone();
-    magic_key_ = rhs.magic_key_;
-    coding_buffer_ = NULL;
-    if (rhs.coding_buffer_ != NULL)
+}
+
+EDCCoding::EDCCoding(const EDCCoding &rhs)
+    :c_(rhs.c_.clone()),
+    cs_(rhs.cs_.clone()),
+    buffer_(NULL),
+    magic_key_(0x0622520a)
+
+{
+    if (rhs.buffer_ != NULL)
     {
-        coding_buffer_ = (EDCC_CODING_T*)malloc(rhs.buffer_len());
-        memcpy(coding_buffer_, rhs.coding_buffer_, rhs.buffer_len());
+        buffer_ = (EDCC_CODING_T*)malloc(rhs.buffer_len());
+        memcpy(buffer_, rhs.buffer_, rhs.buffer_len());
     }
 }
 
@@ -31,11 +40,11 @@ EDCCoding& EDCCoding::operator =(const EDCCoding &rhs)
         c_ = rhs.c_.clone();
         cs_ = rhs.cs_.clone();
         magic_key_ = rhs.magic_key_;
-        FreeCodingBuffer(&coding_buffer_);
-        if (rhs.coding_buffer_ != NULL)
+        FreeCodingBuffer(&buffer_);
+        if (rhs.buffer_ != NULL)
         {
-            coding_buffer_ = (EDCC_CODING_T*)malloc(rhs.buffer_len());
-            memcpy(coding_buffer_, rhs.coding_buffer_, rhs.buffer_len());
+            buffer_ = (EDCC_CODING_T*)malloc(rhs.buffer_len());
+            memcpy(buffer_, rhs.buffer_, rhs.buffer_len());
         }
     }
     return *this;
@@ -43,7 +52,7 @@ EDCCoding& EDCCoding::operator =(const EDCCoding &rhs)
 
 EDCCoding::~EDCCoding()
 {
-    FreeCodingBuffer(&coding_buffer_);
+    FreeCodingBuffer(&buffer_);
 }
 
 Status EDCCoding::Encode(const EDCC_CFG_T &config,
@@ -56,7 +65,7 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config,
         *buffer_size = 0;
         return EDCC_NULL_POINTER_ERROR;
     }
-    if (coding_buffer_ != NULL)
+    if (buffer_ != NULL)
     {
         if (buffer_max_len < buffer_len())
         {
@@ -64,7 +73,7 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config,
             *buffer_size = 0;
             return EDCC_CODING_BUFF_LEN_NOT_ENOUGH;
         }
-        memcpy(coding_buffer, coding_buffer_, buffer_len());
+        memcpy(coding_buffer, buffer_, buffer_len());
         *buffer_size = buffer_len();
         return EDCC_SUCCESS;
     }
@@ -80,14 +89,14 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config,
         *buffer_size = 0;
         return EDCC_CODING_BUFF_LEN_NOT_ENOUGH;
     }
-    memcpy(coding_buffer, coding_buffer_, *buffer_size);
+    memcpy(coding_buffer, buffer_, *buffer_size);
 
     return s;
 }
 
 Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
 {
-    if (coding_buffer_ != NULL)
+    if (buffer_ != NULL)
     {
         *buffer_size = buffer_len();
         return EDCC_SUCCESS;
@@ -100,8 +109,8 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
         *buffer_size = 0;
         return EDCC_LOAD_CONFIG_FAIL;
     }
-    MallocCodingBuffer(config, &coding_buffer_);
-    if (coding_buffer_ == NULL)
+    MallocCodingBuffer(config, &buffer_);
+    if (buffer_ == NULL)
     {
         *buffer_size = 0;
         return EDCC_NULL_POINTER_ERROR;
@@ -128,7 +137,7 @@ Status EDCCoding::EncodeToHexString(const EDCC_CFG_T &config, string *hex_str)
     while (pos < buffer_size)
     {
         char hex_c[3];
-        sprintf(hex_c, "%02x", ((unsigned char*)coding_buffer_)[pos]);
+        sprintf(hex_c, "%02x", ((unsigned char*)buffer_)[pos]);
         hex_string_stream << hex_c;
         ++pos;
     }
@@ -156,13 +165,13 @@ Status EDCCoding::Decode(const u_char *coding_buffer)
         return EDCC_CODING_INVALID;
     }
 
-    MallocCodingBuffer(coding->cfg, &coding_buffer_);
-    if (coding_buffer_ == NULL)
+    MallocCodingBuffer(coding->cfg, &buffer_);
+    if (buffer_ == NULL)
     {
         EDCC_Log("EDCCoding::decrypt failed!");
         return EDCC_NULL_POINTER_ERROR;
     }
-    memcpy(coding_buffer_, coding, coding_len);
+    memcpy(buffer_, coding, coding_len);
 
     return checker.CheckCoding(*this) ? EDCC_SUCCESS : EDCC_CODING_INVALID;
 }
@@ -188,8 +197,8 @@ Status EDCCoding::DecodeFromHexString(const string &hex_str)
 
 void EDCCoding::GenCodingBytes()
 {
-    CHECK_POINTER_NULL_RETURN_VOID(coding_buffer_);
-    memset(coding_buffer_->data, 0, coding_buffer_->len);
+    CHECK_POINTER_NULL_RETURN_VOID(buffer_);
+    memset(buffer_->data, 0, buffer_->len);
 
     size_t offset = 0;
     int counter = 0;
@@ -204,7 +213,7 @@ void EDCCoding::GenCodingBytes()
                 codingC <<= 4;
                 codingC &= 0xf0;
             }
-            *(coding_buffer_->data + offset) |= codingC;
+            *(buffer_->data + offset) |= codingC;
             if (counter == c_.rows*c_.cols
                 || counter % 2 == 0)
             {
@@ -219,7 +228,7 @@ void EDCCoding::GenCodingBytes()
         for (int w = 0; w < cs_.cols; ++w)
         {
             unsigned char codingCs = cs_.at<char>(h, w);
-            *(coding_buffer_->data + offset) |= (codingCs << (7 - (counter % 8)));
+            *(buffer_->data + offset) |= (codingCs << (7 - (counter % 8)));
             ++counter;
             if (counter == cs_.rows*cs_.cols
                 || counter % 8 == 0)
@@ -229,7 +238,7 @@ void EDCCoding::GenCodingBytes()
         }
     }
 
-    memcpy(coding_buffer_->data + offset, &magic_key_, kMagicKeyLen);
+    memcpy(buffer_->data + offset, &magic_key_, kMagicKeyLen);
 }
 
 void EDCCoding::MallocCodingBuffer(const EDCC_CFG_T &config, EDCC_CODING_T **buffer)

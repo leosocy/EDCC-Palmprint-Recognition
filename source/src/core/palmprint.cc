@@ -10,19 +10,16 @@ namespace edcc
 {
 
 Palmprint::Palmprint(const char *identity, const char *image_path)
+    :identity_(identity),
+    image_path_(image_path)
 {
-    if (identity == NULL || image_path == NULL)
-    {
-        EDCC_Log("Identity or imagePath can't be null!");
-        return;
-    }
-    identity_ = identity;
-    image_path_ = image_path;
 }
 
-Palmprint::~Palmprint()
+Palmprint::Palmprint(const Palmprint &rhs)
+    :identity_(rhs.identity_),
+    image_path_(rhs.image_path_),
+    image_(rhs.image_.clone())
 {
-    ;
 }
 
 Palmprint& Palmprint::operator =(const Palmprint &rhs)
@@ -34,13 +31,6 @@ Palmprint& Palmprint::operator =(const Palmprint &rhs)
         image_ = rhs.image_.clone();
     }
     return *this;
-}
-
-Palmprint::Palmprint(const Palmprint &rhs)
-{
-    identity_ = rhs.identity_;
-    image_path_ = rhs.image_path_;
-    image_ = rhs.image_.clone();
 }
 
 bool Palmprint::operator==(const Palmprint &rhs) const

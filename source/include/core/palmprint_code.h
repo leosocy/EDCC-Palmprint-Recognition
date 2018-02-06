@@ -25,8 +25,8 @@ class PalmprintCode
 {
 public:
     PalmprintCode(const char *identity, const char *image_path);
-    PalmprintCode& operator =(const PalmprintCode &other);
     explicit PalmprintCode(const PalmprintCode &other);
+    PalmprintCode& operator =(const PalmprintCode &other);
     virtual ~PalmprintCode();
     Status Encode(const EDCC_CFG_T &config);
     Status EncodeToBuffer(const EDCC_CFG_T &config,
