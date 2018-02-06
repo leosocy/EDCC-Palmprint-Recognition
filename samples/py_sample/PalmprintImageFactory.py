@@ -47,7 +47,7 @@ class PalmprintImageFactory(object):
         self.trainGroup = []
         self.predictGroup = []
         
-        self.__loadTongjiPalmprintImageList__()
+        #self.__loadTongjiPalmprintImageList__()
         self.__loadPolyUPalmprintImageList__()
         self.__genPalmprintGroupDict__()
         self.__genTrainAndPredictGroup__()
@@ -70,12 +70,12 @@ class PalmprintImageFactory(object):
     def __loadPolyUPalmprintImageList__(self):
         if not os.path.exists(polyu_palmprint_image_dir):
             raise RuntimeError("%s palmprint data dir not exsits" % polyu_palmprint_image_dir)
-        for spec in ['Multispectral_I', 'Multispectral_G']:
+        for spec in ['Multispectral_I']:
             specDir = os.path.join(polyu_palmprint_image_dir, spec)
             for p in range(0, polyu_one_spec_people_num):
                 specIDDir = os.path.join(specDir, "%03d" % (p + 1))
-                for i in ['1', '2']:
-                    for j in range(0, 6):
+                for j in range(0, 6):
+                    for i in ['1', '2']:
                         ID = "%s_%d" % (spec, p+1)
                         instanceID = "%s_%02d" % (i, j+1)
                         imageName = "%s_%02d_s.bmp" % (i, j+1)

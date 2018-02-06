@@ -7,7 +7,6 @@
 
 namespace edcc {
 
-using namespace std;
 class PalmprintCode;
 
 class Match 

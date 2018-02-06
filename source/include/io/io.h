@@ -11,7 +11,7 @@
 #include <string>
 
 #include "json.h"
-#include "core/edccoding.h"
+#include "core/config.h"
 
 #define LOAD_PALMPRINT_GROUP_FAILURE 1
 #define LOAD_PALMPRINT_GROUP_SUCCESS 0

@@ -10,7 +10,7 @@
 namespace edcc
 {
 
-std::string toUpper(_IN const char *src)
+std::string toUpper(const char *src)
 {
     std::string str;
     CHECK_POINTER_NULL_RETURN(src, str);
@@ -23,7 +23,7 @@ std::string toUpper(_IN const char *src)
     return str;
 }
 
-void EDCC_Log_Func(_IN const char *format, ...)
+void EDCC_Log_Func(const char *format, ...)
 {
     char log[1024] = {0};
     va_list args;

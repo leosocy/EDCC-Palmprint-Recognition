@@ -7,10 +7,6 @@
 
 #include <string>
 
-#define _IN
-#define _OUT
-#define _INOUT
-
 namespace edcc
 {
 
@@ -94,7 +90,7 @@ static const char hexArray[16] =
     } \
 } while(0)
 
-std::string toUpper(_IN const char *src);
+std::string toUpper(const char *src);
 
 #define ANSI_COLOR_RED                  "\x1b[31m"
 #define ANSI_COLOR_GREEN                "\x1b[32m"
@@ -112,7 +108,7 @@ std::string toUpper(_IN const char *src);
                                             ANSI_COLOR_DARY_GRAY   "[%s: %u]\t" ANSI_COLOR_RESET     \
                                              format"\n"                                              \
                                             , __FUNCTION__, __LINE__, ##__VA_ARGS__)
-void EDCC_Log_Func(_IN const char *format, _IN ...);
+void EDCC_Log_Func(const char *format, ...);
 
 } //namespace edcc
 
