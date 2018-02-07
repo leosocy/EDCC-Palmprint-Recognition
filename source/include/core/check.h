@@ -22,10 +22,10 @@ public:
     bool CheckFeatureData(const std::vector<PalmprintCode> &data,
                           const EDCC_CFG_T &config) const;
     bool CheckCoding(const EDCCoding &coding) const;
-    bool CheckTwoPalmprintCodeConfigEqualAndValid(const PalmprintCode &first_palmprintcode,
+    bool CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
                                                   const PalmprintCode &second_palmprintcode) const;
 private:
-    bool CheckTwoConfigEQAndValid(const EDCC_CFG_T &first_config,
+    bool CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
                                   const EDCC_CFG_T &second_config) const;
 };
 

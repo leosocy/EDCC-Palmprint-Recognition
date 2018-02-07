@@ -25,14 +25,14 @@ void ft_get_top_k::ExcuteInterface()
                                      this->configPath,
                                      this->mode,
                                      this->topKNum,
-                                     topKResult);
+                                     &topKResult);
     } else {
         interRet = GetTopKMatchScore(this->imagePath,
                                      this->featurePath,
                                      this->configPath,
                                      this->mode,
                                      this->topKNum,
-                                     topKResult);
+                                     &topKResult);
     }
     
 }

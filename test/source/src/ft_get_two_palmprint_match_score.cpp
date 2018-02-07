@@ -45,7 +45,7 @@ void ft_get_two_palmprint_match_score::ExcuteInterface()
     interRet = GetTwoPalmprintMatchScore(this->firstImagePath,
                                          this->secondImagePath,
                                          this->configPath,
-                                         this->matchScore);
+                                         &this->matchScore);
 }
 
 TEST_F(ft_get_two_palmprint_match_score, Given_Some_Param_NULL_When_Get_Score_Then_EDCC_NULL_POINTER_ERROR)

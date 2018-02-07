@@ -91,7 +91,9 @@ bool Check::CheckFeatureData(const vector<PalmprintCode> &data,
     {
         const EDCC_CODING_T *coding_buffer = data_iter->coding()->buffer();
         if (coding_buffer == NULL
-            || !CheckTwoConfigEQAndValid(config, coding_buffer->cfg)
+            || !CheckConfig(config)
+            || !CheckConfig(coding_buffer->cfg)
+            || !CheckTwoConfigEqual(config, coding_buffer->cfg)
             || !CheckCoding(*data_iter->coding()))
         {
             EDCC_Log("EDCCoding format error!");
@@ -127,22 +129,20 @@ bool Check::CheckCoding(const EDCCoding &coding) const
     return true;
 }
 
-bool Check::CheckTwoPalmprintCodeConfigEqualAndValid(const PalmprintCode &first_palmprintcode,
+bool Check::CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
                                                      const PalmprintCode &second_palmprintcode) const
 {
     CHECK_POINTER_NULL_RETURN(first_palmprintcode.coding()->buffer(), false);
     CHECK_POINTER_NULL_RETURN(second_palmprintcode.coding()->buffer(), false);
 
-    return CheckTwoConfigEQAndValid(first_palmprintcode.coding()->buffer()->cfg,
-                                    second_palmprintcode.coding()->buffer()->cfg);
+    return CheckTwoConfigEqual(first_palmprintcode.coding()->buffer()->cfg,
+                               second_palmprintcode.coding()->buffer()->cfg);
 }
 
-bool Check::CheckTwoConfigEQAndValid(const EDCC_CFG_T &first_config,
+bool Check::CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
                                      const EDCC_CFG_T &second_config) const
 {
-    return !memcmp(&first_config, &second_config, sizeof(EDCC_CFG_T))
-        && CheckConfig(first_config)
-        && CheckConfig(second_config);
+    return !memcmp(&first_config, &second_config, sizeof(EDCC_CFG_T));
 }
 
 } // namespace edcc

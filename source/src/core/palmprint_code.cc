@@ -144,7 +144,7 @@ Status PalmprintCode::Encode(const EDCC_CFG_T &config)
     
     GaborFilter filter(cv::Size(config.gaborSize, config.gaborSize),
                        config.directions);
-    Mat *imgRet = palmprint_->GenSpecImg(cv::Size(config.imageSizeW, config.imageSizeH));
+    Mat *imgRet = palmprint_->GetSpecImg(cv::Size(config.imageSizeW, config.imageSizeH));
     if (imgRet == NULL)
     {
         EDCC_Log("%s not exists!", palmprint_->image_path().c_str());
@@ -250,8 +250,7 @@ void PalmprintCode::GenEDCCoding(const vector<cv::Mat> &gabor_filter_result,
 
 double PalmprintCode::MatchWith(const PalmprintCode &another) const
 {
-    Match matcher;
-    return matcher.MatchPoint2Point(*this, another);
+    return Match::MatchPoint2Point(*this, another);
 }
 
 } // namespace edcc

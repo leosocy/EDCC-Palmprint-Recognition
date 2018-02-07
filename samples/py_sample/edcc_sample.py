@@ -30,6 +30,8 @@ class EDCCSample(object):
         self.__initDB__()
         self.__readDB__()
         predictGroup = self._factory.predictGroup
+        total_cost_time = 0.0
+        total_match_count = 0
         for predict in predictGroup:
             predictPalmprintCode, codingLen = self._edcc_api.GetEDCCCoding(predict.imagePath, self._configPath)
             K = 3
@@ -43,13 +45,16 @@ class EDCCSample(object):
                 topKMatchScore.append(dictTmp)
             timeEnd = time.time()
             costTime = (timeEnd - timeBegin) * 1000
+            total_cost_time += costTime
+            total_match_count += 1
 
             topKMatchScore = sorted(topKMatchScore, key=lambda p:p["score"], reverse = True)
             while len(topKMatchScore) > K:
                 topKMatchScore.pop()
             self.statisticsResult(predict, topKMatchScore, costTime)
         print("\n\nPredict Over. Total:%d\tPredictCorrect:%d\tAccuracy:%lf%%" % (len(predictGroup), self._succNum, float(self._succNum) / len(predictGroup) * 100))
-    
+        print("Total Cost Time:%lf\tMatch Count:%d\tPer Cost Time:%lf" % (total_cost_time, total_match_count, total_cost_time / total_match_count))
+
     def statisticsResult(self, predict, topKMatchScore, costTime):
         resultsDict = {}
         idCountDict = {}

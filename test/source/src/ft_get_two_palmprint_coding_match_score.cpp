@@ -33,12 +33,12 @@ void ft_get_two_palmprint_coding_match_score::ExcuteInterface()
 {
     interRet = GetTwoPalmprintCodingMatchScore(this->firstCodingBuff,
                                                this->secondCodingBuff,
-                                               this->matchScoreWithPalmprintCoding);
+                                               &this->matchScoreWithPalmprintCoding);
 
     int lRet = GetTwoPalmprintMatchScore(this->firstImagePath,
                                          this->secondImagePath,
                                          this->configPath,
-                                         this->matchScoreWithPalmprint);
+                                         &this->matchScoreWithPalmprint);
     EXPECT_EQ(lRet, EDCC_SUCCESS);
 }
 
@@ -53,9 +53,9 @@ void ft_get_two_palmprint_coding_match_score::GenFirstPalmprintCodingBuff(const 
 
     int ret = GetEDCCCoding(this->firstImagePath,
                             this->configPath,
-                            this->firstCodingBuff,
                             this->bufMaxLen,
-                            this->bufLen);
+                            this->firstCodingBuff,
+                            &this->bufLen);
     EXPECT_EQ(ret, EDCC_SUCCESS);
     EXPECT_NE(bufLen, 0);
 }
@@ -70,9 +70,9 @@ void ft_get_two_palmprint_coding_match_score::GenSecondPalmprintCodingBuff(const
 
     int ret = GetEDCCCoding(secondPalmprintImagePath,
                             this->configPath,
-                            this->secondCodingBuff,
                             this->bufMaxLen,
-                            this->bufLen);
+                            this->secondCodingBuff,
+                            &this->bufLen);
     EXPECT_EQ(ret, EDCC_SUCCESS);
     EXPECT_NE(bufLen, 0);
 }

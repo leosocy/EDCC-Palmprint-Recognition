@@ -30,18 +30,13 @@ class PalmprintCode;
 class IO
 {
 public:
-    IO();
-    ~IO();
-
     int LoadConfig(std::ifstream &in);
     int LoadPalmprintTrainingSet(std::ifstream &in, std::vector<PalmprintCode> *training_set);
     int LoadPalmprintFeatureData(std::ifstream &in, std::vector<PalmprintCode> *feature_data);
     int SavePalmprintFeatureData(std::ofstream &out, std::vector<PalmprintCode> &feature_data);
 
-    const EDCC_CFG_T config() const { return config_; }
+    const EDCC_CFG_T& config() const { return cm.config(); }
 private:
-    bool GenConfig(const std::string &config_key, int config_value);
-    bool GetConfig(const std::string &config_key, int *config_value);
     bool LoadOneIdentityAllPalmprintFeatureData(const std::string &identity,
                                                 const Json::Value &value,
                                                 std::vector<PalmprintCode> *feature_data);
@@ -49,8 +44,7 @@ private:
     bool SetEDCCoding(PalmprintCode &coding, Json::Value *value);
     bool InsertCoding2JsonValue(PalmprintCode &code, Json::Value *value);
 
-    EDCC_CFG_T config_;
-    std::set<std::string> params_;
+    ConfigManager cm;
 };
 
 } // namespace edcc

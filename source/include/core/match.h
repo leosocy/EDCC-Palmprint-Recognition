@@ -8,12 +8,18 @@
 namespace edcc {
 
 class PalmprintCode;
+typedef struct tag_EDCC_CODING_T EDCC_CODING_T;
 
-class Match 
+class Match
 {
 public:
-    double MatchPoint2Point(const PalmprintCode &lhs,
-                            const PalmprintCode &rhs) const;
+    static double MatchPoint2Point(const PalmprintCode &lhs,
+                                   const PalmprintCode &rhs);
+    static double MatchFastMode(const unsigned char *lhs,
+                                const unsigned char *rhs);
+private:
+    static double ExcuteMatch(const EDCC_CODING_T *lhs,
+                              const EDCC_CODING_T *rhs);
 };
 
 } // namespace edcc
