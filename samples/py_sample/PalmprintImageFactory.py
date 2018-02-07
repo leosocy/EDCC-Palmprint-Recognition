@@ -47,8 +47,8 @@ class PalmprintImageFactory(object):
         self.trainGroup = []
         self.predictGroup = []
         
-        #self.__loadTongjiPalmprintImageList__()
-        self.__loadPolyUPalmprintImageList__()
+        self.__loadTongjiPalmprintImageList__()
+        #self.__loadPolyUPalmprintImageList__()
         self.__genPalmprintGroupDict__()
         self.__genTrainAndPredictGroup__()
     

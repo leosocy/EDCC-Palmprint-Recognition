@@ -26,8 +26,8 @@ public:
     string identity() const { return identity_; }
     string image_path() const { return image_path_; }
 
-    Mat* GenOrigImg();
-    Mat* GenSpecImg(const Size &img_size, bool is_gray = true);
+    Mat* GetOrigImg();
+    Mat* GetSpecImg(const Size &img_size, bool is_gray = true);
 private:
     string identity_;
     string image_path_;

@@ -21,7 +21,7 @@ using cv::Size;
 
 class PalmprintCode;
 
-typedef struct
+typedef struct tag_EDCC_CODING_T
 {
     EDCC_CFG_T cfg;
     u_int len;

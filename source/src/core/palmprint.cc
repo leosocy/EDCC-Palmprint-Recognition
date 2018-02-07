@@ -39,7 +39,7 @@ bool Palmprint::operator==(const Palmprint &rhs) const
         && image_path_ == rhs.image_path_;
 }
 
-cv::Mat* Palmprint::GenOrigImg()
+cv::Mat* Palmprint::GetOrigImg()
 {
     image_ = cv::imread(image_path_, CV_LOAD_IMAGE_COLOR);
     if (!image_.data)
@@ -50,9 +50,9 @@ cv::Mat* Palmprint::GenOrigImg()
     return &image_;
 }
 
-cv::Mat* Palmprint::GenSpecImg(const cv::Size &img_size, bool is_gray)
+cv::Mat* Palmprint::GetSpecImg(const cv::Size &img_size, bool is_gray)
 {
-    Mat *origin_image = GenOrigImg();
+    Mat *origin_image = GetOrigImg();
     CHECK_POINTER_NULL_RETURN(origin_image, NULL);
     resize(*origin_image, *origin_image, img_size);
     if (is_gray)

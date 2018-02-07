@@ -39,9 +39,9 @@ void ft_get_edcc_coding::ExcuteInterface()
 {
     interRet = GetEDCCCoding(this->imagePath,
                              this->configPath,
-                             this->pCoding,
                              this->bufMaxLen,
-                             this->bufLen);
+                             this->pCoding,
+                             &this->bufLen);
 }
 
 TEST_F(ft_get_edcc_coding, Given_NULLPalmprintPath_When_GetEDCCCoding_Then_EDCC_NULL_POINTER_ERROR)

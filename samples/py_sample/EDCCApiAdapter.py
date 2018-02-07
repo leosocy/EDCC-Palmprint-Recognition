@@ -51,7 +51,7 @@ class EDCC_API(object):
         bufMaxLen = c_uint(codingBufMaxLen)
         bufLen = c_uint(0)
         pBufLen = POINTER(c_uint)(bufLen)
-        iterfaceRet = self.edcc_api.GetEDCCCoding(pPalmprintImagePath, pConfigPath, codingBuf, bufMaxLen, pBufLen)
+        iterfaceRet = self.edcc_api.GetEDCCCoding(pPalmprintImagePath, pConfigPath, bufMaxLen, codingBuf, pBufLen)
         if iterfaceRet != 0:
             raise RuntimeError("EDCC API:GetEDCCCoding. Call API result error.")
         retBufLen = pBufLen.contents.value
