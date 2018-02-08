@@ -10,19 +10,6 @@
 namespace edcc
 {
 
-std::string toUpper(const char *src)
-{
-    std::string str;
-    CHECK_POINTER_NULL_RETURN(src, str);
-
-    str = src;
-    for(size_t i = 0; i < str.length(); ++i) {
-        str[i] = toupper(str[i]);
-    }
-
-    return str;
-}
-
 void EDCC_Log_Func(const char *format, ...)
 {
     char log[1024] = {0};

@@ -5,8 +5,6 @@
 #ifndef __PUB_H__
 #define __PUB_H__
 
-#include <string>
-
 namespace edcc
 {
 
@@ -89,8 +87,6 @@ static const char hexArray[16] =
         return (value); \
     } \
 } while(0)
-
-std::string toUpper(const char *src);
 
 #define ANSI_COLOR_RED                  "\x1b[31m"
 #define ANSI_COLOR_GREEN                "\x1b[32m"

@@ -35,7 +35,7 @@ public:
     EDCCoding();
     explicit EDCCoding(const EDCCoding &rhs);
     EDCCoding& operator =(const EDCCoding &rhs);
-    virtual ~EDCCoding();
+    ~EDCCoding();
     Status Encode(const EDCC_CFG_T &config,
                   size_t buffer_max_len,
                   u_char *coding_buffer,

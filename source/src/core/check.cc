@@ -10,6 +10,7 @@
 #include "core/edccoding.h"
 #include "core/palmprint.h"
 #include "core/palmprint_code.h"
+#include "core/config.h"
 #include "util/pub.h"
 
 namespace edcc
@@ -28,7 +29,7 @@ static const u_char kMaxGabotDirections = 16;
 
 } // namespace limit
 
-bool Check::CheckConfig(const EDCC_CFG_T &config) const
+bool Check::CheckConfig(const EDCC_CFG_T &config)
 {
     if (config.imageSizeW < limit::kMinImageWidth
         || config.imageSizeH < limit::kMinImageHeight)
@@ -64,7 +65,7 @@ bool Check::CheckConfig(const EDCC_CFG_T &config) const
     return true;
 }
 
-bool Check::CheckTrainingSet(const vector<PalmprintCode> &data) const
+bool Check::CheckTrainingSet(const vector<PalmprintCode> &data)
 {
     for (vector<PalmprintCode>::const_iterator data_iter = data.begin();
          data_iter != data.end(); ++data_iter)
@@ -84,7 +85,7 @@ bool Check::CheckTrainingSet(const vector<PalmprintCode> &data) const
 }
 
 bool Check::CheckFeatureData(const vector<PalmprintCode> &data,
-                             const EDCC_CFG_T &config) const
+                             const EDCC_CFG_T &config)
 {
     for (vector<PalmprintCode>::const_iterator data_iter = data.begin();
          data_iter != data.end(); ++data_iter)
@@ -104,7 +105,7 @@ bool Check::CheckFeatureData(const vector<PalmprintCode> &data,
     return true;
 }
 
-bool Check::CheckCoding(const EDCCoding &coding) const
+bool Check::CheckCoding(const EDCCoding &coding)
 {
     const EDCC_CODING_T *coding_buffer = coding.buffer();
     CHECK_POINTER_NULL_RETURN(coding_buffer, false);
@@ -130,7 +131,7 @@ bool Check::CheckCoding(const EDCCoding &coding) const
 }
 
 bool Check::CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
-                                                     const PalmprintCode &second_palmprintcode) const
+                                                     const PalmprintCode &second_palmprintcode)
 {
     CHECK_POINTER_NULL_RETURN(first_palmprintcode.coding()->buffer(), false);
     CHECK_POINTER_NULL_RETURN(second_palmprintcode.coding()->buffer(), false);
@@ -140,7 +141,7 @@ bool Check::CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprin
 }
 
 bool Check::CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
-                                     const EDCC_CFG_T &second_config) const
+                                     const EDCC_CFG_T &second_config)
 {
     return !memcmp(&first_config, &second_config, sizeof(EDCC_CFG_T));
 }

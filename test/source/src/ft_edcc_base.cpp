@@ -77,7 +77,7 @@ void ft_edcc_base::CheckFeaturesConfigEqualConfigFile(const char *featuresFileNa
 
 void ft_edcc_base::CheckOneIdentityImageCountInFeatures(const char *featuresFileName,
                                                         const char *identity,
-                                                        int expectedCount)
+                                                        size_t expectedCount)
 {
     EXPECT_TRUE(featuresFileName != NULL);
     EXPECT_TRUE(identity != NULL);
@@ -102,7 +102,7 @@ void ft_edcc_base::CheckOneIdentityImageCountInFeatures(const char *featuresFile
     }
     
     Json::Value::Members members = featuresRoot[identity].getMemberNames();
-    int actualCount = members.size();
+    size_t actualCount = members.size();
     EXPECT_EQ(actualCount, expectedCount);
 }
 

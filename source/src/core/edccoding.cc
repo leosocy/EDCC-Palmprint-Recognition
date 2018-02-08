@@ -3,7 +3,6 @@
 // that can be found in the LICENSE file.
 
 #include "core/edccoding.h"
-
 #include "core/check.h"
 #include "core/match.h"
 #include "edcc.h"
@@ -102,8 +101,7 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
         return EDCC_SUCCESS;
     }
 
-    Check checker;
-    if (!checker.CheckConfig(config))
+    if (!Check::CheckConfig(config))
     {
         EDCC_Log("EDCCoding::encrypt config error!");
         *buffer_size = 0;
@@ -153,7 +151,6 @@ Status EDCCoding::Decode(const u_char *coding_buffer)
         return EDCC_NULL_POINTER_ERROR;
     }
 
-    Check checker;
     const EDCC_CODING_T *coding = (EDCC_CODING_T*)coding_buffer;
     size_t coding_len = coding->len + sizeof(EDCC_CODING_T);
     int actual_magic_key = 0;
@@ -173,7 +170,7 @@ Status EDCCoding::Decode(const u_char *coding_buffer)
     }
     memcpy(buffer_, coding, coding_len);
 
-    return checker.CheckCoding(*this) ? EDCC_SUCCESS : EDCC_CODING_INVALID;
+    return Check::CheckCoding(*this) ? EDCC_SUCCESS : EDCC_CODING_INVALID;
 }
 
 Status EDCCoding::DecodeFromHexString(const string &hex_str)

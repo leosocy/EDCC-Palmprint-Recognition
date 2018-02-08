@@ -3,7 +3,6 @@
 // that can be found in the LICENSE file.
 
 #include "core/palmprint.h"
-
 #include "util/pub.h"
 
 namespace edcc
