@@ -1,9 +1,7 @@
-/*************************************************************************
-	> File Name: EDCC.h
-	> Author: Leosocy
-	> Mail: 513887568@qq.com 
-	> Created Time: 2017/10/5 14:32:50
- ************************************************************************/
+// Copyright (c) 2017 Leosocy. All rights reserved.
+// Use of this source code is governed by a MIT-style license 
+// that can be found in the LICENSE file.
+
 #ifndef __EDCC_H__
 #define __EDCC_H__
 
