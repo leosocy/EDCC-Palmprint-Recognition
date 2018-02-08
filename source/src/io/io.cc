@@ -7,11 +7,11 @@
 #include <assert.h>
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include "edcc.h"
 #include "core/edccoding.h"
 #include "core/palmprint.h"
 #include "core/palmprint_code.h"
 #include "core/config.h"
+#include "edcc.h"
 
 using namespace std;
 
@@ -87,8 +87,8 @@ int IO::LoadPalmprintTrainingSet(ifstream &in,
         {
             if (image_list[(unsigned)image_index].isString())
             {
-                PalmprintCode newOne((*it).c_str(), image_list[(unsigned)image_index].asString().c_str());
-                training_set->push_back(newOne);
+                PalmprintCode instance((*it).c_str(), image_list[(unsigned)image_index].asString().c_str());
+                training_set->push_back(instance);
             }
         }
     }
@@ -108,7 +108,7 @@ int IO::LoadPalmprintFeatureData(ifstream &in, vector<PalmprintCode> *feature_da
         EDCC_Log("Load Palmprint Features Data failed. Don't change the json format.");
         return EDCC_LOAD_FEATURES_FAIL;
     }
-    for (set<string>::iterator it = cm.params().begin();
+    for (set<string>::const_iterator it = cm.params().begin();
          it != cm.params().end();
          ++it)
     {
@@ -217,7 +217,7 @@ bool IO::GetEDCCoding(const Json::Value &value, PalmprintCode *instance)
 
 bool IO::SetEDCCoding(PalmprintCode &coding, Json::Value *value)
 {
-    string hex_coding = "";
+    string hex_coding("");
     Status s = coding.EncodeToHexString(config(), &hex_coding);
     if (s != EDCC_SUCCESS)
     {

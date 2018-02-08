@@ -3,7 +3,6 @@
 // that can be found in the LICENSE file.
 
 #include "core/match.h"
-
 #include "core/palmprint_code.h"
 #include "core/edccoding.h"
 

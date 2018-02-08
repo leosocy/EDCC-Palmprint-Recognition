@@ -17,16 +17,16 @@ typedef struct tag_EDCC_CFG_T EDCC_CFG_T;
 class Check
 {
 public:
-    bool CheckConfig(const EDCC_CFG_T &config) const;
-    bool CheckTrainingSet(const std::vector<PalmprintCode> &data) const;
-    bool CheckFeatureData(const std::vector<PalmprintCode> &data,
-                          const EDCC_CFG_T &config) const;
-    bool CheckCoding(const EDCCoding &coding) const;
-    bool CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
-                                                  const PalmprintCode &second_palmprintcode) const;
+    static bool CheckConfig(const EDCC_CFG_T &config);
+    static bool CheckTrainingSet(const std::vector<PalmprintCode> &data);
+    static bool CheckFeatureData(const std::vector<PalmprintCode> &data,
+                                 const EDCC_CFG_T &config);
+    static bool CheckCoding(const EDCCoding &coding);
+    static bool CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
+                                                 const PalmprintCode &second_palmprintcode);
 private:
-    bool CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
-                                  const EDCC_CFG_T &second_config) const;
+    static bool CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
+                                    const EDCC_CFG_T &second_config);
 };
 
 } // namespace edcc

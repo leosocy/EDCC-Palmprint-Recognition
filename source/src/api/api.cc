@@ -1,9 +1,6 @@
-/*************************************************************************
-    > File Name: palmprint_identify.cc
-    > Author: Leosocy
-    > Mail: 513887568@qq.com 
-    > Created Time: 2017/07/26 21:27:26
- ************************************************************************/
+// Copyright (c) 2017 Leosocy. All rights reserved.
+// Use of this source code is governed by a MIT-style license 
+// that can be found in the LICENSE file.
 
 #include "edcc.h"
 
@@ -68,8 +65,7 @@ int GetTwoPalmprintCodingMatchScore(const unsigned char *lhs_coding_buffer,
     s = rhs.Decode(rhs_coding_buffer);
     CHECK_NE_RETURN(s, EDCC_SUCCESS, s);
 
-    Check checker;
-    if (!checker.CheckTwoPalmprintCodeConfigEqual(lhs, rhs))
+    if (!Check::CheckTwoPalmprintCodeConfigEqual(lhs, rhs))
     {
         return EDCC_CODINGS_DIFF_CONFIG;
     }
@@ -137,7 +133,6 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
     IO train_io;
     vector<PalmprintCode> all_features;
     vector<PalmprintCode> original_features;
-    Check checker;
     int ret_value = 0;
 
     if(!is_incremental) {
@@ -152,11 +147,11 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
         CHECK_FALSE_RETURN(features_in.is_open(), EDCC_LOAD_FEATURES_FAIL);
         ret_value = train_io.LoadPalmprintFeatureData(features_in, &original_features);
         if(ret_value != EDCC_SUCCESS
-           || !checker.CheckFeatureData(original_features, train_io.config())) {
+           || !Check::CheckFeatureData(original_features, train_io.config())) {
             return EDCC_LOAD_FEATURES_FAIL;
         }
     }
-    if(!checker.CheckConfig(train_io.config())) {
+    if(!Check::CheckConfig(train_io.config())) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
     
@@ -165,7 +160,7 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
     CHECK_FALSE_RETURN(trainingset_in.is_open(), EDCC_LOAD_TAINING_SET_FAIL);
     ret_value = train_io.LoadPalmprintTrainingSet(trainingset_in, &all_features);
     if(ret_value != EDCC_SUCCESS 
-       || !checker.CheckTrainingSet(all_features)) {
+       || !Check::CheckTrainingSet(all_features)) {
         return EDCC_LOAD_TAINING_SET_FAIL;
     }
     
@@ -199,20 +194,19 @@ int GetTopKMatchScore(const char *palmprint_image_path,
     int ret_value = 0;
     ifstream features_or_group_in;
     vector<PalmprintCode> all_features;
-    Check checker;
     
     features_or_group_in.open(trainingset_features_or_palmprint_group_file_name);
     CHECK_FALSE_RETURN(features_or_group_in.is_open(), EDCC_LOAD_FEATURES_FAIL);
     if(is_features) {
         ret_value = match_io.LoadPalmprintFeatureData(features_or_group_in, &all_features);
         if(ret_value != EDCC_SUCCESS
-           || !checker.CheckFeatureData(all_features, match_io.config())) {
+           || !Check::CheckFeatureData(all_features, match_io.config())) {
             return EDCC_LOAD_FEATURES_FAIL;
         }
     } else {
         ret_value = match_io.LoadPalmprintTrainingSet(features_or_group_in, &all_features);
         if(ret_value != EDCC_SUCCESS
-           || !checker.CheckTrainingSet(all_features)) {
+           || !Check::CheckTrainingSet(all_features)) {
             return EDCC_LOAD_TAINING_SET_FAIL;
         }
 
@@ -222,7 +216,7 @@ int GetTopKMatchScore(const char *palmprint_image_path,
         ret_value = match_io.LoadConfig(configIn);
     }
     if(ret_value != EDCC_SUCCESS
-       || !checker.CheckConfig(match_io.config())) {
+       || !Check::CheckConfig(match_io.config())) {
         return EDCC_LOAD_CONFIG_FAIL;
     }
     if(!is_features) {

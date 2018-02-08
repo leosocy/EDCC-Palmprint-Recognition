@@ -27,7 +27,7 @@ public:
     PalmprintCode(const char *identity, const char *image_path);
     explicit PalmprintCode(const PalmprintCode &other);
     PalmprintCode& operator =(const PalmprintCode &other);
-    virtual ~PalmprintCode();
+    ~PalmprintCode();
     Status Encode(const EDCC_CFG_T &config);
     Status EncodeToBuffer(const EDCC_CFG_T &config,
                           size_t buffer_max_len,
@@ -40,7 +40,6 @@ public:
     const Palmprint* palmprint() const { return palmprint_; };
     const EDCCoding* coding() const { return coding_; };
 private:
-    void Init(const char *identity, const char *image_path);
     void EnhanceImage(const cv::Mat &src,
                       cv::Mat &dst,
                       u_char lapKerSize);

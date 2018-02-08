@@ -38,7 +38,7 @@ public:
     ConfigManager();
     bool GetConfigValue(const std::string &key, int *value);
     bool SetConfigValue(const std::string &key, int value);
-    inline bool IsKeyInConfigParams(const std::string &key)
+    bool IsKeyInConfigParams(const std::string &key)
     { 
         return params_.find(key) != params_.end();
     }

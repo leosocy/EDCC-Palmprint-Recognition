@@ -136,8 +136,7 @@ PalmprintCode::~PalmprintCode()
 
 Status PalmprintCode::Encode(const EDCC_CFG_T &config)
 {
-    Check checker;
-    if (!checker.CheckConfig(config))
+    if (!Check::CheckConfig(config))
     {
         return EDCC_LOAD_CONFIG_FAIL;
     }
@@ -200,12 +199,6 @@ Status PalmprintCode::DecodeFromHexString(const string &hex_str)
 {
     assert(coding_);
     return coding_->DecodeFromHexString(hex_str);
-}
-
-void PalmprintCode::Init(const char *identity, const char *image_path)
-{
-    palmprint_ = NULL;
-    coding_ = NULL;
 }
 
 void PalmprintCode::EnhanceImage(const cv::Mat &src,

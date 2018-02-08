@@ -111,7 +111,7 @@ public:
 
     void CheckOneIdentityImageCountInFeatures(const char *featuresFileName,
                                               const char *identity,
-                                              int expectedCount);
+                                              size_t expectedCount);
 
     void ModifyConfigParams(const char *configOrFeaturesFileName,
                             const char *paramName,
