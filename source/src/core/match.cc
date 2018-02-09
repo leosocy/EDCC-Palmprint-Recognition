@@ -22,11 +22,11 @@ double Match::MatchPoint2Point(const PalmprintCode &lhs,
         return score;
     }
 
-    return ExcuteMatch(l_coding, r_coding);
+    return ExcuteMatching(l_coding, r_coding);
 }
 
-double Match::MatchFastMode(const unsigned char *lhs,
-                            const unsigned char *rhs)
+double Match::FastModeMatching(const unsigned char *lhs,
+                               const unsigned char *rhs)
 {
     int score = 0;
     const EDCC_CODING_T *l_coding = (const EDCC_CODING_T*)lhs;
@@ -39,13 +39,13 @@ double Match::MatchFastMode(const unsigned char *lhs,
         return score;
     }
 
-    return ExcuteMatch(l_coding, r_coding);
+    return ExcuteMatching(l_coding, r_coding);
 }
 
-double Match::ExcuteMatch(const EDCC_CODING_T *lhs,
-                          const EDCC_CODING_T *rhs)
+double Match::ExcuteMatching(const EDCC_CODING_T *lhs,
+                             const EDCC_CODING_T *rhs)
 {
-    double score = 0.0;
+    int score = 0;
     size_t coding_c_len = (size_t)ceil(lhs->cfg.imageSizeW*lhs->cfg.imageSizeH / 2.0);
     const u_char *c_x_start_pos = lhs->data;
     const u_char *c_y_start_pos = rhs->data;

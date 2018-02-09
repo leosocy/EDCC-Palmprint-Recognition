@@ -177,7 +177,7 @@ bool IO::LoadOneIdentityAllPalmprintFeatureData(const string &identity,
     Json::Value::Members image_path_list;
     image_path_list = value.getMemberNames();
 
-    for (Json::Value::Members::iterator it = image_path_list.begin(); 
+    for (Json::Value::Members::iterator it = image_path_list.begin();
          it != image_path_list.end(); ++it)
     {
         PalmprintCode instance(identity.c_str(), (*it).c_str());

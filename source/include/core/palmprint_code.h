@@ -34,7 +34,7 @@ public:
                           u_char *coding_buffer,
                           size_t *buffer_size);
     Status EncodeToHexString(const EDCC_CFG_T &config, string *hex_str);
-    Status Decode(const u_char *coding_buffer);
+    Status DecodeFromBuffer(const u_char *coding_buffer);
     Status DecodeFromHexString(const string &hex_str);
     double MatchWith(const PalmprintCode &another) const;
     const Palmprint* palmprint() const { return palmprint_; };

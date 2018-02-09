@@ -19,7 +19,7 @@ EDCCoding::EDCCoding()
 }
 
 EDCCoding::EDCCoding(const EDCCoding &rhs)
-    :c_(rhs.c_.clone()),
+    : c_(rhs.c_.clone()),
     cs_(rhs.cs_.clone()),
     buffer_(NULL),
     magic_key_(0x0622520a)
@@ -54,10 +54,10 @@ EDCCoding::~EDCCoding()
     FreeCodingBuffer(&buffer_);
 }
 
-Status EDCCoding::Encode(const EDCC_CFG_T &config,
-                         size_t buffer_max_len,
-                         u_char *coding_buffer,
-                         size_t *buffer_size)
+Status EDCCoding::EncodeToBuffer(const EDCC_CFG_T &config,
+                                 size_t buffer_max_len,
+                                 u_char *coding_buffer,
+                                 size_t *buffer_size)
 {
     if (coding_buffer == NULL)
     {
@@ -100,21 +100,22 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
         *buffer_size = buffer_len();
         return EDCC_SUCCESS;
     }
-
     if (!Check::CheckConfig(config))
     {
         EDCC_Log("EDCCoding::encrypt config error!");
         *buffer_size = 0;
         return EDCC_LOAD_CONFIG_FAIL;
     }
-    MallocCodingBuffer(config, &buffer_);
+    *buffer_size = CalcCodingBufferSizeByConfig(config);
+    MallocCodingBuffer(*buffer_size, &buffer_);
     if (buffer_ == NULL)
     {
         *buffer_size = 0;
         return EDCC_NULL_POINTER_ERROR;
     }
+    memcpy(&buffer_->cfg, &config, sizeof(EDCC_CFG_T));
+    buffer_->len = *buffer_size - sizeof(EDCC_CODING_T);
     GenCodingBytes();
-    *buffer_size = buffer_len();
 
     return EDCC_SUCCESS;
 }
@@ -144,31 +145,19 @@ Status EDCCoding::EncodeToHexString(const EDCC_CFG_T &config, string *hex_str)
     return EDCC_SUCCESS;
 }
 
-Status EDCCoding::Decode(const u_char *coding_buffer)
+Status EDCCoding::DecodeFromBuffer(const u_char *coding_buffer)
 {
-    if (coding_buffer == NULL)
-    {
-        return EDCC_NULL_POINTER_ERROR;
-    }
+    CHECK_POINTER_NULL_RETURN(coding_buffer, EDCC_NULL_POINTER_ERROR);
 
     const EDCC_CODING_T *coding = (EDCC_CODING_T*)coding_buffer;
-    size_t coding_len = coding->len + sizeof(EDCC_CODING_T);
-    int actual_magic_key = 0;
-    memcpy(&actual_magic_key,
-           coding->data + coding->len - kMagicKeyLen,
-           kMagicKeyLen);
-    if (actual_magic_key != magic_key_)
-    {
-        return EDCC_CODING_INVALID;
-    }
-
-    MallocCodingBuffer(coding->cfg, &buffer_);
+    size_t coding_buffer_size = coding->len + sizeof(EDCC_CODING_T);
+    MallocCodingBuffer(coding_buffer_size, &buffer_);
     if (buffer_ == NULL)
     {
         EDCC_Log("EDCCoding::decrypt failed!");
         return EDCC_NULL_POINTER_ERROR;
     }
-    memcpy(buffer_, coding, coding_len);
+    memcpy(buffer_, coding, coding_buffer_size);
 
     return Check::CheckCoding(*this) ? EDCC_SUCCESS : EDCC_CODING_INVALID;
 }
@@ -186,7 +175,7 @@ Status EDCCoding::DecodeFromHexString(const string &hex_str)
         string hex_c = hex_str.substr(i * 2, 2);
         sscanf(hex_c.c_str(), "%02x", coding_buffer + i);
     }
-    Status s = Decode(coding_buffer);
+    Status s = DecodeFromBuffer(coding_buffer);
     free(coding_buffer);
 
     return s;
@@ -238,24 +227,26 @@ void EDCCoding::GenCodingBytes()
     memcpy(buffer_->data + offset, &magic_key_, kMagicKeyLen);
 }
 
-void EDCCoding::MallocCodingBuffer(const EDCC_CFG_T &config, EDCC_CODING_T **buffer)
+size_t EDCCoding::CalcCodingBufferSizeByConfig(const EDCC_CFG_T &config)
 {
-    FreeCodingBuffer(buffer);
-
     size_t image_size = config.imageSizeW*config.imageSizeH;
     size_t c_len = (size_t)ceil(image_size / 2.0);
     size_t cs_len = (size_t)ceil(image_size / 8.0);
-    size_t buffer_len = sizeof(EDCC_CODING_T)+c_len+cs_len+kMagicKeyLen;
+    size_t buffer_len = sizeof(EDCC_CODING_T) + c_len + cs_len + kMagicKeyLen;
 
-    *buffer = (EDCC_CODING_T *)malloc(buffer_len);
-    CHECK_POINTER_NULL_RETURN_VOID(*buffer);
-    memset(*buffer, 0, buffer_len);
-
-    memcpy(&((*buffer)->cfg), &config, sizeof(EDCC_CFG_T));
-    (*buffer)->len = static_cast<u_int>(buffer_len - sizeof(EDCC_CODING_T));
+    return buffer_len;
 }
 
-void EDCCoding::FreeCodingBuffer(EDCC_CODING_T **buffer)
+inline void EDCCoding::MallocCodingBuffer(size_t buffer_size, EDCC_CODING_T **buffer)
+{
+    FreeCodingBuffer(buffer);
+
+    *buffer = (EDCC_CODING_T *)malloc(buffer_size);
+    CHECK_POINTER_NULL_RETURN_VOID(*buffer);
+    memset(*buffer, 0, buffer_size);
+}
+
+inline void EDCCoding::FreeCodingBuffer(EDCC_CODING_T **buffer)
 {
     if (*buffer != NULL)
     {
