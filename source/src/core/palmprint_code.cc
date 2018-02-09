@@ -18,7 +18,7 @@ using namespace std;
 namespace
 {
 
-class GaborFilter 
+class GaborFilter
 {
 public:
     GaborFilter(const cv::Size &kernel_size,
@@ -140,7 +140,7 @@ Status PalmprintCode::Encode(const EDCC_CFG_T &config)
     {
         return EDCC_LOAD_CONFIG_FAIL;
     }
-    
+
     GaborFilter filter(cv::Size(config.gaborSize, config.gaborSize),
                        config.directions);
     Mat *imgRet = palmprint_->GetSpecImg(cv::Size(config.imageSizeW, config.imageSizeH));
@@ -175,7 +175,7 @@ Status PalmprintCode::EncodeToBuffer(const EDCC_CFG_T &config,
         *buffer_size = 0;
         return s;
     }
-    return coding_->Encode(config, buffer_max_len, coding_buffer, buffer_size);
+    return coding_->EncodeToBuffer(config, buffer_max_len, coding_buffer, buffer_size);
 }
 
 Status PalmprintCode::EncodeToHexString(const EDCC_CFG_T &config, string *hex_str)
@@ -189,10 +189,10 @@ Status PalmprintCode::EncodeToHexString(const EDCC_CFG_T &config, string *hex_st
     return coding_->EncodeToHexString(config, hex_str);
 }
 
-Status PalmprintCode::Decode(const u_char *coding_buffer)
+Status PalmprintCode::DecodeFromBuffer(const u_char *coding_buffer)
 {
     assert(coding_);
-    return coding_->Decode(coding_buffer);
+    return coding_->DecodeFromBuffer(coding_buffer);
 }
 
 Status PalmprintCode::DecodeFromHexString(const string &hex_str)

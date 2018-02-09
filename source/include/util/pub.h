@@ -102,7 +102,7 @@ static const char hexArray[16] =
 
 #define EDCC_Log(format, ...) EDCC_Log_Func(ANSI_COLOR_LIGHT_GREEN "[EDCC_Debug]\t" ANSI_COLOR_RESET \
                                             ANSI_COLOR_DARY_GRAY   "[%s: %u]\t" ANSI_COLOR_RESET     \
-                                             format"\n"                                              \
+                                            format"\n"                                              \
                                             , __FUNCTION__, __LINE__, ##__VA_ARGS__)
 void EDCC_Log_Func(const char *format, ...);
 

@@ -93,7 +93,6 @@ bool Check::CheckFeatureData(const vector<PalmprintCode> &data,
         const EDCC_CODING_T *coding_buffer = data_iter->coding()->buffer();
         if (coding_buffer == NULL
             || !CheckConfig(config)
-            || !CheckConfig(coding_buffer->cfg)
             || !CheckTwoConfigEqual(config, coding_buffer->cfg)
             || !CheckCoding(*data_iter->coding()))
         {
@@ -131,7 +130,7 @@ bool Check::CheckCoding(const EDCCoding &coding)
 }
 
 bool Check::CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
-                                                     const PalmprintCode &second_palmprintcode)
+                                             const PalmprintCode &second_palmprintcode)
 {
     CHECK_POINTER_NULL_RETURN(first_palmprintcode.coding()->buffer(), false);
     CHECK_POINTER_NULL_RETURN(second_palmprintcode.coding()->buffer(), false);
@@ -141,7 +140,7 @@ bool Check::CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprin
 }
 
 bool Check::CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
-                                     const EDCC_CFG_T &second_config)
+                                const EDCC_CFG_T &second_config)
 {
     return !memcmp(&first_config, &second_config, sizeof(EDCC_CFG_T));
 }

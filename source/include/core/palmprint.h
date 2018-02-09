@@ -23,8 +23,8 @@ public:
     Palmprint& operator =(const Palmprint &rhs);
     bool operator==(const Palmprint &rhs) const;
 
-    string identity() const { return identity_; }
-    string image_path() const { return image_path_; }
+    const string& identity() const { return identity_; }
+    const string& image_path() const { return image_path_; }
 
     Mat* GetOrigImg();
     Mat* GetSpecImg(const Size &img_size, bool is_gray = true);

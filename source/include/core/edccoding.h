@@ -31,17 +31,17 @@ typedef struct tag_EDCC_CODING_T
 class EDCCoding
 {
 public:
-    static const size_t kMagicKeyLen = sizeof(int);
+    static const u_int kMagicKeyLen = sizeof(int);
     EDCCoding();
     explicit EDCCoding(const EDCCoding &rhs);
     EDCCoding& operator =(const EDCCoding &rhs);
     ~EDCCoding();
-    Status Encode(const EDCC_CFG_T &config,
-                  size_t buffer_max_len,
-                  u_char *coding_buffer,
-                  size_t *buffer_size);
+    Status EncodeToBuffer(const EDCC_CFG_T &config,
+                          size_t buffer_max_len,
+                          u_char *coding_buffer,
+                          size_t *buffer_size);
     Status EncodeToHexString(const EDCC_CFG_T &config, string *hex_str);
-    Status Decode(const u_char *coding_buffer);
+    Status DecodeFromBuffer(const u_char *coding_buffer);
     Status DecodeFromHexString(const string &hex_str);
     size_t buffer_len() const { return buffer_->len + sizeof(EDCC_CODING_T); }
     int magic_key() const { return magic_key_; }
@@ -49,8 +49,9 @@ public:
 private:
     friend PalmprintCode;
     void GenCodingBytes();
-    void MallocCodingBuffer(const EDCC_CFG_T &config, EDCC_CODING_T **buffer);
+    void MallocCodingBuffer(size_t buffer_len, EDCC_CODING_T **buffer);
     void FreeCodingBuffer(EDCC_CODING_T **buffer);
+    size_t CalcCodingBufferSizeByConfig(const EDCC_CFG_T &config);
     Status Encode(const EDCC_CFG_T &config, size_t *buffer_size);
 
     cv::Mat c_;

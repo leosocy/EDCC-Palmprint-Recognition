@@ -9,13 +9,13 @@ namespace edcc
 {
 
 Palmprint::Palmprint(const char *identity, const char *image_path)
-    :identity_(identity),
+    : identity_(identity),
     image_path_(image_path)
 {
 }
 
 Palmprint::Palmprint(const Palmprint &rhs)
-    :identity_(rhs.identity_),
+    : identity_(rhs.identity_),
     image_path_(rhs.image_path_),
     image_(rhs.image_.clone())
 {
