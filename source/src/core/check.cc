@@ -17,6 +17,7 @@ namespace edcc
 {
 
 using std::vector;
+using std::set;
 
 namespace limit
 {
@@ -26,6 +27,8 @@ static const u_short kMinImageHeight = 29;
 static const u_char kMaxLaplaceKernelSize = 31;
 static const u_char kMinGaborDirections = 4;
 static const u_char kMaxGabotDirections = 16;
+static const set<u_char> kSupportedCodingModes = {1, 2};
+static const set<u_char> kSupportedMatchingModes = {1, 2};
 
 } // namespace limit
 
@@ -59,6 +62,18 @@ bool Check::CheckConfig(const EDCC_CFG_T &config)
     {
         EDCC_Log("Gabor Directions must in range [%d, %d]!",
                  limit::kMinGaborDirections, limit::kMaxGabotDirections);
+        return false;
+    }
+    if (limit::kSupportedCodingModes.find(config.codingMode) == limit::kSupportedCodingModes.end())
+    {
+        EDCC_Log("Coding Mode [%d] not supported!",
+                 config.codingMode);
+        return false;
+    }
+    if (limit::kSupportedMatchingModes.find(config.matchingMode) == limit::kSupportedMatchingModes.end())
+    {
+        EDCC_Log("Matching Mode [%d] not supported!",
+                 config.matchingMode);
         return false;
     }
 
