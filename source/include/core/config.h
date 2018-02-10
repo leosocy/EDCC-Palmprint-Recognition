@@ -20,6 +20,8 @@ static const char* const kImageHeight = "imageSizeH";
 static const char* const kGaborKernelSize = "gaborKernelSize";
 static const char* const kLaplaceKernelSize = "laplaceKernelSize";
 static const char* const kGaborDirections = "gaborDirections";
+static const char* const kCodingMode = "codingMode";
+static const char* const kMatchingMode = "matchingMode";
 
 } // namespace config
 
@@ -30,6 +32,8 @@ typedef struct tag_EDCC_CFG_T
     u_short gaborSize;
     u_char laplaceSize;
     u_char directions;
+    u_char codingMode;
+    u_char matchingMode;
 } EDCC_CFG_T;
 
 class ConfigManager

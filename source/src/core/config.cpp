@@ -14,6 +14,8 @@ ConfigManager::ConfigManager()
     params_.insert(config::kGaborKernelSize);
     params_.insert(config::kGaborDirections);
     params_.insert(config::kLaplaceKernelSize);
+    params_.insert(config::kCodingMode);
+    params_.insert(config::kMatchingMode);
     memset(&cfg_, 0, sizeof(cfg_));
 }
 
@@ -38,6 +40,14 @@ bool ConfigManager::GetConfigValue(const std::string &key, int *value)
     else if (key == config::kGaborDirections)
     {
         *value = cfg_.directions;
+    }
+    else if (key == config::kCodingMode)
+    {
+        *value = cfg_.codingMode;
+    }
+    else if (key == config::kMatchingMode)
+    {
+        *value = cfg_.matchingMode;
     }
     else
     {
@@ -67,6 +77,14 @@ bool ConfigManager::SetConfigValue(const std::string &key, int value)
     else if (key == config::kGaborDirections)
     {
         cfg_.directions = value;
+    }
+    else if (key == config::kCodingMode)
+    {
+        cfg_.codingMode = value;
+    }
+    else if (key == config::kMatchingMode)
+    {
+        cfg_.matchingMode = value;
     }
     else
     {
