@@ -53,5 +53,27 @@
             "en-US" : "In range[4, 16]",
             "zh-CN" : "在4-16之间"
         }
+    },
+    "codingMode" : {
+        "default" : 2,
+        "desc" : {
+            "en-US" : "Palmprint Coding Mode 1: Compression mode (takes up less disk space, but the encoding speed is slower and the matching speed is slower) 2: Fast mode (takes up more disk space, but the encoding speed is faster and the matching speed is faster )",
+            "zh-CN" : "掌纹编码模式，1：压缩编码（占用较少磁盘空间，但编码速度较慢，同时匹配速度较慢）    2：快速编码（占用较多磁盘空间，但编码速度较快，同时匹配速度较快）"
+        },
+        "regulation" : {
+            "en-US" : "Currently only supports two modes (compression / fast), 2 (fast mode) is recommended.",
+            "zh-CN" : "目前只支持两种模式（压缩/快速），建议使用2（快速模式）。"
+        }
+    },
+    "matchingMode" : {
+        "default" : 2,
+        "desc" : {
+            "en-US" : "Encoding matching mode, 1: Reliable matching (check the encoding legitimacy when matching, but the matching speed is slower) 2: Speed matching (do not check the encoding legitimacy when matching, but the matching speed is faster).",
+            "zh-CN" : "编码匹配模式，1：可靠匹配（匹配时检查编码合法性，但匹配速度较慢）    2：极速匹配（匹配时不检查编码合法性，但匹配速度较快）"
+        },
+        "regulation" : {
+            "en-US" : "Currently, only two modes are supported (Reliable / Speed). If the palmprint code is obtained from the same configuration and the encoding has not been changed, it is recommended that you use 2 (Speed Matching).",
+            "zh-CN" : "目前只支持两种模式（可靠/极速），如果掌纹编码是由同样的配置得到的，并且编码没有被改变，建议您使用2（极速匹配）。"
+        }
     }
 }

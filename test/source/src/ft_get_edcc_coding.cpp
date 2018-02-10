@@ -101,7 +101,8 @@ TEST_F(ft_get_edcc_coding, Given_ConfigNotExists_When_GetEDCCCoding_Then_EDCC_LO
 
 TEST_F(ft_get_edcc_coding, Given_ConfigParamsError_When_GetEDCCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    SetConfigPath(PARAMS_ERROR_CONFIG_PATH);
+    ModifyConfigParams("gaborDirections", 32);
+    CheckConfigParams("gaborDirections", 32);
 
     ExcuteInterface();
 
@@ -112,18 +113,8 @@ TEST_F(ft_get_edcc_coding, Given_ConfigParamsError_When_GetEDCCCoding_Then_EDCC_
 
 TEST_F(ft_get_edcc_coding, Given_ConfigParamsMiss_When_GetEDCCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    SetConfigPath(PARAMS_MISS_CONFIG_PATH);
-
-    ExcuteInterface();
-
-    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
-    EXPECT_FALSE(CODING_BUFF_IS_CHANGE);
-    EXPECT_EQ(bufLen, 0);
-}
-
-TEST_F(ft_get_edcc_coding, Give_ConfigParamsNoDefault_When_GetEDCCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
-{
-    SetConfigPath(PARAMS_NO_DEFAULT_CONFIG_PATH);
+    RemoveConfigParam("gaborDirections");
+    CheckConfigParamNotExists("gaborDirections");
 
     ExcuteInterface();
 
@@ -134,7 +125,8 @@ TEST_F(ft_get_edcc_coding, Give_ConfigParamsNoDefault_When_GetEDCCCoding_Then_ED
 
 TEST_F(ft_get_edcc_coding, Given_ConfigParamsOver_When_GetEDCCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    SetConfigPath(PARAMS_OVER_CONFIG_PATH);
+    AppendConfigParam("overParameter", 66);
+    CheckConfigParams("overParameter", 66);
 
     ExcuteInterface();
 
@@ -187,4 +179,44 @@ TEST_F(ft_get_edcc_coding, Given_CorrectInputs_And_TwoDiffPalmprint_When_GetEDCC
     EXPECT_NE(bufLen, 0);
 
     EXPECT_EQ(bufLenTmp, bufLen);
+}
+
+TEST_F(ft_get_edcc_coding, Given_ConfigCodingModeUnknown_When_GetEDCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams("codingMode", 5);
+    CheckConfigParams("codingMode", 5);
+
+    ExcuteInterface();
+
+    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
+}
+
+TEST_F(ft_get_edcc_coding, Given_ConfigCodingModeZero_When_GetEDCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams("codingMode", 0);
+    CheckConfigParams("codingMode", 0);
+
+    ExcuteInterface();
+
+    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
+}
+
+TEST_F(ft_get_edcc_coding, Given_ConfigCodingModeCompressionMode_When_GetEDCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams("codingMode", 1);
+    CheckConfigParams("codingMode", 1);
+
+    ExcuteInterface();
+
+    CheckInterfaceRet(EDCC_SUCCESS);
+}
+
+TEST_F(ft_get_edcc_coding, Given_ConfigCodingModeFastMode_When_GetEDCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams("codingMode", 2);
+    CheckConfigParams("codingMode", 2);
+
+    ExcuteInterface();
+
+    CheckInterfaceRet(EDCC_SUCCESS);
 }

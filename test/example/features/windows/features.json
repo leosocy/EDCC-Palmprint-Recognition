@@ -63,5 +63,7 @@
    "gaborKernelSize" : 9,
    "imageSizeH" : 29,
    "imageSizeW" : 29,
-   "laplaceKernelSize" : 27
+   "laplaceKernelSize" : 27,
+   "codingMode" : 1,
+   "matchingMode" : 1
 }
