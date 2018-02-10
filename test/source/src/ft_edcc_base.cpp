@@ -20,7 +20,7 @@ void ft_edcc_base::SetUp()
 
 void ft_edcc_base::TearDown()
 {
-    DeleteDir(EXAMPLE_DST_DIR);
+   // DeleteDir(EXAMPLE_DST_DIR);
 
     FREE_CHAR_ARRAY(this->configPath);
     FREE_CHAR_ARRAY(this->groupPath);
@@ -106,62 +106,78 @@ void ft_edcc_base::CheckOneIdentityImageCountInFeatures(const char *featuresFile
     EXPECT_EQ(actualCount, expectedCount);
 }
 
-void ft_edcc_base::ModifyConfigParams(const char *configOrFeaturesFileName,
-                                      const char *paramName,
+void ft_edcc_base::AppendConfigParam(const char *key,
+                                     int value)
+{
+    ParseJsonFile(configPath);
+    valueRoot[key] = value;
+    ofstream configOut;
+    configOut.open(configPath);
+    configOut << valueRoot.toStyledString();
+    configOut.close();
+}
+
+void ft_edcc_base::RemoveConfigParam(const char *paramName)
+{
+    ParseJsonFile(configPath);
+    valueRoot.removeMember(paramName);
+    ofstream configOut;
+    configOut.open(configPath);
+    configOut << valueRoot.toStyledString();
+    configOut.close();
+}
+
+void ft_edcc_base::ModifyConfigParams(const char *paramName,
                                       int valueToSet)
 {
     Json::Value *configValue;
-    configValue = GetJsonValueByConfigParamName(configOrFeaturesFileName, paramName);
+    configValue = GetJsonValueByConfigParamName(configPath, paramName);
     if(configValue == NULL) {
+        EXPECT_STREQ(paramName, "not exists"); 
         return;
     }
     *configValue = valueToSet;
 
     ofstream configOut;
-    configOut.open(configOrFeaturesFileName);
+    configOut.open(configPath);
     configOut << valueRoot.toStyledString();
     configOut.close();
 }
 
-void ft_edcc_base::CheckConfigParams(const char *configOrFeaturesFileName,
-                                     const char *paramName,
+void ft_edcc_base::CheckConfigParams(const char *paramName,
                                      int expectValue)
 {
     Json::Value *configValue;
-    configValue = GetJsonValueByConfigParamName(configOrFeaturesFileName, paramName);
+    configValue = GetJsonValueByConfigParamName(configPath, paramName);
     if(configValue == NULL) {
+        EXPECT_STREQ(paramName, "not exists"); 
         return;
     }
     EXPECT_EQ(configValue->asInt(), expectValue);
 }
 
-Json::Value* ft_edcc_base::GetJsonValueByConfigParamName(const char *configOrFeaturesFileName,
+void ft_edcc_base::CheckConfigParamExists(const char *paramName)
+{
+    Json::Value *configValue;
+    configValue = GetJsonValueByConfigParamName(configPath, paramName);
+    EXPECT_TRUE(configValue != NULL);
+}
+
+void ft_edcc_base::CheckConfigParamNotExists(const char *paramName)
+{
+    Json::Value *configValue;
+    configValue = GetJsonValueByConfigParamName(configPath, paramName);
+    EXPECT_TRUE(configValue == NULL);
+}
+
+Json::Value* ft_edcc_base::GetJsonValueByConfigParamName(const char *config_path,
                                                          const char *paramName)
 {
-    valueRoot.clear();
-    Json::Reader reader;
-
-    EXPECT_TRUE(configOrFeaturesFileName != NULL);
-    EXPECT_TRUE(paramName != NULL);
-    if(configOrFeaturesFileName == NULL
-       || paramName == NULL) {
-        return NULL;
-    }
-
-    ifstream configIn;
-    configIn.open(configOrFeaturesFileName);
-    if(!reader.parse(configIn, valueRoot)) {
-        EXPECT_STREQ("config format", "error");
-        configIn.close();
-        return NULL;
-    }
+    ParseJsonFile(config_path);
     if(valueRoot[paramName].isNull())
     {
-        EXPECT_STREQ(paramName, "not exists");
-        configIn.close();
         return NULL;
     }
-    configIn.close();
     if(valueRoot[paramName].isInt()) {
         return &valueRoot[paramName];
     } else if(valueRoot[paramName].isObject()
@@ -171,7 +187,26 @@ Json::Value* ft_edcc_base::GetJsonValueByConfigParamName(const char *configOrFea
         EXPECT_STREQ("config format", "error");  
         return NULL;
     }
-    
+}
+
+void ft_edcc_base::ParseJsonFile(const char *config_path)
+{
+    valueRoot.clear();
+    Json::Reader reader;
+
+    EXPECT_TRUE(config_path != NULL);
+    if(config_path == NULL) {
+        return;
+    }
+
+    ifstream configIn;
+    configIn.open(config_path);
+    if(!reader.parse(configIn, valueRoot)) {
+        EXPECT_STREQ("config format", "error");
+        configIn.close();
+        return;
+    }
+    configIn.close();
 }
 
 void ft_edcc_base::CopyDir(const char *srcDir, const char *dstDir)

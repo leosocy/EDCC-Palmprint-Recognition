@@ -66,7 +66,7 @@ TEST_F(ft_get_features_incremental, Given_Features_And_IncrementalGroup_Has_Cove
     CheckOneIdentityImageCountInFeatures(FEATURES_OUTPUT_PATH, "4", 6);
 }
 
-TEST_F(ft_get_features_incremental, Given_CodingHasBeenChanged_And_IncrementalGroup_When_Train_With_Incremental_Then_EDCC_LOAD_FEATURES_FAIL)
+/*TEST_F(ft_get_features_incremental, Given_CodingHasBeenChanged_And_IncrementalGroup_When_Train_With_Incremental_Then_EDCC_LOAD_FEATURES_FAIL)
 {
     SetIncremental();
     SetGroupPath(COVER_GROUP_PATH);
@@ -76,4 +76,4 @@ TEST_F(ft_get_features_incremental, Given_CodingHasBeenChanged_And_IncrementalGr
     ExcuteInterface();
 
     CheckInterfaceRet(EDCC_LOAD_FEATURES_FAIL);
-}
+}*/

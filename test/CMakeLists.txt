@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 set(PROJECT_NAME FT_EDCC)
 project(${PROJECT_NAME})
 
-#find_package(OpenCV REQUIRED)
+find_package(OpenCV REQUIRED)
 
 set(GTEST_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/gtest)
 set(JSONCPP_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/jsoncpp)

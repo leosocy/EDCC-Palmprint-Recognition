@@ -72,8 +72,8 @@ TEST_F(ft_get_features, Given_ConfigNotExists_When_Train_Without_Incremental_The
 
 TEST_F(ft_get_features, Given_ConfigParamsErrorImageSize_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    ModifyConfigParams(CORRECT_CONFIG_PATH, "imageSizeW", 11);
-    CheckConfigParams(CORRECT_CONFIG_PATH, "imageSizeW", 11);
+    ModifyConfigParams("imageSizeW", 11);
+    CheckConfigParams("imageSizeW", 11);
     
     ExcuteInterface();
 
@@ -82,8 +82,8 @@ TEST_F(ft_get_features, Given_ConfigParamsErrorImageSize_When_Train_Without_Incr
 
 TEST_F(ft_get_features, Given_ConfigParamsErrorLaplace_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    ModifyConfigParams(CORRECT_CONFIG_PATH, "laplaceKernelSize", 30);
-    CheckConfigParams(CORRECT_CONFIG_PATH, "laplaceKernelSize", 30);
+    ModifyConfigParams("laplaceKernelSize", 30);
+    CheckConfigParams("laplaceKernelSize", 30);
 
     ExcuteInterface();
 
@@ -92,8 +92,8 @@ TEST_F(ft_get_features, Given_ConfigParamsErrorLaplace_When_Train_Without_Increm
 
 TEST_F(ft_get_features, Given_ConfigParamsErrorGaborSize_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    ModifyConfigParams(CORRECT_CONFIG_PATH, "gaborKernelSize", 30);
-    CheckConfigParams(CORRECT_CONFIG_PATH, "gaborKernelSize", 30);
+    ModifyConfigParams("gaborKernelSize", 30);
+    CheckConfigParams("gaborKernelSize", 30);
 
     ExcuteInterface();
 
@@ -102,35 +102,8 @@ TEST_F(ft_get_features, Given_ConfigParamsErrorGaborSize_When_Train_Without_Incr
 
 TEST_F(ft_get_features, Given_ConfigParamsErrorDirections_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
 {
-    ModifyConfigParams(CORRECT_CONFIG_PATH, "gaborDirections", 18);
-    CheckConfigParams(CORRECT_CONFIG_PATH, "gaborDirections", 18);
-    
-    ExcuteInterface();
-
-    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
-}
-
-TEST_F(ft_get_features, Given_ConfigParamsMiss_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
-{
-    SetConfigPath(PARAMS_MISS_CONFIG_PATH);
-    
-    ExcuteInterface();
-
-    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
-}
-
-TEST_F(ft_get_features, Give_ConfigParamsNoDefault_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
-{
-    SetConfigPath(PARAMS_NO_DEFAULT_CONFIG_PATH);
-
-    ExcuteInterface();
-
-    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
-}
-
-TEST_F(ft_get_features, Given_ConfigParamsOver_When_Train_Without_Incremental_Then_EDCC_LOAD_CONFIG_FAIL)
-{
-    SetConfigPath(PARAMS_OVER_CONFIG_PATH);
+    ModifyConfigParams("gaborDirections", 18);
+    CheckConfigParams("gaborDirections", 18);
     
     ExcuteInterface();
 

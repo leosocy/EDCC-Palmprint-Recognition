@@ -97,56 +97,6 @@ TEST_F(ft_get_top_k, Given_PalmprintNotExists_When_GetTop10MatchScore_Then_EDCC_
     CheckTopKMatchScore(0);
 }
 
-TEST_F(ft_get_top_k, Given_PalmprintGroup_And_ConfigNotExists_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
-{
-    SetConfigPath(NOT_EXISTS_CONFIG_PATH);
-    
-    ExcuteInterface();
-
-    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
-    CheckTopKMatchScore(0);
-}
-
-TEST_F(ft_get_top_k, Given_PalmprintGroup_And_ConfigParamsError_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
-{
-    SetConfigPath(PARAMS_ERROR_CONFIG_PATH);
-    
-    ExcuteInterface();
-
-    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
-    CheckTopKMatchScore(0);
-}
-
-TEST_F(ft_get_top_k, Given_PalmprintGroup_And_ConfigParamsMiss_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
-{
-    SetConfigPath(PARAMS_MISS_CONFIG_PATH);
-   
-    ExcuteInterface();
-
-    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
-    CheckTopKMatchScore(0);
-}
-
-TEST_F(ft_get_top_k, Give_PalmprintGroup_And_ConfigParamsNoDefault_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
-{
-    SetConfigPath(PARAMS_NO_DEFAULT_CONFIG_PATH);
-    
-    ExcuteInterface();
-
-    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
-    CheckTopKMatchScore(0);
-}
-
-TEST_F(ft_get_top_k, Given_PalmprintGroup_And_ConfigParamsOver_When_GetTop10MatchScore_Then_EDCC_LOAD_CONFIG_FAIL)
-{
-    SetConfigPath(PARAMS_OVER_CONFIG_PATH);
-    
-    ExcuteInterface();
-
-    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
-    CheckTopKMatchScore(0);
-}
-
 TEST_F(ft_get_top_k, Given_PalmprintGroup_And_GroupWrongFormat_When_GetTop10MatchScore_Then_EDCC_LOAD_TAINING_SET_FAIL)
 {
     SetGroupPath(WRONG_FORMAT_GROUP_PATH);
@@ -197,7 +147,7 @@ TEST_F(ft_get_top_k, Given_FeaturesNotExists_When_GetTop10MatchScoreUseFeatures_
     CheckInterfaceRet(EDCC_LOAD_FEATURES_FAIL);
 }
 
-TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScoreUseFeatures_Then_EDCC_SUCCESS)
+/*TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScoreUseFeatures_Then_EDCC_SUCCESS)
 {
     SetMode(FEATURE);
     SetFeaturePath(FEATURES_TRAINGING_SET_EXISTS);
@@ -206,9 +156,9 @@ TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScoreUseFeatures_Th
 
     CheckInterfaceRet(EDCC_SUCCESS);
     CheckTopKMatchScore(10);
-}
+}*/
 
-TEST_F(ft_get_top_k, Given_CodingInvalid_When_GetTop10MatchScoreUseFeatures_Then_EDCC_LOAD_FEATURES_FAIL)
+/*TEST_F(ft_get_top_k, Given_CodingInvalid_When_GetTop10MatchScoreUseFeatures_Then_EDCC_LOAD_FEATURES_FAIL)
 {
     SetMode(FEATURE);
     SetFeaturePath(FEATURES_TRAINGING_SET_COING_BEEN_CHANGED);
@@ -216,4 +166,4 @@ TEST_F(ft_get_top_k, Given_CodingInvalid_When_GetTop10MatchScoreUseFeatures_Then
     ExcuteInterface();
     
     CheckInterfaceRet(EDCC_LOAD_FEATURES_FAIL);
-}
+}*/
