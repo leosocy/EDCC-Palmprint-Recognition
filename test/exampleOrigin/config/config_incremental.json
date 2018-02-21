@@ -57,7 +57,7 @@
     "codingMode" : {
         "default" : 2,
         "desc" : {
-            "en-US" : "Palmprint Coding Mode 1: Compression mode (takes up less disk space, but the encoding speed is slower and the matching speed is slower) 2: Fast mode (takes up more disk space, but the encoding speed is faster and the matching speed is faster )",
+            "en-US" : "Palmprint Coding Mode 1: Compression coding (takes up less disk space, but the encoding speed is slower and the matching speed is slower) 2: Fast coding (takes up more disk space, but the encoding speed is faster and the matching speed is faster )",
             "zh-CN" : "掌纹编码模式，1：压缩编码（占用较少磁盘空间，但编码速度较慢，同时匹配速度较慢）    2：快速编码（占用较多磁盘空间，但编码速度较快，同时匹配速度较快）"
         },
         "regulation" : {

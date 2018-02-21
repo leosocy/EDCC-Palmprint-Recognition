@@ -132,7 +132,9 @@ TEST_F(ft_get_two_palmprint_coding_match_score, Given_NULL_PalmprintCodingBuff_W
 TEST_F(ft_get_two_palmprint_coding_match_score, Given_Two_Diff_PalmprintCoding_When_Get_Score_Then_EDCC_SUCCESS_And_MatchScoreNE0)
 {
     SetCodingModeCompression();
+    //SetCodingModeFast();
     SetMatchingModeReliable();
+    //SetMatchingModeSpeed();
     SetAllParamsCorrect();
     GenFirstPalmprintCodingBuff(ID1_FIRST_PALMPRINT);
     GenSecondPalmprintCodingBuff(ID1_SECOND_PALMPRINT);

@@ -18,6 +18,12 @@ using namespace std;
 #define TEST_DATA_FEATURES_DIR          TEST_DATA_DIR"features\\windows\\"
 #define TEST_DATA_PALMPRINT_IMAGE_DIR   "..\\test\\palmprint_database\\"
 
+#define ID1_FIRST_PALMPRINT             TEST_DATA_PALMPRINT_IMAGE_DIR"001\\2_01_s.bmp"
+#define ID1_SECOND_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"001\\2_02_s.bmp"
+#define ID2_FIRST_PALMPRINT             TEST_DATA_PALMPRINT_IMAGE_DIR"002\\2_01_s.bmp"
+#define ID2_SECOND_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"002\\2_02_s.bmp"
+#define NOT_EXISTS_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"002\\not_exists.bmp"
+
 #else
 
 #define EXAMPLE_SRC_DIR                 "../test/exampleOrigin"
@@ -27,6 +33,12 @@ using namespace std;
 #define TEST_DATA_GROUP_DIR             TEST_DATA_DIR"group/linux/"
 #define TEST_DATA_FEATURES_DIR          TEST_DATA_DIR"features/linux/"
 #define TEST_DATA_PALMPRINT_IMAGE_DIR   "../test/palmprint_database/"
+
+#define ID1_FIRST_PALMPRINT             TEST_DATA_PALMPRINT_IMAGE_DIR"001/2_01_s.bmp"
+#define ID1_SECOND_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"001/2_02_s.bmp"
+#define ID2_FIRST_PALMPRINT             TEST_DATA_PALMPRINT_IMAGE_DIR"002/2_01_s.bmp"
+#define ID2_SECOND_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"002/2_02_s.bmp"
+#define NOT_EXISTS_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"002/not_exists.bmp"
 
 #endif
 
@@ -47,12 +59,6 @@ using namespace std;
 #define FEATURES_OUTPUT_PATH_CANT_CREATE            TEST_DATA_FEATURES_DIR"folder/features.json"
 #define FEATURES_TRAINGING_SET_EXISTS               TEST_DATA_FEATURES_DIR"trainingFeatures.json"
 #define FEATURES_TRAINGING_SET_COING_BEEN_CHANGED   TEST_DATA_FEATURES_DIR"trainingFeaturesBeenChanged.json"
-
-#define ID1_FIRST_PALMPRINT             TEST_DATA_PALMPRINT_IMAGE_DIR"001/2_01_s.bmp"
-#define ID1_SECOND_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"001/2_02_s.bmp"
-#define ID2_FIRST_PALMPRINT             TEST_DATA_PALMPRINT_IMAGE_DIR"002/2_01_s.bmp"
-#define ID2_SECOND_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"002/2_02_s.bmp"
-#define NOT_EXISTS_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"002/not_exists.bmp"
 
 #define PATH_LEN 128
 #define FREE_CHAR_ARRAY(pArray) do {\
