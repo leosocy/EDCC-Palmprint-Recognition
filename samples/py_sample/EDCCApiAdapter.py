@@ -43,7 +43,9 @@ class EDCC_API(object):
                       palmprintImagePath,
                       configPath,
                       codingBufMaxLen = 1024 * 32):
-        if not isinstance(palmprintImagePath, str) or not isinstance(configPath, str) or not isinstance(codingBufMaxLen, int):
+        if not isinstance(palmprintImagePath, str) \
+            or not isinstance(configPath, str) \
+            or not isinstance(codingBufMaxLen, int):
             raise RuntimeError("EDCC API:GetEDCCCoding. Params in error")
         pPalmprintImagePath = c_char_p(bytes(palmprintImagePath, encoding = "utf8"))
         pConfigPath = c_char_p(bytes(configPath, encoding = "utf8"))
