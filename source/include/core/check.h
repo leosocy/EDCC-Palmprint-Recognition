@@ -6,6 +6,7 @@
 #define __CHECK_H__
 
 #include <vector>
+#include "util/pub.h"
 
 namespace edcc
 {
@@ -13,6 +14,7 @@ namespace edcc
 class PalmprintCode;
 class EDCCoding;
 typedef struct tag_EDCC_CFG_T EDCC_CFG_T;
+typedef struct tag_EDCC_CODING_T EDCC_CODING_T;
 
 class Check
 {
@@ -22,6 +24,7 @@ public:
     static bool CheckFeatureData(const std::vector<PalmprintCode> &data,
                                  const EDCC_CFG_T &config);
     static bool CheckCoding(const EDCCoding &coding);
+    static bool CheckCodingBuffer(const EDCC_CODING_T *coding_buffer);
     static bool CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
                                                  const PalmprintCode &second_palmprintcode);
 private:

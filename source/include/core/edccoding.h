@@ -31,6 +31,7 @@ typedef struct tag_EDCC_CODING_T
 class EDCCoding
 {
 public:
+    static const int kMagicKey = 0x0622520a;
     static const u_int kMagicKeyLen = sizeof(int);
     EDCCoding();
     explicit EDCCoding(const EDCCoding &rhs);
@@ -44,20 +45,21 @@ public:
     Status DecodeFromBuffer(const u_char *coding_buffer);
     Status DecodeFromHexString(const string &hex_str);
     size_t buffer_len() const { return buffer_->len + sizeof(EDCC_CODING_T); }
-    int magic_key() const { return magic_key_; }
+    int magic_key() const { return kMagicKey; }
     const EDCC_CODING_T* buffer() const { return buffer_; }
 private:
     friend PalmprintCode;
-    void GenCodingBytes();
     void MallocCodingBuffer(size_t buffer_len, EDCC_CODING_T **buffer);
     void FreeCodingBuffer(EDCC_CODING_T **buffer);
-    size_t CalcCodingBufferSizeByConfig(const EDCC_CFG_T &config);
     Status Encode(const EDCC_CFG_T &config, size_t *buffer_size);
+    size_t CalcCodingBufferSizeByConfig(const EDCC_CFG_T &config);
+    void GenCodingBytesProcess(u_char coding_mode);
+    void GenCodingBytesCompressionMode();
+    void GenCodingBytesFastMode();
 
     cv::Mat c_;
     cv::Mat cs_;
     EDCC_CODING_T *buffer_;
-    int magic_key_;
 };
 
 } // namespace edcc

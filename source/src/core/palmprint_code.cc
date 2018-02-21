@@ -243,7 +243,9 @@ void PalmprintCode::GenEDCCoding(const vector<cv::Mat> &gabor_filter_result,
 
 double PalmprintCode::MatchWith(const PalmprintCode &another) const
 {
-    return Match::MatchPoint2Point(*this, another);
+    double score = .0;
+    Match::MatchingProcess(this->coding_->buffer(), another.coding_->buffer(), &score);
+    return score;
 }
 
 } // namespace edcc

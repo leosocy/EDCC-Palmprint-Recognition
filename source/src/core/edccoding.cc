@@ -13,17 +13,14 @@ namespace edcc
 using namespace std;
 
 EDCCoding::EDCCoding()
-    :buffer_(NULL),
-    magic_key_(0x0622520a)
+    :buffer_(NULL)
 {
 }
 
 EDCCoding::EDCCoding(const EDCCoding &rhs)
     : c_(rhs.c_.clone()),
     cs_(rhs.cs_.clone()),
-    buffer_(NULL),
-    magic_key_(0x0622520a)
-
+    buffer_(NULL)
 {
     if (rhs.buffer_ != NULL)
     {
@@ -38,7 +35,6 @@ EDCCoding& EDCCoding::operator =(const EDCCoding &rhs)
     {
         c_ = rhs.c_.clone();
         cs_ = rhs.cs_.clone();
-        magic_key_ = rhs.magic_key_;
         FreeCodingBuffer(&buffer_);
         if (rhs.buffer_ != NULL)
         {
@@ -115,7 +111,7 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
     }
     memcpy(&buffer_->cfg, &config, sizeof(EDCC_CFG_T));
     buffer_->len = *buffer_size - sizeof(EDCC_CODING_T);
-    GenCodingBytes();
+    GenCodingBytesProcess(config.codingMode);
 
     return EDCC_SUCCESS;
 }
@@ -181,9 +177,30 @@ Status EDCCoding::DecodeFromHexString(const string &hex_str)
     return s;
 }
 
-void EDCCoding::GenCodingBytes()
+void EDCCoding::GenCodingBytesProcess(u_char coding_mode)
 {
-    CHECK_POINTER_NULL_RETURN_VOID(buffer_);
+    switch (coding_mode)
+    {
+        case COMPRESSION_CODING_MODE:
+        {
+            GenCodingBytesCompressionMode();
+            break;
+        }
+        case FAST_CODING_MODE:
+        {
+            GenCodingBytesFastMode();
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+void EDCCoding::GenCodingBytesCompressionMode()
+{
+    assert(buffer_);
+    assert(c_.rows == cs_.rows);
+    assert(c_.cols == cs_.cols);
     memset(buffer_->data, 0, buffer_->len);
 
     size_t offset = 0;
@@ -193,13 +210,13 @@ void EDCCoding::GenCodingBytes()
         for (int w = 0; w < c_.cols; ++w)
         {
             ++counter;
-            unsigned char codingC = c_.at<char>(h, w);
+            unsigned char coding_c = c_.at<char>(h, w);
             if (counter % 2 != 0)
             {
-                codingC <<= 4;
-                codingC &= 0xf0;
+                coding_c <<= 4;
+                coding_c &= 0xf0;
             }
-            *(buffer_->data + offset) |= codingC;
+            *(buffer_->data + offset) |= coding_c;
             if (counter == c_.rows*c_.cols
                 || counter % 2 == 0)
             {
@@ -213,8 +230,8 @@ void EDCCoding::GenCodingBytes()
     {
         for (int w = 0; w < cs_.cols; ++w)
         {
-            unsigned char codingCs = cs_.at<char>(h, w);
-            *(buffer_->data + offset) |= (codingCs << (7 - (counter % 8)));
+            unsigned char coding_cs = cs_.at<char>(h, w);
+            *(buffer_->data + offset) |= (coding_cs << (7 - (counter % 8)));
             ++counter;
             if (counter == cs_.rows*cs_.cols
                 || counter % 8 == 0)
@@ -223,22 +240,60 @@ void EDCCoding::GenCodingBytes()
             }
         }
     }
+    memcpy(buffer_->data + offset, &kMagicKey, kMagicKeyLen);
+}
 
-    memcpy(buffer_->data + offset, &magic_key_, kMagicKeyLen);
+void EDCCoding::GenCodingBytesFastMode()
+{
+    assert(buffer_);
+    assert(c_.rows == cs_.rows);
+    assert(c_.cols == cs_.cols);
+    memset(buffer_->data, 0, buffer_->len);
+    size_t offset = 0;
+
+    for (int h = 0; h < c_.rows; ++h)
+    {
+        for (int w = 0; w < c_.cols; ++w)
+        {
+            unsigned char coding_c = c_.at<char>(h, w);
+            unsigned char coding_cs = cs_.at<char>(h, w);
+            *(buffer_->data + offset) |= (coding_c << 4);
+            *(buffer_->data + offset) |= (coding_cs);
+            ++offset;
+        }
+    }
+    memcpy(buffer_->data + offset, &kMagicKey, kMagicKeyLen);
 }
 
 size_t EDCCoding::CalcCodingBufferSizeByConfig(const EDCC_CFG_T &config)
 {
+    size_t buffer_len = 0;
+    switch (config.codingMode)
+    {
+        case COMPRESSION_CODING_MODE:
+        {
     size_t image_size = config.imageSizeW*config.imageSizeH;
     size_t c_len = (size_t)ceil(image_size / 2.0);
     size_t cs_len = (size_t)ceil(image_size / 8.0);
-    size_t buffer_len = sizeof(EDCC_CODING_T) + c_len + cs_len + kMagicKeyLen;
+            buffer_len = sizeof(EDCC_CODING_T) + c_len + cs_len + kMagicKeyLen;
+            break;
+        }
+        case FAST_CODING_MODE:
+        {
+            size_t image_size = config.imageSizeW*config.imageSizeH;
+            buffer_len = sizeof(EDCC_CODING_T) + image_size + kMagicKeyLen;
+            break;
+        }
+        default:
+            break;
+    }
 
     return buffer_len;
 }
 
 inline void EDCCoding::MallocCodingBuffer(size_t buffer_size, EDCC_CODING_T **buffer)
 {
+    CHECK_EQ_RETURN_VOID(buffer_size, 0);
     FreeCodingBuffer(buffer);
 
     *buffer = (EDCC_CODING_T *)malloc(buffer_size);
