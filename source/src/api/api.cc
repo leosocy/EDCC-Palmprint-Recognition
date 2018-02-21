@@ -9,6 +9,7 @@
 #include "core/palmprint.h"
 #include "core/palmprint_code.h"
 #include "core/check.h"
+#include "core/match.h"
 #include "util/pub.h"
 
 using namespace std;
@@ -57,23 +58,12 @@ int GetTwoPalmprintCodingMatchScore(const unsigned char *lhs_coding_buffer,
     CHECK_POINTER_NULL_RETURN(lhs_coding_buffer, EDCC_NULL_POINTER_ERROR);
     CHECK_POINTER_NULL_RETURN(rhs_coding_buffer, EDCC_NULL_POINTER_ERROR);
 
-    PalmprintCode lhs(kDefaultId, kDefaultImagePath);
-    PalmprintCode rhs(kDefaultId, kDefaultImagePath);
-
     Status s = 0;
-    s = lhs.DecodeFromBuffer(lhs_coding_buffer);
-    CHECK_NE_RETURN(s, EDCC_SUCCESS, s);
-    s = rhs.DecodeFromBuffer(rhs_coding_buffer);
-    CHECK_NE_RETURN(s, EDCC_SUCCESS, s);
+    const EDCC_CODING_T * lhs_coding = (const EDCC_CODING_T*)lhs_coding_buffer;
+    const EDCC_CODING_T * rhs_coding = (const EDCC_CODING_T*)rhs_coding_buffer;
+    s = Match::MatchingProcess(lhs_coding, rhs_coding, score);
 
-    if (!Check::CheckTwoPalmprintCodeConfigEqual(lhs, rhs))
-    {
-        return EDCC_CODINGS_DIFF_CONFIG;
-    }
-    *score = lhs.MatchWith(rhs);
-    //*score = Match::FastModeMatching(lhs_coding_buffer, rhs_coding_buffer);
-
-    return EDCC_SUCCESS;
+    return s;
 }
 
 int GetTwoPalmprintMatchScore(const char *lhs_image_path,

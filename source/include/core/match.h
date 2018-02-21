@@ -5,6 +5,8 @@
 #ifndef __MATCH_H__
 #define __MATCH_H__
 
+#include "util/pub.h"
+
 namespace edcc {
 
 class PalmprintCode;
@@ -13,13 +15,16 @@ typedef struct tag_EDCC_CODING_T EDCC_CODING_T;
 class Match
 {
 public:
-    static double MatchPoint2Point(const PalmprintCode &lhs,
-                                   const PalmprintCode &rhs);
-    static double FastModeMatching(const unsigned char *lhs,
-                                   const unsigned char *rhs);
+    static Status MatchingProcess(const EDCC_CODING_T *lhs_coding,
+                                  const EDCC_CODING_T *rhs_coding,
+                                  double *score);
 private:
-    static double ExcuteMatching(const EDCC_CODING_T *lhs,
-                                 const EDCC_CODING_T *rhs);
+    static Status ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_coding,
+                                                          const EDCC_CODING_T *rhs_coding,
+                                                          double *score);
+    static Status ExcuteMatchingWhenFastCodingMode(const EDCC_CODING_T *lhs_coding,
+                                                   const EDCC_CODING_T *rhs_coding,
+                                                   double *score);
 };
 
 } // namespace edcc
