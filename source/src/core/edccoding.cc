@@ -96,12 +96,6 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
         *buffer_size = buffer_len();
         return EDCC_SUCCESS;
     }
-    if (!Check::CheckConfig(config))
-    {
-        EDCC_Log("EDCCoding::encrypt config error!");
-        *buffer_size = 0;
-        return EDCC_LOAD_CONFIG_FAIL;
-    }
     *buffer_size = CalcCodingBufferSizeByConfig(config);
     MallocCodingBuffer(*buffer_size, &buffer_);
     if (buffer_ == NULL)

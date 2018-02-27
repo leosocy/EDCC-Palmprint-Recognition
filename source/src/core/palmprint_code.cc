@@ -98,7 +98,6 @@ void GaborFilter::GetGaborKernelReal(cv::Mat *kernel,
 PalmprintCode::PalmprintCode(const char *identity, const char *image_path)
     : palmprint_(new Palmprint(identity, image_path)),
     coding_(new EDCCoding())
-
 {
 }
 
@@ -143,19 +142,19 @@ Status PalmprintCode::Encode(const EDCC_CFG_T &config)
 
     GaborFilter filter(cv::Size(config.gaborSize, config.gaborSize),
                        config.directions);
-    Mat *imgRet = palmprint_->GetSpecImg(cv::Size(config.imageSizeW, config.imageSizeH));
-    if (imgRet == NULL)
+    Mat *spec_img = palmprint_->GetSpecImg(cv::Size(config.imageSizeW, config.imageSizeH));
+    if (spec_img == NULL)
     {
         EDCC_Log("%s not exists!", palmprint_->image_path().c_str());
         return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
     }
-    Mat palmprintImage = *imgRet;
-    Mat gaborResult;
-    EnhanceImage(palmprintImage, palmprintImage, config.laplaceSize);
-    filter.Handle(palmprintImage, &gaborResult);
-    vector<cv::Mat> resultVec;
-    split(gaborResult, resultVec);
-    GenEDCCoding(resultVec,
+    Mat img_tmp = spec_img->clone();
+    Mat gabor_result;
+    EnhanceImage(img_tmp, img_tmp, config.laplaceSize);
+    filter.Handle(img_tmp, &gabor_result);
+    vector<cv::Mat> result_vec;
+    split(gabor_result, result_vec);
+    GenEDCCoding(result_vec,
                  cv::Size(config.imageSizeW, config.imageSizeH),
                  config.directions);
 
@@ -220,23 +219,23 @@ void PalmprintCode::GenEDCCoding(const vector<cv::Mat> &gabor_filter_result,
     {
         for (int w = 0; w < img_size.width; ++w)
         {
-            double maxResponse = -DBL_MAX;
-            int maxDirection = -1;
-            int Cleft = -1, Cright = -1;
+            double max_response = -DBL_MAX;
+            int max_direction = -1;
+            int c_left = -1, c_right = -1;
             for (u_char d = 0; d < directions; ++d)
             {
                 double response = gabor_filter_result[d].at<double>(h, w);
-                if (response > maxResponse)
+                if (response > max_response)
                 {
-                    maxResponse = response;
-                    maxDirection = d;
+                    max_response = response;
+                    max_direction = d;
                 }
             }
-            coding_->c_.at<char>(h, w) = maxDirection;
-            maxDirection == directions - 1 ? Cleft = 0 : Cleft = maxDirection + 1;
-            maxDirection == 0 ? Cright = directions - 1 : Cright = maxDirection - 1;
-            coding_->cs_.at<char>(h, w) = gabor_filter_result[Cleft].at<double>(h, w) >=
-                gabor_filter_result[Cright].at<double>(h, w) ? 1 : 0;
+            coding_->c_.at<char>(h, w) = max_direction;
+            max_direction == directions - 1 ? c_left = 0 : c_left = max_direction + 1;
+            max_direction == 0 ? c_right = directions - 1 : c_right = max_direction - 1;
+            coding_->cs_.at<char>(h, w) = gabor_filter_result[c_left].at<double>(h, w) >=
+                gabor_filter_result[c_right].at<double>(h, w) ? 1 : 0;
         }
     }
 }
