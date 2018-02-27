@@ -46,37 +46,39 @@ void ft_get_two_palmprint_coding_match_score::ExcuteInterface()
 
 void ft_get_two_palmprint_coding_match_score::GenFirstPalmprintCodingBuff(const char *firstPalmprintImagePath)
 {
-    EXPECT_NE((size_t)firstCodingBuff, (size_t)NULL);
-    if(firstCodingBuff == NULL) {
-        return;
-    }
-    FREE_CHAR_ARRAY(this->firstImagePath);
-    MALLOC_CHAR_ARRAY(this->firstImagePath, firstPalmprintImagePath, PATH_LEN);
+    GenCodingBuff(firstPalmprintImagePath, &this->firstImagePath, &this->firstCodingBuff);
+}
+void ft_get_two_palmprint_coding_match_score::GenSecondPalmprintCodingBuff(const char *secondPalmprintImagePath)
+{
+    GenCodingBuff(secondPalmprintImagePath, &this->secondImagePath, &this->secondCodingBuff);
+}
 
-    int ret = GetEDCCCoding(this->firstImagePath,
+void ft_get_two_palmprint_coding_match_score::GenCodingBuff(const char *imagePath, char **dstImagePath, unsigned char **codingBuff)
+{
+    EXPECT_TRUE(imagePath != NULL);
+    FREE_CHAR_ARRAY(*dstImagePath);
+    MALLOC_CHAR_ARRAY(*dstImagePath, imagePath, PATH_LEN);
+    int ret = GetEDCCCoding(*dstImagePath,
                             this->configPath,
                             this->bufMaxLen,
-                            this->firstCodingBuff,
+                            *codingBuff,
                             &this->bufLen);
     EXPECT_EQ(ret, EDCC_SUCCESS);
     EXPECT_NE(bufLen, 0);
 }
-void ft_get_two_palmprint_coding_match_score::GenSecondPalmprintCodingBuff(const char *secondPalmprintImagePath)
-{
-    EXPECT_NE((size_t)secondCodingBuff, (size_t)NULL);
-    if(secondCodingBuff == NULL) {
-        return;
-    }
-    FREE_CHAR_ARRAY(this->secondImagePath);
-    MALLOC_CHAR_ARRAY(this->secondImagePath, secondPalmprintImagePath, PATH_LEN);
 
-    int ret = GetEDCCCoding(secondPalmprintImagePath,
-                            this->configPath,
-                            this->bufMaxLen,
-                            this->secondCodingBuff,
-                            &this->bufLen);
-    EXPECT_EQ(ret, EDCC_SUCCESS);
-    EXPECT_NE(bufLen, 0);
+void ft_get_two_palmprint_coding_match_score::GenMatchScoreBaseline()
+{
+    SetCodingModeCompression();
+    CheckCodingModeCompression();
+    SetMatchingModeReliable();
+    CheckMatchingModeReliable();
+    GenFirstPalmprintCodingBuff(ID1_FIRST_PALMPRINT);
+    GenSecondPalmprintCodingBuff(ID1_SECOND_PALMPRINT);
+    ExcuteInterface();
+    CheckInterfaceRet(EDCC_SUCCESS);
+    CheckMatchScoreNE(0.0);
+    CheckMatchScoreEQToPalmprint();
 }
 
 void ft_get_two_palmprint_coding_match_score::SetFirstPalmprintCoding(unsigned char *codingBuff)
@@ -211,16 +213,7 @@ TEST_F(ft_get_two_palmprint_coding_match_score, Given_PalmprintCoding_Invalid_Co
 
 TEST_F(ft_get_two_palmprint_coding_match_score, Given_CodingModeCompressionAndMatchingModeReliable_When_ChangeTo_CodingModeCompressionAndMatchingModeSpeed_Then_MatchScoreEQ)
 {
-    SetCodingModeCompression();
-    CheckCodingModeCompression();
-    SetMatchingModeReliable();
-    CheckMatchingModeReliable();
-    GenFirstPalmprintCodingBuff(ID1_FIRST_PALMPRINT);
-    GenSecondPalmprintCodingBuff(ID1_SECOND_PALMPRINT);
-    ExcuteInterface();
-    CheckInterfaceRet(EDCC_SUCCESS);
-    CheckMatchScoreNE(0.0);
-    CheckMatchScoreEQToPalmprint();
+    GenMatchScoreBaseline();
 
     SetCodingModeCompression();
     CheckCodingModeCompression();
@@ -238,16 +231,7 @@ TEST_F(ft_get_two_palmprint_coding_match_score, Given_CodingModeCompressionAndMa
 
 TEST_F(ft_get_two_palmprint_coding_match_score, Given_CodingModeCompressionAndMatchingModeReliable_When_ChangeTo_CodingModeFastAndMatchingModeReliable_Then_MatchScoreEQ)
 {
-    SetCodingModeCompression();
-    CheckCodingModeCompression();
-    SetMatchingModeReliable();
-    CheckMatchingModeReliable();
-    GenFirstPalmprintCodingBuff(ID1_FIRST_PALMPRINT);
-    GenSecondPalmprintCodingBuff(ID1_SECOND_PALMPRINT);
-    ExcuteInterface();
-    CheckInterfaceRet(EDCC_SUCCESS);
-    CheckMatchScoreNE(0.0);
-    CheckMatchScoreEQToPalmprint();
+    GenMatchScoreBaseline();
 
     SetCodingModeFast();
     CheckCodingModeFast();
@@ -265,16 +249,7 @@ TEST_F(ft_get_two_palmprint_coding_match_score, Given_CodingModeCompressionAndMa
 
 TEST_F(ft_get_two_palmprint_coding_match_score, Given_CodingModeCompressionAndMatchingModeReliable_When_ChangeTo_CodingModeFastAndMatchingModeSpeed_Then_MatchScoreEQ)
 {
-    SetCodingModeCompression();
-    CheckCodingModeCompression();
-    SetMatchingModeReliable();
-    CheckMatchingModeReliable();
-    GenFirstPalmprintCodingBuff(ID1_FIRST_PALMPRINT);
-    GenSecondPalmprintCodingBuff(ID1_SECOND_PALMPRINT);
-    ExcuteInterface();
-    CheckInterfaceRet(EDCC_SUCCESS);
-    CheckMatchScoreNE(0.0);
-    CheckMatchScoreEQToPalmprint();
+    GenMatchScoreBaseline();
 
     SetCodingModeFast();
     CheckCodingModeFast();
