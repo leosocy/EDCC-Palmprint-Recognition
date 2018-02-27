@@ -19,6 +19,7 @@ public:
     void CheckMatchScoreNE(double expectScore);
     void CheckMatchScoreEQToPalmprint();
     void CheckMatchScoreNEToPalmprint();
+    void CheckMatchScoreEQWhenCodingModeAndMatchingModeChanged();
 private:
     unsigned char *firstCodingBuff;
     char *firstImagePath;
@@ -26,6 +27,8 @@ private:
     char *secondImagePath;
     double matchScoreWithPalmprintCoding;
     double matchScoreWithPalmprint;
+    std::vector<double> matchScoreWithPalmprintCodingVec;
+    std::vector<double> matchScoreWithPalmprintVec;
     size_t bufMaxLen;
     size_t bufLen;
 };

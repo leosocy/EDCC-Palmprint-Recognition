@@ -58,7 +58,7 @@ using namespace std;
 #define FEATURES_INCREMENTAL_OUTPUT_PATH            TEST_DATA_FEATURES_DIR"features_incremental.json"
 #define FEATURES_OUTPUT_PATH_CANT_CREATE            TEST_DATA_FEATURES_DIR"folder/features.json"
 #define FEATURES_TRAINGING_SET_EXISTS               TEST_DATA_FEATURES_DIR"trainingFeatures.json"
-#define FEATURES_TRAINGING_SET_COING_BEEN_CHANGED   TEST_DATA_FEATURES_DIR"trainingFeaturesBeenChanged.json"
+#define FEATURES_TRAINGING_SET_CODING_BEEN_CHANGED   TEST_DATA_FEATURES_DIR"trainingFeaturesBeenChanged.json"
 
 #define PATH_LEN 128
 #define FREE_CHAR_ARRAY(pArray) do {\
@@ -76,7 +76,8 @@ using namespace std;
     strncpy((pDstArray), (pSrcArray), (len));\
 }while(0)
 
-class ft_edcc_base : public testing::Test {
+class ft_edcc_base : public testing::Test
+{
 public:
     ft_edcc_base();
     virtual ~ft_edcc_base();
@@ -84,35 +85,60 @@ public:
     virtual void SetUp();
     virtual void TearDown();
 
-    virtual void SetConfigPath(const char *configPath) {
+    virtual void SetConfigPath(const char *configPath)
+    {
         FREE_CHAR_ARRAY(this->configPath);
         MALLOC_CHAR_ARRAY(this->configPath, configPath, PATH_LEN);
     }
-    virtual void SetGroupPath(const char *groupPath) {
+    virtual void SetGroupPath(const char *groupPath)
+    {
         FREE_CHAR_ARRAY(this->groupPath);
         MALLOC_CHAR_ARRAY(this->groupPath, groupPath, PATH_LEN);
     }
-    virtual void SetFeaturePath(const char *featurePath) {
+    virtual void SetFeaturePath(const char *featurePath)
+    {
         FREE_CHAR_ARRAY(this->featurePath);
         MALLOC_CHAR_ARRAY(this->featurePath, featurePath, PATH_LEN);
     }
-    virtual void SetImagePath(const char *imagePath) {
+    virtual void SetImagePath(const char *imagePath)
+    {
         FREE_CHAR_ARRAY(this->imagePath);
         MALLOC_CHAR_ARRAY(this->imagePath, imagePath, PATH_LEN);
     }
-    virtual void SetCodingModeCompression() {
+    virtual void SetCodingModeCompression()
+    {
         ModifyConfigParams("codingMode", 1);
     }
-    virtual void SetCodingModeFast() {
+    virtual void CheckCodingModeCompression()
+    {
+        CheckConfigParams("codingMode", 1);
+    }
+    virtual void SetCodingModeFast()
+    {
         ModifyConfigParams("codingMode", 2);
     }
-    virtual void SetMatchingModeReliable() {
+    virtual void CheckCodingModeFast()
+    {
+        CheckConfigParams("codingMode", 2);
+    }
+    virtual void SetMatchingModeReliable()
+    {
         ModifyConfigParams("matchingMode", 1);
     }
-    virtual void SetMatchingModeSpeed() {
+    virtual void CheckMatchingModeReliable()
+    {
+        CheckConfigParams("matchingMode", 1);
+    }
+    virtual void SetMatchingModeSpeed()
+    {
         ModifyConfigParams("matchingMode", 2);
     }
-    virtual void SetAllParamsCorrect() {
+    virtual void CheckMatchingModeSpeed()
+    {
+        CheckConfigParams("matchingMode", 2);
+    }
+    virtual void SetAllParamsCorrect()
+    {
         //Do nothing
     }
 

@@ -9,6 +9,6 @@
 int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);
-    testing::GTEST_FLAG(filter) = "*";
+    testing::GTEST_FLAG(filter) = "*Given_CodingModeCompressionAndMatchingModeReliable*";
     return RUN_ALL_TESTS();
 }
