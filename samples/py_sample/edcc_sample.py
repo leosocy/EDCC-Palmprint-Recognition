@@ -6,8 +6,8 @@ from EDCCApiAdapter import *
 from PalmprintImageFactory import *
 from PalmprintCodeRepository import *
 import time
-#import win_unicode_console
-#win_unicode_console.enable()
+import win_unicode_console
+win_unicode_console.enable()
 
 class PalmprintCodeDTO(object):
     def __init__(self, ID, instanceID, imagePath, code):
@@ -25,6 +25,7 @@ class EDCCSample(object):
         self._configPath = os.path.normpath(os.path.join(os.getcwd(), "edcc_config/config.json"))
         self._succNum = 0
         self._failNum = 0
+        self._wrong_list = []
 
     def runSample(self):
         self.__initDB__()
@@ -54,6 +55,9 @@ class EDCCSample(object):
             self.statisticsResult(predict, topKMatchScore, costTime)
         print("\n\nPredict Over. Total:%d\tPredictCorrect:%d\tAccuracy:%lf%%" % (len(predictGroup), self._succNum, float(self._succNum) / len(predictGroup) * 100))
         print("Total Cost Time:%lf\tMatch Count:%d\tPer Cost Time:%lf" % (total_cost_time, total_match_count, total_cost_time / total_match_count))
+        print("Wrong List:")
+        for record in self._wrong_list:
+            print(record)
 
     def statisticsResult(self, predict, topKMatchScore, costTime):
         resultsDict = {}
@@ -74,12 +78,14 @@ class EDCCSample(object):
         resultsDict = sorted(resultsDict.items(), key=lambda r:r[1], reverse=True)
         bestMatchID = resultsDict[0][0]
         bestMatchScore = resultsDict[0][1]
-        print("Predict:\tID:%s\tInstanceID:%s\t\nBestMatch:\tID:%s\t\nMatchScore:%lf\tCostTime:%lfms" % (predict.id, predict.instanceID, bestMatchID, bestMatchScore, costTime))
+        resultStr = "Predict:\tID:%s\tInstanceID:%s\t\nBestMatch:\tID:%s\t\nMatchScore:%lf\tCostTime:%lfms" % (predict.id, predict.instanceID, bestMatchID, bestMatchScore, costTime)
+        print(resultStr)
         if bestMatchID == predict.id:
             self._succNum = self._succNum + 1
             print("Correct Match\n\n")
         else:
             self._failNum = self._failNum + 1
+            self._wrong_list.append(resultStr)
             print("Error Match\n\n")
 
     def __initDB__(self):
