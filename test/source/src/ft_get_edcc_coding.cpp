@@ -220,3 +220,43 @@ TEST_F(ft_get_edcc_coding, Given_ConfigCodingModeFastMode_When_GetEDCCoding_Then
 
     CheckInterfaceRet(EDCC_SUCCESS);
 }
+
+TEST_F(ft_get_edcc_coding, Given_ConfigMatchingModeUnknown_When_GetEDCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams("matchingMode", 5);
+    CheckConfigParams("matchingMode", 5);
+
+    ExcuteInterface();
+
+    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
+}
+
+TEST_F(ft_get_edcc_coding, Given_ConfigMatchingModeZero_When_GetEDCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams("matchingMode", 0);
+    CheckConfigParams("matchingMode", 0);
+
+    ExcuteInterface();
+
+    CheckInterfaceRet(EDCC_LOAD_CONFIG_FAIL);
+}
+
+TEST_F(ft_get_edcc_coding, Given_ConfigMatchingModeReliableMode_When_GetEDCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams("matchingMode", 1);
+    CheckConfigParams("matchingMode", 1);
+
+    ExcuteInterface();
+
+    CheckInterfaceRet(EDCC_SUCCESS);
+}
+
+TEST_F(ft_get_edcc_coding, Given_ConfigMatchingModeSpeedMode_When_GetEDCCoding_Then_EDCC_LOAD_CONFIG_FAIL)
+{
+    ModifyConfigParams("matchingMode", 2);
+    CheckConfigParams("matchingMode", 2);
+
+    ExcuteInterface();
+
+    CheckInterfaceRet(EDCC_SUCCESS);
+}

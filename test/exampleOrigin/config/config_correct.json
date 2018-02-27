@@ -66,7 +66,7 @@
         }
     },
     "matchingMode" : {
-        "default" : 2,
+        "default" : 1,
         "desc" : {
             "en-US" : "Encoding matching mode, 1: Reliable matching (check the encoding legitimacy when matching, but the matching speed is slower) 2: Speed matching (do not check the encoding legitimacy when matching, but the matching speed is faster).",
             "zh-CN" : "编码匹配模式，1：可靠匹配（匹配时检查编码合法性，但匹配速度较慢）    2：极速匹配（匹配时不检查编码合法性，但匹配速度较快）"
