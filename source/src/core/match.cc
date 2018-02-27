@@ -36,7 +36,7 @@ Status Match::MatchingProcess(const EDCC_CODING_T *lhs_coding,
         default:
         {
             *score = .0;
-            EDCC_Log("Coding Mode Error.");
+            EDCC_Log("Coding Mode [%d] not supported!", lhs_coding->cfg.codingMode);
             return EDCC_CODING_INVALID;
         }
     }
@@ -52,7 +52,6 @@ Status Match::ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_c
             || !Check::CheckCodingBuffer(rhs_coding))
     {
             *score = .0;
-            EDCC_Log("Coding Invalid!");
             return EDCC_CODING_INVALID;
         }
     }
@@ -78,36 +77,10 @@ Status Match::ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_c
                 match_score += 1;
             }
         }
-        if (c_mask & 0x0f)
-        {
-            ++c_x_start_pos;
-            ++c_y_start_pos;
-            c_mask = 0xf0;
-        }
-        else
-        {
-            c_mask = 0x0f;
-        }
-        if (cs_mask & 0x01)
-        {
-            ++cs_x_start_pos;
-            ++cs_y_start_pos;
-            cs_mask = 0x80;
-        }
-        else
-        {
-            cs_mask >>= 1;
-        }
+        c_mask & 0x0f ? ++c_x_start_pos, ++c_y_start_pos, c_mask = 0xf0 : c_mask = 0x0f;
+        cs_mask & 0x01 ? ++cs_x_start_pos, ++cs_y_start_pos, cs_mask = 0x80 : cs_mask >>= 1;
     }
-
-    if (image_size % 2 == 0)
-    {
-        *score = match_score / (2.0 * image_size);
-    }
-    else
-    {
-        *score = (match_score - 2) / (2.0 * image_size);
-    }
+    *score = (image_size % 2 == 0 ? (match_score / (2.0 * image_size)) : ((match_score - 2) / (2.0 * image_size)));
     return EDCC_SUCCESS;
 }
 
