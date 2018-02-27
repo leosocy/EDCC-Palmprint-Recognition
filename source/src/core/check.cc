@@ -119,21 +119,46 @@ bool Check::CheckCodingBuffer(const EDCC_CODING_T *coding_buffer)
                                                     + coding_buffer->len - EDCCoding::kMagicKeyLen);
     memcpy(&actual_magic_key, src_addr, EDCCoding::kMagicKeyLen);
     CHECK_NE_RETURN(actual_magic_key, EDCCoding::kMagicKey, false);
-    size_t coding_c_len = static_cast<size_t>(ceil(coding_buffer->cfg.imageSizeW \
-                                                   * coding_buffer->cfg.imageSizeH / 2.0));
     u_char gabor_directions = coding_buffer->cfg.directions;
-    const u_char *coding_c_cur_addr = coding_buffer->data;
-    const u_char *coding_c_end_addr = coding_buffer->data + coding_c_len;
-    for (; coding_c_cur_addr < coding_c_end_addr; ++coding_c_cur_addr)
+    if (coding_buffer->cfg.codingMode == COMPRESSION_CODING_MODE)
     {
-        u_char c_tmp = *coding_c_cur_addr;
-        if ((c_tmp & 0x0f) >= gabor_directions
-            || ((c_tmp & 0xf0) >> 4) >= gabor_directions)
+        size_t coding_c_len = static_cast<size_t>(ceil(coding_buffer->cfg.imageSizeW \
+                                                       * coding_buffer->cfg.imageSizeH / 2.0));
+        const u_char *coding_c_cur_addr = coding_buffer->data;
+        const u_char *coding_c_end_addr = coding_buffer->data + coding_c_len;
+        for (; coding_c_cur_addr < coding_c_end_addr; ++coding_c_cur_addr)
         {
-            return false;
+            u_char c_tmp = *coding_c_cur_addr;
+            if ((c_tmp & 0x0f) >= gabor_directions
+                || ((c_tmp & 0xf0) >> 4) >= gabor_directions)
+            {
+                EDCC_Log("Coding Buffer Invalid!");
+                return false;
+            }
         }
     }
-
+    else if (coding_buffer->cfg.codingMode == FAST_CODING_MODE)
+    {
+        size_t coding_len = coding_buffer->cfg.imageSizeW * coding_buffer->cfg.imageSizeH;
+        const u_char *coding_cur_addr = coding_buffer->data;
+        const u_char *coding_end_addr = coding_buffer->data + coding_len;
+        for (; coding_cur_addr < coding_end_addr; ++coding_cur_addr)
+        {
+            u_char c_tmp = *coding_cur_addr;
+            if (((c_tmp & 0xf0) >> 4) >= gabor_directions
+                || (c_tmp & 0x0e) != 0x00)
+            {
+                EDCC_Log("Coding Buffer Invalid!");
+                return false;
+            }
+        }
+    }
+    else
+    {
+        EDCC_Log("Coding Mode [%d] not supported!", coding_buffer->cfg.codingMode);
+        return false;
+    }
+    
     return true;
 }
 
