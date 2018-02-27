@@ -10,6 +10,7 @@ public:
 
     void GenFirstPalmprintCodingBuff(const char *firstPalmprintImagePath);
     void GenSecondPalmprintCodingBuff(const char *secondPalmprintImagePath);
+    void GenMatchScoreBaseline();
 
     void SetFirstPalmprintCoding(unsigned char *codingBuff);
     void SetSecondPalmprintCoding(unsigned char *codingBuff);
@@ -21,6 +22,7 @@ public:
     void CheckMatchScoreNEToPalmprint();
     void CheckMatchScoreEQWhenCodingModeAndMatchingModeChanged();
 private:
+    void GenCodingBuff(const char *imagePath, char **dstImagePath, unsigned char **codingBuff);
     unsigned char *firstCodingBuff;
     char *firstImagePath;
     unsigned char *secondCodingBuff;
