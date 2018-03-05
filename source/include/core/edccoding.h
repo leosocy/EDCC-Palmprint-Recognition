@@ -20,6 +20,7 @@ using cv::Mat;
 using cv::Size;
 
 class PalmprintCode;
+class Status;
 
 typedef struct tag_EDCC_CODING_T
 {

@@ -9,7 +9,6 @@
 #include <vector>
 #include <set>
 #include <string>
-
 #include "json.h"
 #include "core/config.h"
 
@@ -26,14 +25,15 @@ namespace edcc
 {
 
 class PalmprintCode;
+class Status;
 
 class IO
 {
 public:
-    int LoadConfig(std::ifstream &in);
-    int LoadPalmprintTrainingSet(std::ifstream &in, std::vector<PalmprintCode> *training_set);
-    int LoadPalmprintFeatureData(std::ifstream &in, std::vector<PalmprintCode> *feature_data);
-    int SavePalmprintFeatureData(std::ofstream &out, std::vector<PalmprintCode> &feature_data);
+    Status LoadConfig(std::ifstream &in);
+    Status LoadPalmprintTrainingSet(std::ifstream &in, std::vector<PalmprintCode> *training_set);
+    Status LoadPalmprintFeatureData(std::ifstream &in, std::vector<PalmprintCode> *feature_data);
+    Status SavePalmprintFeatureData(std::ofstream &out, std::vector<PalmprintCode> &feature_data);
 
     const EDCC_CFG_T& config() const { return cm.config(); }
 private:

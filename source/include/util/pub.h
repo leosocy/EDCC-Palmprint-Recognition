@@ -12,14 +12,6 @@ typedef unsigned char u_char;
 typedef unsigned short u_short;
 typedef unsigned int u_int;
 
-typedef int Status;
-
-static const char hexArray[16] =
-{'0', '1', '2', '3',
-'4', '5', '6', '7',
-'8', '9', 'A', 'B',
-'C', 'D', 'E', 'F'};
-
 #define CHECK_POINTER_NULL_RETURN(pointer, ret) do { \
     if((pointer) == NULL) { \
         EDCC_Log("%s is NULL!", #pointer); \

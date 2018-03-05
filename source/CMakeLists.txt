@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 2.8 )
 
-set(PROJECT_NAME EDCC)
+set(PROJECT_NAME edcc)
 project(${PROJECT_NAME})
 set(JSONCPP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/jsoncpp)
 set(EDCC_PUB_HEADER ${CMAKE_SOURCE_DIR}/../include)

@@ -5,7 +5,7 @@
 #include "core/edccoding.h"
 #include "core/check.h"
 #include "core/match.h"
-#include "edcc.h"
+#include "util/status.h"
 
 namespace edcc
 {
@@ -58,7 +58,7 @@ Status EDCCoding::EncodeToBuffer(const EDCC_CFG_T &config,
     if (coding_buffer == NULL)
     {
         *buffer_size = 0;
-        return EDCC_NULL_POINTER_ERROR;
+        return Status::NullPtrError();
     }
     if (buffer_ != NULL)
     {
@@ -66,15 +66,15 @@ Status EDCCoding::EncodeToBuffer(const EDCC_CFG_T &config,
         {
             EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!");
             *buffer_size = 0;
-            return EDCC_CODING_BUFF_LEN_NOT_ENOUGH;
+            return Status::CodingBufferLenNotEnough();
         }
         memcpy(coding_buffer, buffer_, buffer_len());
         *buffer_size = buffer_len();
-        return EDCC_SUCCESS;
+        return Status::Ok();
     }
 
     Status s = Encode(config, buffer_size);
-    if (s != EDCC_SUCCESS)
+    if (!s.IsOk())
     {
         return s;
     }
@@ -82,7 +82,7 @@ Status EDCCoding::EncodeToBuffer(const EDCC_CFG_T &config,
     {
         EDCC_Log("EDCCoding::encrypt bufMaxLen smaller than the real space occupied!");
         *buffer_size = 0;
-        return EDCC_CODING_BUFF_LEN_NOT_ENOUGH;
+        return Status::CodingBufferLenNotEnough();
     }
     memcpy(coding_buffer, buffer_, *buffer_size);
 
@@ -94,20 +94,20 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
     if (buffer_ != NULL)
     {
         *buffer_size = buffer_len();
-        return EDCC_SUCCESS;
+        return Status::Ok();
     }
     *buffer_size = CalcCodingBufferSizeByConfig(config);
     MallocCodingBuffer(*buffer_size, &buffer_);
     if (buffer_ == NULL)
     {
         *buffer_size = 0;
-        return EDCC_NULL_POINTER_ERROR;
+        Status::NullPtrError();
     }
     memcpy(&buffer_->cfg, &config, sizeof(EDCC_CFG_T));
     buffer_->len = *buffer_size - sizeof(EDCC_CODING_T);
     GenCodingBytesProcess(config.codingMode);
 
-    return EDCC_SUCCESS;
+    return Status::Ok();
 }
 
 Status EDCCoding::EncodeToHexString(const EDCC_CFG_T &config, string *hex_str)
@@ -115,7 +115,7 @@ Status EDCCoding::EncodeToHexString(const EDCC_CFG_T &config, string *hex_str)
     assert(hex_str);
     size_t buffer_size = 0;
     Status s = Encode(config, &buffer_size);
-    if (s != EDCC_SUCCESS)
+    if (!s.IsOk())
     {
         hex_str->clear();
         return s;
@@ -132,12 +132,12 @@ Status EDCCoding::EncodeToHexString(const EDCC_CFG_T &config, string *hex_str)
     }
     *hex_str = hex_string_stream.str();
 
-    return EDCC_SUCCESS;
+    return Status::Ok();
 }
 
 Status EDCCoding::DecodeFromBuffer(const u_char *coding_buffer)
 {
-    CHECK_POINTER_NULL_RETURN(coding_buffer, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(coding_buffer, Status::NullPtrError());
 
     const EDCC_CODING_T *coding = (EDCC_CODING_T*)coding_buffer;
     size_t coding_buffer_size = coding->len + sizeof(EDCC_CODING_T);
@@ -145,19 +145,22 @@ Status EDCCoding::DecodeFromBuffer(const u_char *coding_buffer)
     if (buffer_ == NULL)
     {
         EDCC_Log("EDCCoding::decrypt failed!");
-        return EDCC_NULL_POINTER_ERROR;
+        return Status::NullPtrError();
     }
     memcpy(buffer_, coding, coding_buffer_size);
 
-    return Check::CheckCoding(*this) ? EDCC_SUCCESS : EDCC_CODING_INVALID;
+    return Check::CheckCoding(*this) ? Status::Ok() : Status::CodingInvalid();
 }
 
 Status EDCCoding::DecodeFromHexString(const string &hex_str)
 {
     size_t coding_len = hex_str.length() / 2;
-    CHECK_EQ_RETURN(coding_len, 0, false);
+    if (coding_len == 0)
+    {
+        return Status::CodingInvalid();
+    }
     u_char* coding_buffer = (unsigned char*)malloc(sizeof(unsigned char) * coding_len);
-    CHECK_POINTER_NULL_RETURN(coding_buffer, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(coding_buffer, Status::NullPtrError());
     memset(coding_buffer, 0, sizeof(unsigned char) * coding_len);
 
     for (size_t i = 0; i < coding_len; ++i)
