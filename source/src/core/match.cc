@@ -6,12 +6,12 @@
 #include "core/palmprint_code.h"
 #include "core/edccoding.h"
 #include "core/check.h"
-#include "EDCC.h"
+#include "util/status.h"
 
 namespace edcc
 {
 
-Status Match::MatchingProcess(const EDCC_CODING_T *lhs_coding,
+Status Matcher::MatchingProcess(const EDCC_CODING_T *lhs_coding,
                               const EDCC_CODING_T *rhs_coding,
                               double *score)
 {
@@ -20,7 +20,7 @@ Status Match::MatchingProcess(const EDCC_CODING_T *lhs_coding,
     {
         *score = .0;
         EDCC_Log("Two palmprint instance coding buffer config difference.");
-        return EDCC_CODINGS_DIFF_CONFIG;
+        return Status::CodingsConfigDiff();
     }
 
     switch (lhs_coding->cfg.codingMode)
@@ -37,12 +37,12 @@ Status Match::MatchingProcess(const EDCC_CODING_T *lhs_coding,
         {
             *score = .0;
             EDCC_Log("Coding Mode [%d] not supported!", lhs_coding->cfg.codingMode);
-            return EDCC_CODING_INVALID;
+            return Status::CodingInvalid();
         }
     }
 }
 
-Status Match::ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_coding,
+Status Matcher::ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_coding,
                                                       const EDCC_CODING_T *rhs_coding,
                                                       double *score)
 {
@@ -52,7 +52,7 @@ Status Match::ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_c
             || !Check::CheckCodingBuffer(rhs_coding))
     {
             *score = .0;
-            return EDCC_CODING_INVALID;
+            return Status::CodingInvalid();
         }
     }
 
@@ -81,10 +81,10 @@ Status Match::ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_c
         cs_mask & 0x01 ? ++cs_x_start_pos, ++cs_y_start_pos, cs_mask = 0x80 : cs_mask >>= 1;
     }
     *score = (image_size % 2 == 0 ? (match_score / (2.0 * image_size)) : ((match_score - 2) / (2.0 * image_size)));
-    return EDCC_SUCCESS;
+    return Status::Ok();
 }
 
-Status Match::ExcuteMatchingWhenFastCodingMode(const EDCC_CODING_T *lhs_coding,
+Status Matcher::ExcuteMatchingWhenFastCodingMode(const EDCC_CODING_T *lhs_coding,
                                                const EDCC_CODING_T *rhs_coding,
                                                double *score)
 {
@@ -95,7 +95,7 @@ Status Match::ExcuteMatchingWhenFastCodingMode(const EDCC_CODING_T *lhs_coding,
         {
             *score = .0;
             EDCC_Log("Coding Invalid!");
-            return EDCC_CODING_INVALID;
+            return Status::CodingInvalid();
         }
     }
 
@@ -124,7 +124,7 @@ Status Match::ExcuteMatchingWhenFastCodingMode(const EDCC_CODING_T *lhs_coding,
     }
 
     *score = match_score / (2.0 * image_size);
-    return EDCC_SUCCESS;
+    return Status::Ok();
 }
 
 } // namespace edcc

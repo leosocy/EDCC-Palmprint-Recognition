@@ -8,7 +8,7 @@
 #include "core/edccoding.h"
 #include "core/check.h"
 #include "core/match.h"
-#include "edcc.h"
+#include "util/status.h"
 
 namespace edcc
 {
@@ -137,7 +137,7 @@ Status PalmprintCode::Encode(const EDCC_CFG_T &config)
 {
     if (!Check::CheckConfig(config))
     {
-        return EDCC_LOAD_CONFIG_FAIL;
+        return Status::LoadConfigError();
     }
 
     GaborFilter filter(cv::Size(config.gaborSize, config.gaborSize),
@@ -146,7 +146,7 @@ Status PalmprintCode::Encode(const EDCC_CFG_T &config)
     if (spec_img == NULL)
     {
         EDCC_Log("%s not exists!", palmprint_->image_path().c_str());
-        return EDCC_LOAD_PALMPRINT_IMAGE_FAIL;
+        return Status::LoadPalmprintError();
     }
     Mat img_tmp = spec_img->clone();
     Mat gabor_result;
@@ -169,7 +169,7 @@ Status PalmprintCode::EncodeToBuffer(const EDCC_CFG_T &config,
 {
     assert(coding_);
     Status s = Encode(config);
-    if (s != EDCC_SUCCESS)
+    if (!s.IsOk())
     {
         *buffer_size = 0;
         return s;
@@ -181,7 +181,7 @@ Status PalmprintCode::EncodeToHexString(const EDCC_CFG_T &config, string *hex_st
 {
     assert(coding_);
     Status s = Encode(config);
-    if (s != EDCC_SUCCESS)
+    if (!s.IsOk())
     {
         return s;
     }
@@ -238,13 +238,6 @@ void PalmprintCode::GenEDCCoding(const vector<cv::Mat> &gabor_filter_result,
                 gabor_filter_result[c_right].at<double>(h, w) ? 1 : 0;
         }
     }
-}
-
-double PalmprintCode::MatchWith(const PalmprintCode &another) const
-{
-    double score = .0;
-    Match::MatchingProcess(this->coding_->buffer(), another.coding_->buffer(), &score);
-    return score;
 }
 
 } // namespace edcc

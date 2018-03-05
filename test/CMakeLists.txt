@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME FT_EDCC)
+set(PROJECT_NAME test_edcc)
 project(${PROJECT_NAME})
 
 find_package(OpenCV REQUIRED)
@@ -15,7 +15,7 @@ message(STATUS "PROJECT_NAME : " ${PROJECT_NAME})
 message(STATUS "DIR : " ${CMAKE_BINARY_DIR})
 message(STATUS "——————————————————————————————————————")
 
-add_subdirectory(${EDCC_ROOT} ${CMAKE_BINARY_DIR}/EDCC)
+add_subdirectory(${EDCC_ROOT} ${CMAKE_BINARY_DIR}/edcc)
 add_subdirectory(${GTEST_ROOT} ${CMAKE_BINARY_DIR}/gtest)
 
 include_directories(${EDCC_PUB_HEADER})
@@ -69,9 +69,7 @@ endif()
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SRC_FILES})
 
-#FIND_LIBRARY(LIB_GTEST gtest.a ${CMAKE_BINARY_DIR} NO_DEFAULT_PATH)
-#link_directories(${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/../lib)
-target_link_libraries(${PROJECT_NAME} EDCC gtest)
+target_link_libraries(${PROJECT_NAME} edcc gtest)
 
 enable_testing()
 add_test(NAME ${PROJECT_NAME}

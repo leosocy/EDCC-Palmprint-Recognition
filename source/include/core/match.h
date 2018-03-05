@@ -10,9 +10,10 @@
 namespace edcc {
 
 class PalmprintCode;
+class Status;
 typedef struct tag_EDCC_CODING_T EDCC_CODING_T;
 
-class Match
+class Matcher
 {
 public:
     static Status MatchingProcess(const EDCC_CODING_T *lhs_coding,
