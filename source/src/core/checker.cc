@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT-style license 
 // that can be found in the LICENSE file.
 
-#include "core/check.h"
+#include "core/checker.h"
 
 #include <iostream>
 #include <map>
@@ -18,7 +18,7 @@ namespace edcc
 using std::vector;
 using std::set;
 
-bool Check::CheckConfig(const EDCC_CFG_T &config)
+bool Checker::CheckConfig(const EDCC_CFG_T &config)
 {
     if (config.imageSizeW < limit::kMinImageWidth
         || config.imageSizeH < limit::kMinImageHeight)
@@ -66,7 +66,7 @@ bool Check::CheckConfig(const EDCC_CFG_T &config)
     return true;
 }
 
-bool Check::CheckTrainingSet(const vector<PalmprintCode> &data)
+bool Checker::CheckTrainingSet(const vector<PalmprintCode> &data)
 {
     for (vector<PalmprintCode>::const_iterator data_iter = data.begin();
          data_iter != data.end(); ++data_iter)
@@ -85,7 +85,7 @@ bool Check::CheckTrainingSet(const vector<PalmprintCode> &data)
     return true;
 }
 
-bool Check::CheckFeatureData(const vector<PalmprintCode> &data,
+bool Checker::CheckFeatureData(const vector<PalmprintCode> &data,
                              const EDCC_CFG_T &config)
 {
     for (vector<PalmprintCode>::const_iterator data_iter = data.begin();
@@ -105,13 +105,13 @@ bool Check::CheckFeatureData(const vector<PalmprintCode> &data,
     return true;
 }
 
-bool Check::CheckCoding(const EDCCoding &coding)
+bool Checker::CheckCoding(const EDCCoding &coding)
 {
     const EDCC_CODING_T *coding_buffer = coding.buffer();
     return CheckCodingBuffer(coding_buffer);
 }
 
-bool Check::CheckCodingBuffer(const EDCC_CODING_T *coding_buffer)
+bool Checker::CheckCodingBuffer(const EDCC_CODING_T *coding_buffer)
 {
     CHECK_POINTER_NULL_RETURN(coding_buffer, false);
     int actual_magic_key = 0;
@@ -162,7 +162,7 @@ bool Check::CheckCodingBuffer(const EDCC_CODING_T *coding_buffer)
     return true;
 }
 
-bool Check::CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
+bool Checker::CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
                                              const PalmprintCode &second_palmprintcode)
 {
     CHECK_POINTER_NULL_RETURN(first_palmprintcode.coding()->buffer(), false);
@@ -172,7 +172,7 @@ bool Check::CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprin
                                second_palmprintcode.coding()->buffer()->cfg);
 }
 
-bool Check::CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
+bool Checker::CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
                                 const EDCC_CFG_T &second_config)
 {
     return !memcmp(&first_config, &second_config, sizeof(EDCC_CFG_T));

@@ -40,15 +40,12 @@ Status IO::LoadConfig(ifstream &in)
     for (Json::Value::Members::iterator it = members.begin();
          it != members.end(); ++it)
     {
-        if (!root[*it].isObject() || root[*it]["default"].isNull())
+        if (!root[*it].isObject()
+            || root[*it]["default"].isNull()
+            || !cm_.SetConfigValue(*it, root[*it]["default"].asInt()))
         {
             EDCC_Log("Parse config.json failed, you can only change the value of \
                      \"default\" label in this file.");
-            return Status::LoadConfigError();
-        }
-        if (!cm.SetConfigValue(*it, root[*it]["default"].asInt()))
-        {
-            EDCC_Log("Illegal configuration parameters.");
             return Status::LoadConfigError();
         }
     }
@@ -57,7 +54,7 @@ Status IO::LoadConfig(ifstream &in)
 }
 
 Status IO::LoadPalmprintTrainingSet(ifstream &in,
-                                 vector<PalmprintCode> *training_set)
+                                    vector<PalmprintCode> *training_set)
 {
     CHECK_POINTER_NULL_RETURN(training_set, Status::NullPtrError());
 
@@ -107,16 +104,13 @@ Status IO::LoadPalmprintFeatureData(ifstream &in, vector<PalmprintCode> *feature
         EDCC_Log("Load Palmprint Features Data failed. Don't change the json format.");
         return Status::LoadFeaturesError();
     }
-    for (set<string>::const_iterator it = cm.params().begin();
-         it != cm.params().end();
+    for (set<string>::const_iterator it = cm_.params().begin();
+         it != cm_.params().end();
          ++it)
     {
-        if (root[*it].isNull() || !root[*it].isInt())
-        {
-            EDCC_Log("Load EDCC config from features data failed. Make sure json file has config.");
-            return Status::LoadConfigError();
-        }
-        if (!cm.SetConfigValue(*it, root[*it].asInt()))
+        if (root[*it].isNull()
+            || !root[*it].isInt()
+            || !cm_.SetConfigValue(*it, root[*it].asInt()))
         {
             EDCC_Log("Load EDCC config from features data failed. Make sure json file has config.");
             return Status::LoadConfigError();
@@ -125,7 +119,7 @@ Status IO::LoadPalmprintFeatureData(ifstream &in, vector<PalmprintCode> *feature
     members = root.getMemberNames();
     for (Json::Value::Members::iterator it = members.begin(); it != members.end(); ++it)
     {
-        if (!cm.IsKeyInConfigParams(*it)
+        if (!cm_.IsKeyInConfigParams(*it)
             && root[*it].isObject())
         {
             if (!LoadOneIdentityAllPalmprintFeatureData(*it, root[*it], feature_data))
@@ -147,10 +141,10 @@ Status IO::SavePalmprintFeatureData(ofstream &out, vector<PalmprintCode> &featur
         return Status::SaveFeaturesError();
     }
     Json::Value root;
-    for (set<string>::iterator it = cm.params().begin(); it != cm.params().end(); ++it)
+    for (set<string>::iterator it = cm_.params().begin(); it != cm_.params().end(); ++it)
     {
         int value = 0;
-        if (!cm.GetConfigValue(*it, &value))
+        if (!cm_.GetConfigValue(*it, &value))
         {
             EDCC_Log("If you want to train/predict, load config.json first.\
                     Or if you want incremental training/prediction, load trainData.json first.");
@@ -189,7 +183,6 @@ bool IO::LoadOneIdentityAllPalmprintFeatureData(const string &identity,
             return false;
         }
     }
-
     return true;
 }
 
@@ -207,12 +200,7 @@ bool IO::GetEDCCoding(const Json::Value &value, PalmprintCode *instance)
     string hex_coding = value[CODING_FIELD].asString();
     CHECK_STR_EMPTY_RETURN(hex_coding, false);
     Status s = instance->DecodeFromHexString(hex_coding);
-    if (!s.IsOk())
-    {
-        return false;
-    }
-
-    return true;
+    return s.IsOk() ? true : false;
 }
 
 bool IO::SetEDCCoding(PalmprintCode &coding, Json::Value *value)
@@ -239,7 +227,10 @@ bool IO::InsertCoding2JsonValue(PalmprintCode &code, Json::Value *value)
         return false;
     }
     Json::Value coding_value;
-    CHECK_EQ_RETURN(SetEDCCoding(code, &coding_value), false, false);
+    if (!SetEDCCoding(code, &coding_value))
+    {
+        return false;
+    }
     (*value)[identity][image_path] = coding_value;
 
     return true;

@@ -9,8 +9,10 @@ Used to configure the parameters of EDCC algorithm. There are five parameters:
 - `gaborKernelSize`: The kernel size of 2DGabor wavelet.
 - `gaborDirections`: The number of directions of 2DGabor wavelet.
 - `laplaceKernelSize`: The kernel size of laplacian.
+- `codingMode` : Encode mode.
+- `matchingMode` : Match Mode.
 
-`Tips`: You can change these parameters to get the highest palmprint recognition accuracy.
+`Tips`: You can change these parameters to get the highest palmprint recognition accuracy and fastest matching speed.
 
 ## TrainingSet
 

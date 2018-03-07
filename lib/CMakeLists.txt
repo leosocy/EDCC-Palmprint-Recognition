@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PROJECT_NAME EDCC)
+set(PROJECT_NAME edcc)
 project(${PROJECT_NAME})
 set(JSONCPP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/jsoncpp)
 set(EDCC_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../source)
@@ -58,14 +58,14 @@ set(srcs ${jsoncpp_include_files} ${jsoncpp_src_files} ${edcc_include_files} ${e
 # 生成动态库目标
 add_library(${PROJECT_NAME} SHARED ${srcs})
 # 生成静态库目标
-add_library(${PROJECT_NAME}_STATIC STATIC ${srcs})
+add_library(${PROJECT_NAME}_static STATIC ${srcs})
 target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS})
 
 # 指定静态库的输出名称
-set_target_properties(${PROJECT_NAME}_STATIC PROPERTIES OUTPUT_NAME ${PROJECT_NAME}_STATIC)
+set_target_properties(${PROJECT_NAME}_static PROPERTIES OUTPUT_NAME ${PROJECT_NAME}_static)
 # 使动态库和静态库同时存在
 set_target_properties(${PROJECT_NAME} PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-set_target_properties(${PROJECT_NAME}_STATIC PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+set_target_properties(${PROJECT_NAME}_static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 
 # 指定动态库版本
 # VERSION 动态库版本
