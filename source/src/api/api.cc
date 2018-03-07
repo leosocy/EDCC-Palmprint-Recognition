@@ -5,12 +5,11 @@
 #include "edcc.h"
 
 #include "io/io.h"
-#include "core/config.h"
 #include "core/palmprint.h"
 #include "core/edccoding.h"
 #include "core/palmprint_code.h"
-#include "core/check.h"
-#include "core/match.h"
+#include "core/checker.h"
+#include "core/matcher.h"
 #include "util/pub.h"
 #include "util/status.h"
 
@@ -139,12 +138,12 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
         s = train_io.LoadPalmprintFeatureData(features_in, &original_features);
         features_in.close();
         CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
-        if (!Check::CheckFeatureData(original_features, train_io.config()))
+        if (!Checker::CheckFeatureData(original_features, train_io.config()))
         {
             return EDCC_LOAD_FEATURES_FAIL;
         }
     }
-    if (!Check::CheckConfig(train_io.config()))
+    if (!Checker::CheckConfig(train_io.config()))
     {
         return EDCC_LOAD_CONFIG_FAIL;
     }
@@ -155,7 +154,7 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
     s = train_io.LoadPalmprintTrainingSet(trainingset_in, &all_features);
     trainingset_in.close();
     CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
-    if (!Check::CheckTrainingSet(all_features))
+    if (!Checker::CheckTrainingSet(all_features))
     {
         return EDCC_LOAD_TAINING_SET_FAIL;
     }
@@ -198,7 +197,7 @@ int GetTopKMatchScore(const char *palmprint_image_path,
         s = match_io.LoadPalmprintFeatureData(features_or_group_in, &all_features);
         features_or_group_in.close();
         CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
-        if (!Check::CheckFeatureData(all_features, match_io.config()))
+        if (!Checker::CheckFeatureData(all_features, match_io.config()))
         {
             return EDCC_LOAD_FEATURES_FAIL;
         }
@@ -208,7 +207,7 @@ int GetTopKMatchScore(const char *palmprint_image_path,
         s = match_io.LoadPalmprintTrainingSet(features_or_group_in, &all_features);
         features_or_group_in.close();
         CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
-        if (!Check::CheckTrainingSet(all_features))
+        if (!Checker::CheckTrainingSet(all_features))
         {
             return EDCC_LOAD_TAINING_SET_FAIL;
         }
@@ -220,7 +219,7 @@ int GetTopKMatchScore(const char *palmprint_image_path,
         config_in.close();
     }
     CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
-    if (!Check::CheckConfig(match_io.config()))
+    if (!Checker::CheckConfig(match_io.config()))
     {
         return EDCC_LOAD_CONFIG_FAIL;
     }

@@ -2,10 +2,10 @@
 // Use of this source code is governed by a MIT-style license 
 // that can be found in the LICENSE file.
 
-#include "core/match.h"
+#include "core/matcher.h"
 #include "core/palmprint_code.h"
 #include "core/edccoding.h"
-#include "core/check.h"
+#include "core/checker.h"
 #include "util/status.h"
 
 namespace edcc
@@ -48,8 +48,8 @@ Status Matcher::ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs
 {
     if (lhs_coding->cfg.matchingMode == RELIABLE_MATCHING_MODE)
     {
-        if (!Check::CheckCodingBuffer(lhs_coding)
-            || !Check::CheckCodingBuffer(rhs_coding))
+        if (!Checker::CheckCodingBuffer(lhs_coding)
+            || !Checker::CheckCodingBuffer(rhs_coding))
     {
             *score = .0;
             return Status::CodingInvalid();
@@ -90,8 +90,8 @@ Status Matcher::ExcuteMatchingWhenFastCodingMode(const EDCC_CODING_T *lhs_coding
 {
     if (lhs_coding->cfg.matchingMode == RELIABLE_MATCHING_MODE)
     {
-        if (!Check::CheckCodingBuffer(lhs_coding)
-            || !Check::CheckCodingBuffer(rhs_coding))
+        if (!Checker::CheckCodingBuffer(lhs_coding)
+            || !Checker::CheckCodingBuffer(rhs_coding))
         {
             *score = .0;
             EDCC_Log("Coding Invalid!");

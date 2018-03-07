@@ -16,7 +16,7 @@ class EDCCoding;
 typedef struct tag_EDCC_CFG_T EDCC_CFG_T;
 typedef struct tag_EDCC_CODING_T EDCC_CODING_T;
 
-class Check
+class Checker
 {
 public:
     static bool CheckConfig(const EDCC_CFG_T &config);

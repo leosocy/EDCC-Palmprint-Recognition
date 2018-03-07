@@ -1,20 +1,20 @@
-# About EDCC library FAQ
+# About edcc library FAQ
 
-## Available EDCC library
+## Available edcc library
 
 ### For Windows
 
-bin: Include `EDCC.dll` and dependent `OpenCV dll`
+bin: Include `edcc.dll` and dependent `OpenCV dll`
 
-lib: Inlucde `EDCC.lib`
+lib: Inlucde `edcc.lib`
 
 ### For Linux
 
-bin: Include `EDCC.so` and dependent `OpenCV so`
+bin: Include `edcc.so` and dependent `OpenCV so`
 
-lib: Inlucde `EDCC.a`
+lib: Inlucde `edcc.a`
 
-## How to generate EDCC library
+## How to generate edcc library
 
 ### Windows
 

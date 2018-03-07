@@ -7,19 +7,9 @@
 
 #include <fstream>
 #include <vector>
-#include <set>
 #include <string>
 #include "json.h"
 #include "core/config.h"
-
-#define LOAD_PALMPRINT_GROUP_FAILURE 1
-#define LOAD_PALMPRINT_GROUP_SUCCESS 0
-
-#define LOAD_PALMPRINT_FEATURE_DATA_FAILURE 2
-#define LOAD_PALMPRINT_FEATURE_DATA_SUCCESS 0
-
-#define SAVE_PALMPRINT_FEATURE_DATA_FAILURE 3
-#define SAVE_PALMPRINT_FEATURE_DATA_SUCCESS 0
 
 namespace edcc
 {
@@ -35,7 +25,7 @@ public:
     Status LoadPalmprintFeatureData(std::ifstream &in, std::vector<PalmprintCode> *feature_data);
     Status SavePalmprintFeatureData(std::ofstream &out, std::vector<PalmprintCode> &feature_data);
 
-    const EDCC_CFG_T& config() const { return cm.config(); }
+    const EDCC_CFG_T& config() const { return cm_.config(); }
 private:
     bool LoadOneIdentityAllPalmprintFeatureData(const std::string &identity,
                                                 const Json::Value &value,
@@ -44,7 +34,7 @@ private:
     bool SetEDCCoding(PalmprintCode &coding, Json::Value *value);
     bool InsertCoding2JsonValue(PalmprintCode &code, Json::Value *value);
 
-    ConfigManager cm;
+    ConfigManager cm_;
 };
 
 } // namespace edcc

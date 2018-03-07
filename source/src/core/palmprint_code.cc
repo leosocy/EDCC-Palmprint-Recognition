@@ -6,8 +6,8 @@
 #include <cmath>
 #include "core/palmprint.h"
 #include "core/edccoding.h"
-#include "core/check.h"
-#include "core/match.h"
+#include "core/checker.h"
+#include "core/matcher.h"
 #include "util/status.h"
 
 namespace edcc
@@ -135,7 +135,7 @@ PalmprintCode::~PalmprintCode()
 
 Status PalmprintCode::Encode(const EDCC_CFG_T &config)
 {
-    if (!Check::CheckConfig(config))
+    if (!Checker::CheckConfig(config))
     {
         return Status::LoadConfigError();
     }

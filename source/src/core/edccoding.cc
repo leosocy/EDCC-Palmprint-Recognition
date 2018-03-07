@@ -3,8 +3,8 @@
 // that can be found in the LICENSE file.
 
 #include "core/edccoding.h"
-#include "core/check.h"
-#include "core/match.h"
+#include "core/checker.h"
+#include "core/matcher.h"
 #include "util/status.h"
 
 namespace edcc
@@ -89,27 +89,6 @@ Status EDCCoding::EncodeToBuffer(const EDCC_CFG_T &config,
     return s;
 }
 
-Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
-{
-    if (buffer_ != NULL)
-    {
-        *buffer_size = buffer_len();
-        return Status::Ok();
-    }
-    *buffer_size = CalcCodingBufferSizeByConfig(config);
-    MallocCodingBuffer(*buffer_size, &buffer_);
-    if (buffer_ == NULL)
-    {
-        *buffer_size = 0;
-        Status::NullPtrError();
-    }
-    memcpy(&buffer_->cfg, &config, sizeof(EDCC_CFG_T));
-    buffer_->len = *buffer_size - sizeof(EDCC_CODING_T);
-    GenCodingBytesProcess(config.codingMode);
-
-    return Status::Ok();
-}
-
 Status EDCCoding::EncodeToHexString(const EDCC_CFG_T &config, string *hex_str)
 {
     assert(hex_str);
@@ -135,6 +114,27 @@ Status EDCCoding::EncodeToHexString(const EDCC_CFG_T &config, string *hex_str)
     return Status::Ok();
 }
 
+Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
+{
+    if (buffer_ != NULL)
+    {
+        *buffer_size = buffer_len();
+        return Status::Ok();
+    }
+    *buffer_size = CalcCodingBufferSizeByConfig(config);
+    MallocCodingBuffer(*buffer_size, &buffer_);
+    if (buffer_ == NULL)
+    {
+        *buffer_size = 0;
+        Status::NullPtrError();
+    }
+    memcpy(&buffer_->cfg, &config, sizeof(EDCC_CFG_T));
+    buffer_->len = *buffer_size - sizeof(EDCC_CODING_T);
+    GenCodingBytesProcess(config.codingMode);
+
+    return Status::Ok();
+}
+
 Status EDCCoding::DecodeFromBuffer(const u_char *coding_buffer)
 {
     CHECK_POINTER_NULL_RETURN(coding_buffer, Status::NullPtrError());
@@ -149,7 +149,7 @@ Status EDCCoding::DecodeFromBuffer(const u_char *coding_buffer)
     }
     memcpy(buffer_, coding, coding_buffer_size);
 
-    return Check::CheckCoding(*this) ? Status::Ok() : Status::CodingInvalid();
+    return Checker::CheckCoding(*this) ? Status::Ok() : Status::CodingInvalid();
 }
 
 Status EDCCoding::DecodeFromHexString(const string &hex_str)
@@ -288,7 +288,7 @@ size_t EDCCoding::CalcCodingBufferSizeByConfig(const EDCC_CFG_T &config)
     return buffer_len;
 }
 
-inline void EDCCoding::MallocCodingBuffer(size_t buffer_size, EDCC_CODING_T **buffer)
+void EDCCoding::MallocCodingBuffer(size_t buffer_size, EDCC_CODING_T **buffer)
 {
     CHECK_EQ_RETURN_VOID(buffer_size, 0);
     FreeCodingBuffer(buffer);
@@ -298,7 +298,7 @@ inline void EDCCoding::MallocCodingBuffer(size_t buffer_size, EDCC_CODING_T **bu
     memset(*buffer, 0, buffer_size);
 }
 
-inline void EDCCoding::FreeCodingBuffer(EDCC_CODING_T **buffer)
+void EDCCoding::FreeCodingBuffer(EDCC_CODING_T **buffer)
 {
     if (*buffer != NULL)
     {
