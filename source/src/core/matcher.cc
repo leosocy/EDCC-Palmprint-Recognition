@@ -3,7 +3,7 @@
 // that can be found in the LICENSE file.
 
 #include "core/matcher.h"
-#include "core/palmprint_code.h"
+#include "core/palmprintcode.h"
 #include "core/edccoding.h"
 #include "core/checker.h"
 #include "util/status.h"
@@ -27,11 +27,11 @@ Status Matcher::MatchingProcess(const EDCC_CODING_T *lhs_coding,
     {
         case COMPRESSION_CODING_MODE:
         {
-            return ExcuteMatchingWhenCompressionCodingMode(lhs_coding, rhs_coding, score);
+            return ExecuteMatchingWhenCompressionCodingMode(lhs_coding, rhs_coding, score);
         }
         case FAST_CODING_MODE:
         {
-            return ExcuteMatchingWhenFastCodingMode(lhs_coding, rhs_coding, score);
+            return ExecuteMatchingWhenFastCodingMode(lhs_coding, rhs_coding, score);
         }
         default:
         {
@@ -42,7 +42,7 @@ Status Matcher::MatchingProcess(const EDCC_CODING_T *lhs_coding,
     }
 }
 
-Status Matcher::ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_coding,
+Status Matcher::ExecuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_coding,
                                                       const EDCC_CODING_T *rhs_coding,
                                                       double *score)
 {
@@ -84,7 +84,7 @@ Status Matcher::ExcuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs
     return Status::Ok();
 }
 
-Status Matcher::ExcuteMatchingWhenFastCodingMode(const EDCC_CODING_T *lhs_coding,
+Status Matcher::ExecuteMatchingWhenFastCodingMode(const EDCC_CODING_T *lhs_coding,
                                                const EDCC_CODING_T *rhs_coding,
                                                double *score)
 {

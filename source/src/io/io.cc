@@ -8,7 +8,7 @@
 #include <opencv2/opencv.hpp>
 #include "core/edccoding.h"
 #include "core/palmprint.h"
-#include "core/palmprint_code.h"
+#include "core/palmprintcode.h"
 #include "core/config.h"
 #include "util/status.h"
 

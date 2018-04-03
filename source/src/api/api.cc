@@ -7,7 +7,7 @@
 #include "io/io.h"
 #include "core/palmprint.h"
 #include "core/edccoding.h"
-#include "core/palmprint_code.h"
+#include "core/palmprintcode.h"
 #include "core/checker.h"
 #include "core/matcher.h"
 #include "util/pub.h"

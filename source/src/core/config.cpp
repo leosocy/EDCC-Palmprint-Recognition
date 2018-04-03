@@ -3,6 +3,7 @@
 // that can be found in the LICENSE file.
 
 #include "core/config.h"
+#include <string.h>
 
 namespace edcc
 {

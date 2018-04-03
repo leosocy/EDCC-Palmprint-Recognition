@@ -9,14 +9,25 @@
 
 #include "core/edccoding.h"
 #include "core/palmprint.h"
-#include "core/palmprint_code.h"
+#include "core/palmprintcode.h"
 #include "core/config.h"
 
 namespace edcc
 {
-
 using std::vector;
 using std::set;
+
+bool IsValueInArray(const u_char *elem_array, int array_size, u_char value)
+{
+    for (int i = 0; i < array_size; ++i)
+    {
+        if (*(elem_array + i) == value)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 bool Checker::CheckConfig(const EDCC_CFG_T &config)
 {
@@ -50,13 +61,17 @@ bool Checker::CheckConfig(const EDCC_CFG_T &config)
                  limit::kMinGaborDirections, limit::kMaxGabotDirections);
         return false;
     }
-    if (limit::kSupportedCodingModes.find(config.codingMode) == limit::kSupportedCodingModes.end())
+    if (!IsValueInArray(limit::kSupportedCodingModes,
+                       sizeof(limit::kSupportedCodingModes)/sizeof(limit::kSupportedCodingModes[0]),
+                       config.codingMode))
     {
         EDCC_Log("Coding Mode [%d] not supported!",
                  config.codingMode);
         return false;
     }
-    if (limit::kSupportedMatchingModes.find(config.matchingMode) == limit::kSupportedMatchingModes.end())
+    if (!IsValueInArray(limit::kSupportedMatchingModes,
+                        sizeof(limit::kSupportedMatchingModes) / sizeof(limit::kSupportedMatchingModes[0]),
+                        config.matchingMode))
     {
         EDCC_Log("Matching Mode [%d] not supported!",
                  config.matchingMode);
