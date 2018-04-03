@@ -1,33 +1,21 @@
 # Code structure
 
-## API
+## api
 
-- The implementation of the APIs provided in EDCC.h.
+The implementation of the apis provided in edcc.h.
 
-## Pub
+## core
 
-- Some common functions and macros.
+- config
+- matcher
+- checker
+- edccoding
+- palmprint
+- palmprintcode
 
-## IO
+## io
 
-- Load the configuration file of the EDCC algorithm `loadConfig` (configuration file in JSON format).
-- Loads palmprint training set `loadPalmprintGroup`.
-- Load palmprint training set feature library `loadPalmprintFeatureData`.
-- Save the palmprint training set signature library `savePalmprintFeatureData`.
+## util
 
-## Check
-
-- Check the legitimacy of the EDCC algorithm `checkConfigValid`.
-- Check the training set palmprint legality checkPalmprintGroupValid`.
-- Check signature library validation `checkPalmprintFeatureData`.
-
-## Core
-
-- `Palmprint`
-- `EDCCoding`
-- `GaborFilter`
-- `PalmprintCode`
-
-## Match
-
-- Two palm prints encode point-to-point matches `matchP2P`.
+- pub
+- status

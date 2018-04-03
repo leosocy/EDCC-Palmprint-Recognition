@@ -6,7 +6,6 @@
 #define __CONFIG_H__
 
 #include <string>
-#include <set>
 #include "util/pub.h"
 
 namespace edcc
@@ -28,21 +27,27 @@ static const char* const kMatchingMode = "matchingMode";
 namespace limit
 {
 
-using std::set;
-
 static const u_short kMinImageWidth = 29;
 static const u_short kMinImageHeight = 29;
 static const u_char kMaxLaplaceKernelSize = 31;
 static const u_char kMinGaborDirections = 4;
 static const u_char kMaxGabotDirections = 16;
 #define COMPRESSION_CODING_MODE 1
-#define FAST_CODING_MODE 2
-static const set<u_char> kSupportedCodingModes = {COMPRESSION_CODING_MODE, FAST_CODING_MODE};
-#define RELIABLE_MATCHING_MODE 1
-#define SPEED_MATCHING_MODE 2
-static const set<u_char> kSupportedMatchingModes = {RELIABLE_MATCHING_MODE, SPEED_MATCHING_MODE};
+#define FAST_CODING_MODE        2
+static const u_char kSupportedCodingModes[] =
+{
+    COMPRESSION_CODING_MODE,
+    FAST_CODING_MODE
+};
+#define RELIABLE_MATCHING_MODE  1
+#define SPEED_MATCHING_MODE     2
+static const u_char kSupportedMatchingModes[] =
+{
+    RELIABLE_MATCHING_MODE,
+    SPEED_MATCHING_MODE
+};
 
-} // namespace limit
+}; // namespace limit
 
 typedef struct tag_EDCC_CFG_T
 {
