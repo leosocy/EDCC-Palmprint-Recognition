@@ -6,6 +6,7 @@
 #define __CONFIG_H__
 
 #include <string>
+#include <set>
 #include "util/pub.h"
 
 namespace edcc

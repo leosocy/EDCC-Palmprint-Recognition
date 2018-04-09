@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
-#include <EDCC.h>
+#include "edcc.h"
 using namespace std;
 
 #ifdef _WINDOWS

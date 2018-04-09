@@ -7,10 +7,8 @@ from ctypes import *
 import sys
 
 runtime_path = os.getcwd()
-edcc_windows_dll_path = os.path.join(os.getcwd(), "windows-lib")
-edcc_unix_so_path = os.path.join(os.getcwd(), "unix-lib")
-edcc_windows_dll_name = os.path.join(edcc_windows_dll_path, "EDCC.dll")
-edcc_unix_so_name = os.path.join(edcc_unix_so_path, "EDCC.so")
+edcc_so_path = os.path.join(os.getcwd(), "lib")
+edcc_so_name = "./libedcc.so"
 
 class EDCC_API(object):
     def __init__(self):
@@ -18,22 +16,9 @@ class EDCC_API(object):
         self.__loadEDCCLib__()
     
     def __loadEDCCLib__(self):
-        if self.__isWindows__():
-            os.chdir(edcc_windows_dll_path)
-            self.edcc_api = cdll.LoadLibrary(edcc_windows_dll_name)
-            os.chdir(runtime_path)
-        elif self.__isUnix__():
-            os.chdir(edcc_unix_so_path)
-            self.edcc_api = cdll.LoadLibrary(edcc_unix_so_name)
-            os.chdir(runtime_path)
-        else:
-            raise RuntimeError("Unkown system platform.")
-    
-    def __isWindows__(self):
-        return 'Windows' in platform.system()
-    
-    def __isUnix__(self):
-        return 'Linux' in platform.system()
+        os.chdir(edcc_so_path)
+        self.edcc_api = CDLL(edcc_so_name)
+        os.chdir(runtime_path)
 
     '''
     @in str:palmprintImagePath str:configPath int:codingBufMaxLen
@@ -47,8 +32,8 @@ class EDCC_API(object):
             or not isinstance(configPath, str) \
             or not isinstance(codingBufMaxLen, int):
             raise RuntimeError("EDCC API:GetEDCCCoding. Params in error")
-        pPalmprintImagePath = c_char_p(bytes(palmprintImagePath, encoding = "utf8"))
-        pConfigPath = c_char_p(bytes(configPath, encoding = "utf8"))
+        pPalmprintImagePath = c_char_p(bytes(palmprintImagePath))
+        pConfigPath = c_char_p(bytes(configPath))
         codingBuf = create_string_buffer(codingBufMaxLen)
         bufMaxLen = c_uint(codingBufMaxLen)
         bufLen = c_uint(0)
@@ -87,9 +72,9 @@ class EDCC_API(object):
                                   configPath):
         if not isinstance(firstPalmprintImagePath, str) or not isinstance(secondPalmprintImagePath, str) or not isinstance(configPath, str):
             raise RuntimeError("EDCC API:GetTwoPalmprintMatchScore. Params in error")
-        pFirstPalmprintImagePath = c_char_p(bytes(firstPalmprintImagePath, encoding = "utf8"))
-        pSecondPalmprintImagePath = c_char_p(bytes(secondPalmprintImagePath, encoding = "utf8"))
-        pConfigPath = c_char_p(bytes(configPath, encoding = "utf8"))
+        pFirstPalmprintImagePath = c_char_p(bytes(firstPalmprintImagePath))
+        pSecondPalmprintImagePath = c_char_p(bytes(secondPalmprintImagePath))
+        pConfigPath = c_char_p(bytes(configPath))
         matchScore = c_double(0.0)
         pScore = POINTER(c_double)(matchScore)
         iterfaceRet = self.edcc_api.GetTwoPalmprintMatchScore(pFirstPalmprintImagePath, pSecondPalmprintImagePath, pConfigPath, pScore)

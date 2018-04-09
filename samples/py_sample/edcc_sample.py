@@ -6,8 +6,6 @@ from EDCCApiAdapter import *
 from PalmprintImageFactory import *
 from PalmprintCodeRepository import *
 import time
-import win_unicode_console
-win_unicode_console.enable()
 
 class PalmprintCodeDTO(object):
     def __init__(self, ID, instanceID, imagePath, code):
