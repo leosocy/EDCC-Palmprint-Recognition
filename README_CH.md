@@ -37,11 +37,11 @@
 
 ### 链接EDCC库
 
-1. 将生成的\*.a和\*.so以及EDCC/include/EDCC.h拷贝到自己的项目目录
+1. 将生成的\*.a和\*.so以及EDCC/include/edcc.h拷贝到自己的项目目录
 1. 编辑您的CMakeLists.txt
     ```cmake
     find_package(OpenCV REQUIRED)
-    include_directories(EDCC.h)
+    include_directories(edcc.h)
     ······
     target_link_libraries(${PROJECT} EDCC ${OpenCV_LIBS})
     ```

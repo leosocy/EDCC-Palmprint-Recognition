@@ -62,10 +62,6 @@ file(GLOB_RECURSE SRC_FILES
 
 group_src_by_dir(HEADER_FILES)
 group_src_by_dir(SRC_FILES)
-if(MSVC)
-    add_compile_options("/MT")
-elseif (UNIX)
-endif()
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SRC_FILES})
 
