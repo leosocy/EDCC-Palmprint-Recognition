@@ -1,4 +1,4 @@
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required(VERSION 2.8)
 
 set(PROJECT_NAME edcc)
 project(${PROJECT_NAME})
@@ -12,11 +12,13 @@ message(STATUS "—————————————————————�
 
 add_subdirectory(${JSONCPP_ROOT} ${CMAKE_BINARY_DIR}/thirdparty/jsoncpp)
 
-set(OpenCV_STATIC OFF)
-set(OpenCV_INCLUDE_DIRS ${OpenCV_DIR}/include)
-set(OpenCV_LIB_PATH ${OpenCV_DIR}/x64/vc15/lib)
-
 find_package(OpenCV REQUIRED)
+
+IF(MSVC)
+    set(OpenCV_STATIC OFF)
+    set(OpenCV_INCLUDE_DIRS ${OpenCV_DIR}/include)
+    set(OpenCV_LIB_PATH ${OpenCV_DIR}/x64/vc15/lib)
+ENDIF()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
 include_directories(${EDCC_PUB_HEADER})
@@ -25,12 +27,10 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 macro(group_src_by_dir src_files)
     foreach(file_path ${${src_files}})
-        message(${file_path})
         string(REGEX REPLACE ${CMAKE_CURRENT_SOURCE_DIR}/\(.*\) \\1 relative_path ${file_path})
         string(REGEX REPLACE "(.+)\\..*" \\1 relative_group ${relative_path})
         list(FIND c_groups ${relative_group} index)
         if(NOT index LESS 0)
-            message(${relative_group})
             string(REPLACE "/" "\\" relative_group ${relative_group})
             source_group(${relative_group} FILES ${file_path})
         else()
@@ -38,10 +38,8 @@ macro(group_src_by_dir src_files)
             if(has_group)
                 string(REGEX REPLACE "(.+)/.*" \\1 group ${relative_path})
                 string(REPLACE "/" "\\" group ${group})
-                message(${group})
                 source_group(${group} FILES ${file_path})
             else()
-                message("")
                 source_group("" FILES ${file_path})
             endif()
         endif()
