@@ -32,8 +32,8 @@ class EDCC_API(object):
             or not isinstance(configPath, str) \
             or not isinstance(codingBufMaxLen, int):
             raise RuntimeError("EDCC API:GetEDCCCoding. Params in error")
-        pPalmprintImagePath = c_char_p(bytes(palmprintImagePath))
-        pConfigPath = c_char_p(bytes(configPath))
+        pPalmprintImagePath = c_char_p(bytes(palmprintImagePath, encoding="utf-8"))
+        pConfigPath = c_char_p(bytes(configPath, encoding="utf-8"))
         codingBuf = create_string_buffer(codingBufMaxLen)
         bufMaxLen = c_uint(codingBufMaxLen)
         bufLen = c_uint(0)
@@ -72,9 +72,9 @@ class EDCC_API(object):
                                   configPath):
         if not isinstance(firstPalmprintImagePath, str) or not isinstance(secondPalmprintImagePath, str) or not isinstance(configPath, str):
             raise RuntimeError("EDCC API:GetTwoPalmprintMatchScore. Params in error")
-        pFirstPalmprintImagePath = c_char_p(bytes(firstPalmprintImagePath))
-        pSecondPalmprintImagePath = c_char_p(bytes(secondPalmprintImagePath))
-        pConfigPath = c_char_p(bytes(configPath))
+        pFirstPalmprintImagePath = c_char_p(bytes(firstPalmprintImagePath, encoding="utf-8"))
+        pSecondPalmprintImagePath = c_char_p(bytes(secondPalmprintImagePath, encoding="utf-8"))
+        pConfigPath = c_char_p(bytes(configPath, encoding="utf-8"))
         matchScore = c_double(0.0)
         pScore = POINTER(c_double)(matchScore)
         iterfaceRet = self.edcc_api.GetTwoPalmprintMatchScore(pFirstPalmprintImagePath, pSecondPalmprintImagePath, pConfigPath, pScore)
