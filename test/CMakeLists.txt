@@ -3,12 +3,12 @@ cmake_minimum_required(VERSION 2.8)
 set(PROJECT_NAME test_edcc)
 project(${PROJECT_NAME})
 
-find_package(OpenCV REQUIRED)
+#find_package(OpenCV REQUIRED)
 
-set(GTEST_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/gtest)
-set(JSONCPP_ROOT ${CMAKE_SOURCE_DIR}/../thirdparty/jsoncpp)
-set(EDCC_ROOT ${CMAKE_SOURCE_DIR}/../source)
-set(EDCC_PUB_HEADER ${CMAKE_SOURCE_DIR}/../include)
+set(GTEST_ROOT ${PROJECT_SOURCE_DIR}/../thirdparty/gtest)
+set(JSONCPP_ROOT ${PROJECT_SOURCE_DIR}/../thirdparty/jsoncpp)
+set(EDCC_ROOT ${PROJECT_SOURCE_DIR}/../source)
+set(EDCC_PUB_HEADER ${PROJECT_SOURCE_DIR}/../include)
 
 message(STATUS "——————————————————————————————————————")
 message(STATUS "PROJECT_NAME : " ${PROJECT_NAME})
@@ -62,12 +62,11 @@ file(GLOB_RECURSE SRC_FILES
 
 group_src_by_dir(HEADER_FILES)
 group_src_by_dir(SRC_FILES)
+if(MSVC)
+    add_compile_options("/MT")
+elseif (UNIX)
+endif()
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SRC_FILES})
-
+add_dependencies(edcc gtest)
 target_link_libraries(${PROJECT_NAME} edcc gtest)
-
-enable_testing()
-add_test(NAME ${PROJECT_NAME}
-        CONFIGURATIONS  Release
-        COMMAND ${PROJECT_NAME})

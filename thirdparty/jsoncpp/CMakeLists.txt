@@ -31,5 +31,5 @@ elseif (UNIX)
 endif()
 
 add_library(${PROJECT_NAME} STATIC 
-						${jsoncpp_include_files}
-						${jsoncpp_src_files})
+			${jsoncpp_include_files}
+			${jsoncpp_src_files})

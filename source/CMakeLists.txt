@@ -2,25 +2,25 @@ cmake_minimum_required(VERSION 2.8)
 
 set(PROJECT_NAME edcc)
 project(${PROJECT_NAME})
-set(JSONCPP_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../thirdparty/jsoncpp)
-set(EDCC_PUB_HEADER ${CMAKE_SOURCE_DIR}/../include)
+set(JSONCPP_ROOT ${PROJECT_SOURCE_DIR}/../thirdparty/jsoncpp)
+set(EDCC_PUB_HEADER ${PROJECT_SOURCE_DIR}/../include)
 
 message(STATUS "——————————————————————————————————————")
 message(STATUS "PROJECT_NAME : " ${PROJECT_NAME})
-message(STATUS "DIR : " ${CMAKE_CURRENT_SOURCE_DIR})
+message(STATUS "DIR : " ${PROJECT_SOURCE_DIR})
 message(STATUS "——————————————————————————————————————")
 
 add_subdirectory(${JSONCPP_ROOT} ${CMAKE_BINARY_DIR}/thirdparty/jsoncpp)
 
-find_package(OpenCV REQUIRED)
-
 IF(MSVC)
-    set(OpenCV_STATIC OFF)
-    set(OpenCV_INCLUDE_DIRS ${OpenCV_DIR}/include)
-    set(OpenCV_LIB_PATH ${OpenCV_DIR}/x64/vc15/lib)
+set(OpenCV_STATIC OFF)
+set(OpenCV_INCLUDE_DIRS ${OpenCV_DIR}/include)
+set(OpenCV_LIB_PATH ${OpenCV_DIR}/x64/vc15/lib)
 ENDIF()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/)
+find_package(OpenCV REQUIRED)
+
+include_directories(${PROJECT_SOURCE_DIR}/include/)
 include_directories(${EDCC_PUB_HEADER})
 include_directories(${JSONCPP_ROOT}/include)
 include_directories(${OpenCV_INCLUDE_DIRS})
