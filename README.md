@@ -20,50 +20,61 @@ Advantages of `EDCC` algorithm:
 
 [**More details of `EDCC`**](https://leosocy.github.io/2017/10/18/EDCC-Algorithm/)
 
+## Installation
+
+There are some requirements if you want to install `EDCC`:
+
+1. Linux/Unix OS
+1. OpenCV Installed
+
+Steps:
+
+1. `git clone https://github.com/Leosocy/EDCC-Palmprint-Recognition.git`
+1. `cd EDCC-Palmprint-Recognition && mkdir -p build && cd build`
+1. `cmake ..`
+1. `make -j install`
+
 ## How to use `EDCC` in your project
 
-### Use existing library
+There are some [samples](https://github.com/Leosocy/EDCC-Palmprint-Recognition/tree/master/samples) about how to use `edcc api`.
 
-1. `git clone https://github.com/Leosocy/EDCC-Palmprint-Recognition.git`
-1. `cd EDCC-Palmprint-Recognition/lib`
+[Usage of api.](https://github.com/Leosocy/EDCC/tree/master/include)
 
-There is existing library in [`lib`](https://github.com/Leosocy/EDCC/tree/master/lib) directory, include Windows/Linux. EDCC api header is in [`include`](https://github.com/Leosocy/EDCC/tree/master/include) directory.
+- C++
 
-You can use the following methods to use EDCC in your project:
+    In your CMakeLists.txt, add these lines:
 
-- Add *.a *.so to system lib directory, such as /usr/lib; add edcc.h to system include directory, such as /usr/include.
-- Add edcc library directory path to your system environment varibles.
-- Edit your CMakeLists.txt
     ```cmake
-    find_package(OpenCV REQUIRED)
-    include_directories(edcc.h)
-    ······
-    link_directories(${EDCC_LIB_PATH})
-    target_link_libraries(${PROJECT} edcc ${OpenCV_LIBS})
+    FIND_PACKAGE(EDCC REQUIRED)
+    INCLUDE_DIRECTORIES(${EDCC_INCLUDE_DIRS})
+    TARGET_LINK_LIBRARIES(YOUR_TARGET_NAME ${EDCC_LIBS})
     ```
-- Put EDCC library and EDCC.h in the same folder as your project.
 
-### Generate library and use it
+    Then you can use those apis in `edcc.h` like this:
 
-1. `git clone https://github.com/Leosocy/EDCC-Palmprint-Recognition.git`
-1. `cd EDCC/lib`
-1. `mkdir build`
-1. `cmake ..`
-1. `make -j`
+    ```C++
+    #include <edcc.h>
+    int main(int argc, char** argv)
+    {
+        const char* palmprint_image_path = "IMAGE_PATH";
+        const char* config_file_path = "config.json";
+        #define CODE_BUFFER_MAX_LEN 1024
+        unsigned char code_buffer[CODE_BUFFER_MAX_LEN] = {0};
+        size_t buffer_len = 0;
+        int ret = GetEDCCCoding(palmprint_image_path,
+                                config_file_path,
+                                CODE_BUFFER_MAX_LEN,
+                                code_buffer,
+                                &buffer_len);
+    }
+    ```
 
-`libedcc_static.a` and `libedcc.so` will be generated in `edcc_lib` directory.
+- Python
 
-Compile library process frequently asked questions [FAQ](https://github.com/Leosocy/EDCC/tree/master/lib)
+    Python need 3.x.
 
-## API Instructions
+    In your py, add these lines:
 
-[Instructions](https://github.com/Leosocy/EDCC/tree/master/include)
-
-## Directory Structure
-
-- `include`: Contain the EDCC api header and api instructions.
-- `source`: EDCC algorithm source code and code architecture.
-- `samples`: Some samples about how to use EDCC api, include `python`, `C++`.
-- `test`: functions test.
-- `thirdparty`: Third party library, include `gtest` and `jsoncpp`.
-- `lib`: A CMakeList used to generate EDCC static and dynamic link libraries. And two directories include windows and linux libraries.
+    ```python
+    from edcc_adapter import *
+    ```
