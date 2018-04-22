@@ -56,16 +56,33 @@ There are some [samples](https://github.com/Leosocy/EDCC-Palmprint-Recognition/t
     #include <edcc.h>
     int main(int argc, char** argv)
     {
-        const char* palmprint_image_path = "IMAGE_PATH";
+        const char* palmprint_image_path_1 = "IMAGE_PATH_1";
+        const char* palmprint_image_path_2 = "IMAGE_PATH_1";
         const char* config_file_path = "config.json";
         #define CODE_BUFFER_MAX_LEN 1024
-        unsigned char code_buffer[CODE_BUFFER_MAX_LEN] = {0};
-        size_t buffer_len = 0;
-        int ret = GetEDCCCoding(palmprint_image_path,
+        unsigned char code_buffer_1[CODE_BUFFER_MAX_LEN] = {0};
+        unsigned char code_buffer_2[CODE_BUFFER_MAX_LEN] = {0};
+        size_t buffer_len_1 = 0;
+        size_t buffer_len_2 = 0;
+        int ret = GetEDCCCoding(palmprint_image_path_1,
                                 config_file_path,
                                 CODE_BUFFER_MAX_LEN,
-                                code_buffer,
-                                &buffer_len);
+                                code_buffer_1,
+                                &buffer_len_1);
+        ret = GetEDCCCoding(palmprint_image_path_2,
+                            config_file_path,
+                            CODE_BUFFER_MAX_LEN,
+                            code_buffer_2,
+                            &buffer_len_2);
+        double coding_matching_score = 0.0
+        double image_matching_score = 0.0
+        GetTwoPalmprintCodingMatchScore(code_buffer_1,
+                                        code_buffer_2,
+                                        &coding_matching_score)
+        GetTwoPalmprintMatchScore(palmprint_image_path_1,
+                                  palmprint_image_path_2,
+                                  config_file_path,
+                                  &image_matching_score)
     }
     ```
 
@@ -77,4 +94,13 @@ There are some [samples](https://github.com/Leosocy/EDCC-Palmprint-Recognition/t
 
     ```python
     from edcc_adapter import *
+
+    EDCC_API = EdccApi()
+    coding_1, coding_len_1 = EDCC_API.GetEDCCCoding("IMAGE_PATH_1", "CONFIG_PATH")
+    coding_2, coding_len_2 = EDCC_API.GetEDCCCoding("IMAGE_PATH_2", "CONFIG_PATH")
+
+    coding_matching_score = EDCC_API.GetTwoPalmprintCodingMatchScore(coding_1, coding_2)
+    image_matching_score = EDCC_API.GetTwoPalmprintMatchScore("IMAGE_PATH_1", "IMAGE_PATH_2", "CONFIG_PATH")
     ```
+
+## Run samples
