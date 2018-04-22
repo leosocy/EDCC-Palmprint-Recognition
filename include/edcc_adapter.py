@@ -26,11 +26,11 @@ class EdccApi(object):
         c_buffer_max_len = c_uint(coding_buffer_max_len)
         buffer_len = c_uint(0)
         c_pointer_buffer_len = POINTER(c_uint)(buffer_len)
-        iterface_ret = self.edcc_api.GetEDCCCoding(c_pointer_palmprint_image_path,
-                                                   c_pointer_config_path,
-                                                   c_buffer_max_len,
-                                                   c_coding_buffer,
-                                                   c_pointer_buffer_len)
+        iterface_ret = self._edcc_lib.GetEDCCCoding(c_pointer_palmprint_image_path,
+                                                    c_pointer_config_path,
+                                                    c_buffer_max_len,
+                                                    c_coding_buffer,
+                                                    c_pointer_buffer_len)
         if iterface_ret != 0:
             raise RuntimeError("EDCC API:GetEDCCCoding. Call API result error[%d]." % (iterface_ret))
         buffer_len_ret = c_pointer_buffer_len.contents.value
@@ -49,9 +49,9 @@ class EdccApi(object):
         c_pointer_second_palmprint_coding_buffer = c_char_p(second_palmprint_coding_buffer)
         match_score = c_double(0.0)
         c_pointer_match_score = POINTER(c_double)(match_score)
-        iterface_ret = self.edcc_api.GetTwoPalmprintCodingMatchScore(c_pointer_first_palmprint_coding_buffer,
-                                                                     c_pointer_second_palmprint_coding_buffer,
-                                                                     c_pointer_match_score)
+        iterface_ret = self._edcc_lib.GetTwoPalmprintCodingMatchScore(c_pointer_first_palmprint_coding_buffer,
+                                                                      c_pointer_second_palmprint_coding_buffer,
+                                                                      c_pointer_match_score)
         if iterface_ret != 0:
             raise RuntimeError("EDCC API:GetTwoPalmprintCodingMatchScore. Call API result error[%d]." % (iterface_ret))
         return c_pointer_match_score.contents.value
@@ -64,8 +64,8 @@ class EdccApi(object):
                                   firstpalmprint_image_path,
                                   secondpalmprint_image_path,
                                   config_path):
-        if not isinstance(firstpalmprint_image_path, str)
-            or not isinstance(secondpalmprint_image_path, str)
+        if not isinstance(firstpalmprint_image_path, str)      \
+            or not isinstance(secondpalmprint_image_path, str) \
             or not isinstance(config_path, str):
             raise RuntimeError("EDCC API:GetTwoPalmprintMatchScore. Params in error")
         c_pointer_firstpalmprint_image_path = c_char_p(bytes(firstpalmprint_image_path, encoding="utf-8"))
@@ -73,10 +73,10 @@ class EdccApi(object):
         c_pointer_config_path = c_char_p(bytes(config_path, encoding="utf-8"))
         match_score = c_double(0.0)
         c_pointer_match_score = POINTER(c_double)(match_score)
-        iterface_ret = self.edcc_api.GetTwoPalmprintMatchScore(c_pointer_firstpalmprint_image_path,
-                                                               c_pointer_secondpalmprint_image_path,
-                                                               c_pointer_config_path,
-                                                               c_pointer_match_score)
+        iterface_ret = self._edcc_lib.GetTwoPalmprintMatchScore(c_pointer_firstpalmprint_image_path,
+                                                                c_pointer_secondpalmprint_image_path,
+                                                                c_pointer_config_path,
+                                                                c_pointer_match_score)
         if iterface_ret != 0:
             raise RuntimeError("EDCC API:GetTwoPalmprintMatchScore. Call API result error[%d]." % (iterface_ret))
         return c_pointer_match_score.contents.value

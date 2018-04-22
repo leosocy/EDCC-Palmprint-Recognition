@@ -73,8 +73,12 @@ IF(PYTHONINTERP_FOUND AND PYTHON_VERSION_MAJOR GREATER 2)
     EXECUTE_PROCESS(COMMAND "${PYTHON_EXECUTABLE}" -c 
                                             "if True:
                                                 from distutils import sysconfig as sc
-                                                print(sc.get_python_lib(prefix='', plat_specific=True))"
+                                                print(sc.get_python_lib(plat_specific=True))"
                     OUTPUT_VARIABLE PYTHON_SITE
                     OUTPUT_STRIP_TRAILING_WHITESPACE)
-    INSTALL(FILES ${EDCC_PUB_HEADER}/edcc_adapter.py DESTINATION ${PYTHON_SITE}/)
+    EXECUTE_PROCESS(COMMAND touch ${PYTHON_SITE}/edcc_package.pth
+		    COMMAND echo "${CMAKE_INSTALL_PREFIX}/include/edcc"
+		    OUTPUT_FILE ${PYTHON_SITE}/edcc_package.pth)
+    MESSAGE(STATUS ${PYTHON_SITE} ) 
+    INSTALL(FILES ${EDCC_PUB_HEADER}/edcc_adapter.py DESTINATION include/edcc)
 ENDIF()
