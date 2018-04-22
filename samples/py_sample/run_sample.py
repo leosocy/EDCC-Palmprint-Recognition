@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*
 
 import os
-from EDCCApiAdapter import *
+from edcc_adapter import *
 from PalmprintImageFactory import *
 from PalmprintCodeRepository import *
 import time
@@ -14,7 +14,7 @@ class PalmprintCodeDTO(object):
 
 class EDCCSample(object):
     def __init__(self):
-        self._edcc_api = EDCC_API()
+        self._edcc_api = EdccApi()
         self._factory = PalmprintImageFactory(4)
         self._dbPath = "./R_PALMPRINTCODE.db"
         if os.path.exists(self._dbPath):
