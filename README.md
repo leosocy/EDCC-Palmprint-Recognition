@@ -104,3 +104,11 @@ There are some [samples](https://github.com/Leosocy/EDCC-Palmprint-Recognition/t
     ```
 
 ## Run samples
+
+Before running the example, make sure `make install` succeed.
+
+- Run Python sample
+
+    1. `cd EDCC-Palmprint-Recognition && mkdir -p build && cd build`
+    1. `cmake ..`
+    1. `make -j run_py_sample`
