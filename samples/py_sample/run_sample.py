@@ -52,12 +52,13 @@ class EDCCSample(object):
                 topKMatchScore.pop()
             self.statisticsResult(predict, topKMatchScore, costTime)
         print("\n\n=========================================================================")
-        print("Predict Over. Total:%d\tPredictCorrect:%d\tAccuracy:%lf%%" % (len(predictGroup), self._succNum, float(self._succNum) / len(predictGroup) * 100))
+        print("Predict Over.\nTotal:%d\tPredictCorrect:%d\tAccuracy:%lf%%" % (len(predictGroup), self._succNum, float(self._succNum) / len(predictGroup) * 100))
         print("Total Cost Time:%lf\tMatch Count:%d\tPer Cost Time:%lf" % (total_cost_time, total_match_count, total_cost_time / total_match_count))
         if self._wrong_list:
             print("Wrong List:")
             for record in self._wrong_list:
                 print(record)
+        print("=========================================================================\n\n")
 
     def statisticsResult(self, predict, topKMatchScore, costTime):
         resultsDict = {}
@@ -78,15 +79,22 @@ class EDCCSample(object):
         resultsDict = sorted(resultsDict.items(), key=lambda r:r[1], reverse=True)
         bestMatchID = resultsDict[0][0]
         bestMatchScore = resultsDict[0][1]
-        resultStr = "Predict:\tID:%s\tInstanceID:%s\t\nBestMatch:\tID:%s\t\nMatchScore:%lf\tCostTime:%lfms" % (predict.id, predict.instanceID, bestMatchID, bestMatchScore, costTime)
-        print(resultStr)
+        predictHeadStr = "Predict:"
+        trainStr = "ID:%s   InstanceID:%s" % (predict.id, predict.instanceID)
+        predictStr = "BestMatch:  ID:%s   MatchScore:%lf  CostTime:%lfms" % (bestMatchID, bestMatchScore, costTime)
+        resultLineMaxLen = max(len(trainStr), len(predictStr), len(predictStr)) + 5
+        print('-'*resultLineMaxLen)
+        print('| '+predictHeadStr+(resultLineMaxLen-len(predictHeadStr)-3)*' '+'|')
+        print('| '+trainStr+(resultLineMaxLen-len(trainStr)-3)*' '+'|')
+        print('| '+predictStr+(resultLineMaxLen-len(predictStr)-3)*' '+'|')
         if bestMatchID == predict.id:
             self._succNum = self._succNum + 1
-            print("Correct Match\n\n")
+            print('| '+'Correct Match'+(resultLineMaxLen-len('Correct Match')-3)*' '+'|')
         else:
             self._failNum = self._failNum + 1
             self._wrong_list.append(resultStr)
-            print("Error Match\n\n")
+            print('| '+'Error Match'+(resultLineMaxLen-len('Error Match')-3)*' '+'|')
+        print('-'*resultLineMaxLen+'\n\n')
 
     def _initDB(self):
         print("Init PalmprintCodeDB")
