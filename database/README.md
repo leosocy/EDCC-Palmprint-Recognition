@@ -1,33 +1,33 @@
 # 掌纹图像ROI
 
-## BaiduYun
+Partial palmprint data set.
 
-链接: https://pan.baidu.com/s/1sloOpjR 密码: q3cf
+For full data, [click here](https://pan.baidu.com/s/1sloOpjR)  (`passwd:`**q3cf**).
 
-## PolyU
+## PolyU Palmprint Database
 
-多光谱掌纹数据库包含四个光谱（红、绿、蓝和近红外NIR）。
+The multi-spectral palmprint database contains four spectra (red, green, blue, and near-infrared NIR).
 
-从250个受试者（男195人，女55人）收集了每个频谱的数据库。
+A database of each spectrum was collected from 250 subjects (195 males and 55 females).
 
-年龄分布为20至60岁，整个采集过程分为两次，每次采集两只手掌的共12张图像。
+The age distribution ranged from 20 to 60 years old. The whole collection process was divided into two times. A total of 12 images of two palms were collected at a time.
 
-因此，对每名志愿者在每个光谱下采集了来自2只手掌的24张图像。总的来说数据库包含4个光谱，每个光谱包括500个不同手掌的6000张图像。
+Therefore, 24 images from 2 palms were collected for each volunteer under each spectrum. In total, the database contains 4 spectra, each of which includes 6000 images of 500 different palms.
 
-## Tongji
+## Tongji Palmprint Database
 
-同济大学掌纹数据库：基于非接触式设备采集。
+Tongji University palmprint database: based on non-contact device acquisition.
 
-包含了来自300个人（男192人，女108人）的手掌图像，其中235名受试者为20~30岁，其余为30~50岁）。
+Contains images of palms from 300 individuals (192 men and 108 women), of whom 235 were 20 to 30 years old and the rest were 30 to 50 years old.
 
-整个采集过程分为两次，第一次和第二次之间的平均时间间隔约为61天，最大和最短时间间隔分别为106天和21天，每次采集两只手掌的20张图片。
+The whole collection process is divided into two times. The average time interval between the first and second time is about 61 days. The maximum and the shortest time intervals are 106 days and 21 days respectively. Each time, 20 pictures of two palms are collected.
 
-因此每个受试者采集了来自2只手掌的40张图像，一共包含了12000个图像样本。
+Therefore, each subject collected 40 images from 2 palms, which contained a total of 12,000 image samples.
 
-## 使用这些掌纹ROI图像构建掌纹特征库
+## Use these palmprint ROI images to build a palmprint feature library
 
-您可以在samples中看到用python编写的示例
+You can see an example written in python in samples.
 
-这些示例演示了如何使用掌纹ROI进行 ***训练***·***预测***
+These examples demonstrate how to use the palmprint ROI for **training** and **prediction**.
 
-***使用EDCC库生成你的PalmID吧！***
+***Use the EDCC library to generate your PalmID!***
