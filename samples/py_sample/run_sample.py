@@ -26,8 +26,8 @@ class EDCCSample(object):
         self._wrong_list = []
 
     def runSample(self):
-        self.__initDB__()
-        self.__readDB__()
+        self._initDB()
+        self._readDB()
         predictGroup = self._factory.predictGroup
         total_cost_time = 0.0
         total_match_count = 0
@@ -86,12 +86,12 @@ class EDCCSample(object):
             self._wrong_list.append(resultStr)
             print("Error Match\n\n")
 
-    def __initDB__(self):
+    def _initDB(self):
         print("Init PalmprintCodeDB")
        
         self._palmprintcodeRepository.startExecute()
         for train in self._factory.trainGroup:
-            results = self._palmprintcodeRepository.selectPalmprintByIDInstamceID(train.id, train.instanceID)
+            results = self._palmprintcodeRepository.selectPalmprintByIDInstanceID(train.id, train.instanceID)
             if len(results):
                 continue
             codingBytes, codingLen = self._edcc_api.GetEDCCCoding(train.imagePath, self._configPath)
@@ -99,7 +99,7 @@ class EDCCSample(object):
             print("Insert ID:%s\tinstanceID:%s\tImagePath:%s" % (train.id, train.instanceID, train.imagePath))
         self._palmprintcodeRepository.endExecute()
     
-    def __readDB__(self):
+    def _readDB(self):
         print("Read PalmprintCodeDB")
         self._palmprintcodeRepository.startExecute()
         allPalmprintCodeData = self._palmprintcodeRepository.selectAllPalmprint()

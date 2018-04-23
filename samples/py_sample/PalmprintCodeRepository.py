@@ -8,16 +8,16 @@ from PalmprintImageFactory import *
 class PalmprintCodeRepo(object):
     def __init__(self, dbPath):
         self._dbPath = dbPath
-        self.__createDB__()
-        self.__createTable__()
+        self._createDB()
+        self._createTable()
         self._bStartExecute = False
         pass
 
-    def __createDB__(self):
+    def _createDB(self):
         if not os.path.isfile(self._dbPath):
             open(self._dbPath, 'w')
     
-    def __createTable__(self):
+    def _createTable(self):
         conn = sqlite3.connect(self._dbPath)
         create_tb_cmd="\
         CREATE TABLE IF NOT EXISTS PALMPRINTCODE\
@@ -66,7 +66,7 @@ class PalmprintCodeRepo(object):
         except:
             return []
     
-    def selectPalmprintByIDInstamceID(self, ID, InstanceID):
+    def selectPalmprintByIDInstanceID(self, ID, InstanceID):
         if not self._bStartExecute:
             raise RuntimeError("Please confirm that you have called \"startExecute\"")
         try:
