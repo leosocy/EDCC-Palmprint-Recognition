@@ -74,15 +74,15 @@ There are some [samples](https://github.com/Leosocy/EDCC-Palmprint-Recognition/t
                             CODE_BUFFER_MAX_LEN,
                             code_buffer_2,
                             &buffer_len_2);
-        double coding_matching_score = 0.0
-        double image_matching_score = 0.0
+        double coding_matching_score = 0.0;
+        double image_matching_score = 0.0;
         GetTwoPalmprintCodingMatchScore(code_buffer_1,
                                         code_buffer_2,
-                                        &coding_matching_score)
+                                        &coding_matching_score);
         GetTwoPalmprintMatchScore(palmprint_image_path_1,
                                   palmprint_image_path_2,
                                   config_file_path,
-                                  &image_matching_score)
+                                  &image_matching_score);
     }
     ```
 
