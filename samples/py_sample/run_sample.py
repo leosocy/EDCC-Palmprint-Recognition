@@ -51,11 +51,13 @@ class EDCCSample(object):
             while len(topKMatchScore) > K:
                 topKMatchScore.pop()
             self.statisticsResult(predict, topKMatchScore, costTime)
-        print("\n\nPredict Over. Total:%d\tPredictCorrect:%d\tAccuracy:%lf%%" % (len(predictGroup), self._succNum, float(self._succNum) / len(predictGroup) * 100))
+        print("\n\n=========================================================================")
+        print("Predict Over. Total:%d\tPredictCorrect:%d\tAccuracy:%lf%%" % (len(predictGroup), self._succNum, float(self._succNum) / len(predictGroup) * 100))
         print("Total Cost Time:%lf\tMatch Count:%d\tPer Cost Time:%lf" % (total_cost_time, total_match_count, total_cost_time / total_match_count))
-        print("Wrong List:")
-        for record in self._wrong_list:
-            print(record)
+        if self._wrong_list:
+            print("Wrong List:")
+            for record in self._wrong_list:
+                print(record)
 
     def statisticsResult(self, predict, topKMatchScore, costTime):
         resultsDict = {}
