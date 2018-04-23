@@ -67,6 +67,7 @@ EXECUTE_PROCESS(COMMAND touch /etc/ld.so.conf.d/edcc.conf
                 COMMAND echo "${CMAKE_INSTALL_PREFIX}/lib"
                 OUTPUT_FILE /etc/ld.so.conf.d/edcc.conf)
 EXECUTE_PROCESS(COMMAND ldconfig)
+EXECUTE_PROCESS(COMMAND ldconfig)
 
 # install edcc_adapter.py, need python 3.x
 IF(PYTHONINTERP_FOUND AND PYTHON_VERSION_MAJOR GREATER 2)
