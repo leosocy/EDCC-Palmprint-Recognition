@@ -26,7 +26,7 @@ Therefore, each subject collected 40 images from 2 palms, which contained a tota
 
 ## Use these palmprint ROI images to build a palmprint feature library
 
-You can see an example written in python in samples.
+You can see some examples written in python/cpp in [samples](https://github.com/Leosocy/EDCC-Palmprint-Recognition/tree/master/samples).
 
 These examples demonstrate how to use the palmprint ROI for **training** and **prediction**.
 
