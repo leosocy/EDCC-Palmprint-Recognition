@@ -82,4 +82,8 @@ IF(PYTHONINTERP_FOUND AND PYTHON_VERSION_MAJOR GREATER 2)
 		    OUTPUT_FILE ${PYTHON_SITE}/edcc_package.pth)
     MESSAGE(STATUS ${PYTHON_SITE} ) 
     INSTALL(FILES ${EDCC_PUB_HEADER}/edcc_adapter.py DESTINATION include/edcc)
+    ADD_CUSTOM_TARGET(run_py_sample
+                      COMMAND python run_sample.py
+                      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/samples/py_sample)
+
 ENDIF()
