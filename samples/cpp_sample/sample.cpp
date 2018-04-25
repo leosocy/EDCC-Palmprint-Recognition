@@ -1,17 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <edcc.h>
+
+void PrintUsage()
+{
+    printf("Usage:\t./run_cpp_sample [-c config path] [-i image_1 image_2]\n");
+    printf("e.g.\t./run_cpp_sample -c ./config.json -i ./Palmprint1.jpg ./Palmprint2.jpg\n");
+}
+
+bool CheckOptions(int argc, char** argv)
+{
+    if (argc < 6)
+    {
+        PrintUsage();
+        return false;
+    }
+    return true;
+}
 
 int main(int argc, char** argv)
 {
-    if (argc < 3)
+    if (!CheckOptions(argc, argv))
     {
-        printf("Usage:\n\t./run_cpp_sample image_path_1 image_path_2\n");
-        return -1;
+        return 1;
     }
-    const char* palmprint_image_path_1 = argv[1];
-    const char* palmprint_image_path_2 = argv[2];
-    const char* config_file_path = "../config.json";
+    const char* palmprint_image_path_1 = NULL;
+    const char* palmprint_image_path_2 = NULL;
+    const char* config_file_path = NULL;
+    int i = 1;
+    while (i < argc)
+    {
+        if (strcmp(argv[i], "-c") == 0)
+        {
+            config_file_path = argv[++i];
+        }
+        else if (strcmp(argv[i], "-i") == 0)
+        {
+            palmprint_image_path_1 = argv[++i];
+            palmprint_image_path_2 = argv[++i];
+        }
+        ++i;
+    }
     #define CODE_BUFFER_MAX_LEN 1024
     unsigned char code_buffer_1[CODE_BUFFER_MAX_LEN] = {0};
     unsigned char code_buffer_2[CODE_BUFFER_MAX_LEN] = {0};
@@ -38,9 +68,9 @@ int main(int argc, char** argv)
                               &image_matching_score);
     if (coding_matching_score == image_matching_score)
     {
-        printf("-----------------------------------------------------------\n");
+        printf("\n-----------------------------------------------------------\n");
         printf("PalmprintImage1:%s\nPalmprintImage2:%s\nMatchingScore:%lf\n", palmprint_image_path_1, palmprint_image_path_2, image_matching_score);
-        printf("-----------------------------------------------------------\n");
+        printf("-----------------------------------------------------------\n\n");
     }
     return 0;
 }
