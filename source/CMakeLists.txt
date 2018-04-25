@@ -12,12 +12,6 @@ message(STATUS "—————————————————————�
 
 add_subdirectory(${JSONCPP_ROOT} ${CMAKE_BINARY_DIR}/thirdparty/jsoncpp)
 
-IF(MSVC)
-set(OpenCV_STATIC OFF)
-set(OpenCV_INCLUDE_DIRS ${OpenCV_DIR}/include)
-set(OpenCV_LIB_PATH ${OpenCV_DIR}/x64/vc15/lib)
-ENDIF()
-
 find_package(OpenCV REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/)
@@ -59,11 +53,6 @@ file(GLOB_RECURSE SRC_FILES
 
 group_src_by_dir(HEADER_FILES)
 group_src_by_dir(SRC_FILES)
-
-if(MSVC)
-    add_compile_options("/MT")
-elseif (UNIX)
-endif()
 
 add_library(${PROJECT_NAME} STATIC
             ${HEADER_FILES}
