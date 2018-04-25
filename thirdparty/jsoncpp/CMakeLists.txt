@@ -25,11 +25,6 @@ if(MSVC)
 	source_group(src FILES ${jsoncpp_src_files}) 
 endif()
 
-if(MSVC)
-	add_compile_options("/MT")
-elseif (UNIX)
-endif()
-
 add_library(${PROJECT_NAME} STATIC 
 			${jsoncpp_include_files}
 			${jsoncpp_src_files})
