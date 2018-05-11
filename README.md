@@ -31,8 +31,8 @@ Steps:
 
 1. `git clone https://github.com/Leosocy/EDCC-Palmprint-Recognition.git`
 1. `cd EDCC-Palmprint-Recognition && mkdir -p build && cd build`
-1. `cmake ..`
-1. `make -j install`
+1. `sudo cmake ..`
+1. `sudo make -j install`
 
 ## How to use `EDCC` in your project
 
@@ -110,5 +110,5 @@ Before running the example, make sure `make install` succeed.
 - Run Python sample
 
     1. `cd EDCC-Palmprint-Recognition && mkdir -p build && cd build`
-    1. `cmake ..`
-    1. `make -j run_py_sample`
+    1. `sudo cmake ..`
+    1. `sudo make -j run_py_sample`
