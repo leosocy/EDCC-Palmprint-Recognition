@@ -80,7 +80,7 @@ IF(PYTHONINTERP_FOUND AND PYTHON_VERSION_MAJOR GREATER 2)
     EXECUTE_PROCESS(COMMAND touch ${PYTHON_SITE}/edcc_package.pth
 		    COMMAND echo "${CMAKE_INSTALL_PREFIX}/include/edcc"
 		    OUTPUT_FILE ${PYTHON_SITE}/edcc_package.pth)
-    MESSAGE(STATUS ${PYTHON_SITE} ) 
+    MESSAGE(STATUS "Python site dir: ${PYTHON_SITE}") 
     INSTALL(FILES ${EDCC_PUB_HEADER}/edcc_adapter.py DESTINATION include/edcc)
     ADD_CUSTOM_TARGET(run_py_sample
                       COMMAND python run_sample.py
