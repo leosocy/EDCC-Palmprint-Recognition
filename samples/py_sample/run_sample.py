@@ -61,7 +61,7 @@ class EDCCSample(object):
             "\n\n=========================================================================")
         print("Predict Over.\nTotal:%d\tPredictCorrect:%d\tAccuracy:%lf%%" % (
             len(predictGroup), self._succNum, float(self._succNum) / len(predictGroup) * 100))
-        print("Total Cost Time:%lf\tMatch Count:%d\tPer Cost Time:%lf" % (
+        print("Total Cost Time:%lf ms\tMatch Count:%d\tPer Cost Time:%lf ms" % (
             total_cost_time, total_match_count, total_cost_time / total_match_count))
         if self._wrong_list:
             print("Wrong List:")
@@ -92,7 +92,7 @@ class EDCCSample(object):
         bestMatchScore = resultsDict[0][1]
         predictHeadStr = "Predict:"
         trainStr = "ID:%s   InstanceID:%s" % (predict.id, predict.instanceID)
-        predictStr = "BestMatch:  ID:%s   MatchScore:%lf  CostTime:%lfms" % (
+        predictStr = "BestMatch:  ID:%s   MatchScore:%lf  CostTime:%lf ms" % (
             bestMatchID, bestMatchScore, costTime)
         resultLineMaxLen = max(len(trainStr), len(
             predictStr), len(predictStr)) + 5
