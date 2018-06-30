@@ -1,0 +1,11 @@
+stages:
+  - test
+  - lint
+  - deploy_integration
+
+test:
+  stage: test
+  script:
+    - mkdir -p build; cd build
+    - cmake ../test; make -j
+    - ./test_edcc
