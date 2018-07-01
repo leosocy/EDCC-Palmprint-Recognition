@@ -5,19 +5,14 @@ stages:
 
 # -------------------- Tests --------------------
 
-ft_test:
+test:
   stage: test
   image: "registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1"
   script:
     - mkdir -p build; cd build
     - cmake ../test; make -j
     - ./test_edcc
-
-samples_test:
-  stage: test
-  image: "registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1"
-  script:
-    - mkdir -p build; cd build
+    - rm -rf *
     - cmake ..; make -j; make install
     - make -j run_py_sample
 
