@@ -1,18 +1,18 @@
 stages:
-  - build_test_coverage
+  - test
   - lint
   - deploy_integration
 
 # -------------------- Tests --------------------
-test:
-  stage: build_test_coverage
+build_test_coverage:
+  stage: test
   image: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
   script:
     - mkdir -p build; cd build
     - cmake ../test; make -j
     - ./test_edcc
     - lcov -b . -d edcc -c -o cov.info
-    - locv -e cov.info "*/EDCC-Palmprint-Recognition/source/*" -o result.info
+    - lcov -e cov.info "*/EDCC-Palmprint-Recognition/source/*" -o result.info
     - genhtml -o cov_result result.info
     - mv cov_result ..
     - rm -rf *
