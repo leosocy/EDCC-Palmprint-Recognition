@@ -6,7 +6,9 @@ stages:
 # -------------------- Tests --------------------
 build_test_coverage:
   stage: test
-  image: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
+  image:
+    name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
+    pull: if-not-present
   script:
     - mkdir -p build; cd build
     - cmake ../test; make -j
@@ -26,7 +28,9 @@ build_test_coverage:
 # -------------------- Lints --------------------
 cppcheck:
   stage: lint
-  image: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
+  image:
+    name: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
+    pull: if-not-present
   script:
     - cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
 
