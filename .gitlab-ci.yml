@@ -14,7 +14,7 @@ build_test_coverage:
     - cmake ../test; make -j
     - ./test_edcc
     - lcov -b . -d edcc -c -o cov.info
-    - lcov -e cov.info "*/EDCC-Palmprint-Recognition/source/*" -o result.info
+    - lcov -e cov.info "*/EDCC-Palmprint-Recognition/source/*" -o result.info -q
     - genhtml -o cov_result result.info
     - mv cov_result ..
     - rm -rf *
