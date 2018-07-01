@@ -5,7 +5,7 @@ stages:
 
 # -------------------- Tests --------------------
 test:
-  stage: test
+  stage: build_test_coverage
   image: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
   script:
     - mkdir -p build; cd build
