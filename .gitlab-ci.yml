@@ -1,6 +1,7 @@
 stages:
   - test
   - lint
+  - cov
   - deploy_integration
 
 # -------------------- Tests --------------------
@@ -14,6 +15,10 @@ test:
     - rm -rf *
     - cmake ..; make -j; make install
     - make -j run_py_sample
+  artifacts:
+    name: edcclib
+    paths:
+      - build/edcc_lib
 
 # -------------------- Lints --------------------
 cppcheck:
@@ -21,3 +26,5 @@ cppcheck:
   image: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
   script:
     - cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
+
+# -------------------- Cov --------------------
