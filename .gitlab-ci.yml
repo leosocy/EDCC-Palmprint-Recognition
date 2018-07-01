@@ -8,6 +8,7 @@ build_test_coverage:
   stage: test
   image:
     name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
+  coverage: '/lines[\.]+\: (\d+\.\d+)\%/'
   script:
     - mkdir -p build; cd build
     - cmake ../test; make -j
