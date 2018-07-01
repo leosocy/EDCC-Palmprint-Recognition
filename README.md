@@ -2,6 +2,8 @@
 
 [![pipeline status](https://gitlab.com/leosocy/EDCC-Palmprint-Recognition/badges/feature-gitlab-ci/pipeline.svg)](https://gitlab.com/leosocy/EDCC-Palmprint-Recognition/commits/feature-gitlab-ci)
 [![coverage report](https://gitlab.com/leosocy/EDCC-Palmprint-Recognition/badges/feature-gitlab-ci/coverage.svg)](https://gitlab.com/leosocy/EDCC-Palmprint-Recognition/commits/feature-gitlab-ci)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Leosocy/EDCC-Palmprint-Recognition/blob/master/LICENSE)
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/16141/badge.svg)](https://scan.coverity.com/projects/leosocy-edcc-palmprint-recognition)
 
 `EDCC(Enhanced and Discriminative Competitive Code)`, which is used for palmprint-recognition.
 
