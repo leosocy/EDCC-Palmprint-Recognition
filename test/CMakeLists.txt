@@ -5,6 +5,11 @@ project(${PROJECT_NAME})
 
 #find_package(OpenCV REQUIRED)
 
+SET(GCC_COVERAGE_COMPILE_FLAGS "-coverage -fprofile-arcs -ftest-coverage")
+SET(GCC_COVERAGE_LINK_FLAGS    "-coverage -lgcov")
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
+
 set(GTEST_ROOT ${PROJECT_SOURCE_DIR}/../thirdparty/gtest)
 set(JSONCPP_ROOT ${PROJECT_SOURCE_DIR}/../thirdparty/jsoncpp)
 set(EDCC_ROOT ${PROJECT_SOURCE_DIR}/../source)
