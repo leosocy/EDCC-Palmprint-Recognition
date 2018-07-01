@@ -1,7 +1,6 @@
 stages:
-  - test
+  - build_test_coverage
   - lint
-  - cov
   - deploy_integration
 
 # -------------------- Tests --------------------
@@ -12,13 +11,17 @@ test:
     - mkdir -p build; cd build
     - cmake ../test; make -j
     - ./test_edcc
+    - lcov -b . -d edcc -c -o cov.info
+    - locv -e cov.info "*/EDCC-Palmprint-Recognition/source/*" -o result.info
+    - genhtml -o cov_result result.info
+    - mv cov_result ..
     - rm -rf *
     - cmake ..; make -j; make install
     - make -j run_py_sample
   artifacts:
-    name: edcclib
+    name: coverage
     paths:
-      - build/edcc_lib
+      - cov_result
 
 # -------------------- Lints --------------------
 cppcheck:
