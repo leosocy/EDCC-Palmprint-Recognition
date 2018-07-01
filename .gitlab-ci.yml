@@ -1,0 +1,36 @@
+stages:
+  - test
+  - lint
+  - deploy_integration
+
+# -------------------- Tests --------------------
+build_test_coverage:
+  stage: test
+  image:
+    name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
+  coverage: '/lines[\.]+\: (\d+\.\d+)\%/'
+  script:
+    - mkdir -p build; cd build
+    - cmake ../test; make -j
+    - ./test_edcc
+    - lcov -b . -d edcc -c -o cov.info
+    - lcov -e cov.info "*/EDCC-Palmprint-Recognition/source/*" -o result.info -q
+    - genhtml -o cov_result result.info
+    - mv cov_result ..
+    - rm -rf *
+    - cmake ..; make -j; make install
+    - make -j run_py_sample
+  artifacts:
+    name: coverage
+    paths:
+      - cov_result
+
+# -------------------- Lints --------------------
+cppcheck:
+  stage: lint
+  image:
+    name: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
+  script:
+    - cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
+
+# -------------------- Cov --------------------
