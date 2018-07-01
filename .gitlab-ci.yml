@@ -4,10 +4,9 @@ stages:
   - deploy_integration
 
 # -------------------- Tests --------------------
-
 test:
   stage: test
-  image: "registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1"
+  image: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
   script:
     - mkdir -p build; cd build
     - cmake ../test; make -j
@@ -17,3 +16,8 @@ test:
     - make -j run_py_sample
 
 # -------------------- Lints --------------------
+cppcheck:
+  stage: lint
+  image: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
+  script:
+    - cppcheck --enable=all --error-exitcode=1 -I source/include source/src
