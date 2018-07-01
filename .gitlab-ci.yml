@@ -20,4 +20,4 @@ cppcheck:
   stage: lint
   image: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
   script:
-    - ppcheck --enable=warning --error-exitcode=1 -I source/include source/src
+    - cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
