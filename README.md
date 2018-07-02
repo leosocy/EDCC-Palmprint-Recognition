@@ -27,7 +27,7 @@ Advantages of `EDCC` algorithm:
 
 ## Installation
 
-There are some requirements if you want to install `EDCC`:
+There are ***some requirements*** if you want to install `EDCC`:
 
 1. Linux/Unix OS
 1. OpenCV Installed
@@ -36,7 +36,7 @@ Steps:
 
 1. `git clone https://github.com/Leosocy/EDCC-Palmprint-Recognition.git`
 1. `cd EDCC-Palmprint-Recognition && mkdir -p build && cd build`
-1. `sudo cmake ..`
+1. `cmake ..`
 1. `sudo make -j install`
 
 ## How to use `EDCC` in your project
@@ -100,12 +100,12 @@ There are some [samples](https://github.com/Leosocy/EDCC-Palmprint-Recognition/t
     ```python
     from edcc_adapter import *
 
-    EDCC_API = EdccApi()
-    coding_1, coding_len_1 = EDCC_API.GetEDCCCoding("IMAGE_PATH_1", "CONFIG_PATH")
-    coding_2, coding_len_2 = EDCC_API.GetEDCCCoding("IMAGE_PATH_2", "CONFIG_PATH")
+    api = EdccApi()
+    coding_1, coding_len_1 = api.GetEDCCCoding("IMAGE_PATH_1", "CONFIG_PATH")
+    coding_2, coding_len_2 = api.GetEDCCCoding("IMAGE_PATH_2", "CONFIG_PATH")
 
-    coding_matching_score = EDCC_API.GetTwoPalmprintCodingMatchScore(coding_1, coding_2)
-    image_matching_score = EDCC_API.GetTwoPalmprintMatchScore("IMAGE_PATH_1", "IMAGE_PATH_2", "CONFIG_PATH")
+    coding_matching_score = api.GetTwoPalmprintCodingMatchScore(coding_1, coding_2)
+    image_matching_score = api.GetTwoPalmprintMatchScore("IMAGE_PATH_1", "IMAGE_PATH_2", "CONFIG_PATH")
     ```
 
 ## Run samples
@@ -115,5 +115,5 @@ Before running the example, make sure `make install` succeed.
 - Run Python sample
 
     1. `cd EDCC-Palmprint-Recognition && mkdir -p build && cd build`
-    1. `sudo cmake ..`
+    1. `cmake ..`
     1. `sudo make -j run_py_sample`
