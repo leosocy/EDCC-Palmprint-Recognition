@@ -6,6 +6,8 @@ stages:
 # -------------------- Tests --------------------
 build_test_coverage:
   stage: test
+  tags:
+    - local-runner
   image:
     name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
   coverage: '/lines[\.]+\: (\d+\.\d+)\%/'
@@ -28,6 +30,8 @@ build_test_coverage:
 # -------------------- Lints --------------------
 cppcheck:
   stage: lint
+  tags:
+    - local-runner
   image:
     name: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
   script:
