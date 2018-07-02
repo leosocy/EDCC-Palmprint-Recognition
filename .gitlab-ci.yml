@@ -8,6 +8,7 @@ build_test_coverage:
   stage: test
   tags:
     - local-runner
+    - specific
   image:
     name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
   coverage: '/lines[\.]+\: (\d+\.\d+)\%/'
@@ -32,6 +33,7 @@ cppcheck:
   stage: lint
   tags:
     - local-runner
+    - specific
   image:
     name: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
   script:
