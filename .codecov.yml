@@ -1,0 +1,21 @@
+coverage:
+  precision: 2
+  round: nearest
+  range: "85...95"
+  status:
+    project:
+      default:
+        threshold: 2%
+    patch:
+      default:
+        target: 95%
+  ignore:
+    - "test/"
+    - "thirdparty/"
+
+
+codecov:
+  branch: master
+
+comment:
+  layout: "reach, diff, flags, files"
