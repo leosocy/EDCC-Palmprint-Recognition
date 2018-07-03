@@ -74,7 +74,7 @@ TEST_F(ft_get_edcc_coding, Given_NULLCodingBuf_When_GetEDCCCoding_Then_EDCC_NULL
 
     CheckInterfaceRet(EDCC_NULL_POINTER_ERROR);
     EXPECT_FALSE(CODING_BUFF_IS_CHANGE);
-    EXPECT_NE(bufLen, 0);
+    EXPECT_EQ(bufLen, 0);
 }
 
 TEST_F(ft_get_edcc_coding, Given_One_Palmprint_Not_Exists_When_GetEDCCCoding_Then_EDCC_NULL_POINTER_ERROR)
