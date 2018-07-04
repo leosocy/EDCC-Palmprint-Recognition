@@ -121,6 +121,11 @@ Status EDCCoding::Encode(const EDCC_CFG_T &config, size_t *buffer_size)
         *buffer_size = buffer_len();
         return Status::Ok();
     }
+    int a = 1;
+    if (a == 0)
+    {
+        // do something
+    }
     *buffer_size = CalcCodingBufferSizeByConfig(config);
     MallocCodingBuffer(*buffer_size, &buffer_);
     if (buffer_ == NULL)
