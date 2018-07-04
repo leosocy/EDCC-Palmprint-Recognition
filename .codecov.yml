@@ -1,18 +1,27 @@
 coverage:
   precision: 2
   round: nearest
-  range: "85...95"
+  range: "90...95"
   status:
     project:
-      default:
-        threshold: 2%
-    patch:
-      default:
+      default: false
+      tests:
+        target: 90%
+        paths: "test/"
+      app:
         target: 95%
+        threshold: 0.5%
+        paths: "!test/"
+    patch:
+      default: false
+      tests:
+        target: 95%
+        paths: "test/"
+      app:
+        target: 98%
+        paths: "!test/"
   ignore:
-    - "test/"
     - "thirdparty/"
-
 
 codecov:
   branch: master
