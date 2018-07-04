@@ -7,21 +7,29 @@ coverage:
       default: false
       tests:
         target: 90%
-        paths: "test/"
+        flags: tests
       app:
         target: 95%
-        threshold: 0.5%
-        paths: "!test/"
+        flags: app
     patch:
       default: false
       tests:
         target: 95%
-        paths: "test/"
+        flags: tests
       app:
         target: 98%
-        paths: "!test/"
+        flags: app
   ignore:
     - "thirdparty/"
+
+flags:
+  app:
+    paths:
+      - include/
+      - source/
+  tests:
+    paths:
+      - test/
 
 codecov:
   branch: master
