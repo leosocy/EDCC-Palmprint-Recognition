@@ -1,5 +1,5 @@
 coverage:
-  precision: 4
+  precision: 2
   round: nearest
   range: "90...95"
   status:
