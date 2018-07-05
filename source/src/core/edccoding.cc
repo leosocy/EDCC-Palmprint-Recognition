@@ -140,6 +140,10 @@ Status EDCCoding::DecodeFromBuffer(const u_char *coding_buffer)
     CHECK_POINTER_NULL_RETURN(coding_buffer, Status::NullPtrError());
 
     const EDCC_CODING_T *coding = (EDCC_CODING_T*)coding_buffer;
+    if (!Checker::CheckConfig(coding->cfg))
+    {
+        return Status::CodingInvalid();
+    }
     size_t coding_buffer_size = coding->len + sizeof(EDCC_CODING_T);
     MallocCodingBuffer(coding_buffer_size, &buffer_);
     if (buffer_ == NULL)
@@ -166,7 +170,7 @@ Status EDCCoding::DecodeFromHexString(const string &hex_str)
     for (size_t i = 0; i < coding_len; ++i)
     {
         string hex_c = hex_str.substr(i * 2, 2);
-        sscanf(hex_c.c_str(), "%02x", reinterpret_cast<unsigned int*>(coding_buffer + i));
+        sscanf(hex_c.c_str(), "%02x", coding_buffer + i);
     }
     Status s = DecodeFromBuffer(coding_buffer);
     free(coding_buffer);
@@ -269,9 +273,9 @@ size_t EDCCoding::CalcCodingBufferSizeByConfig(const EDCC_CFG_T &config)
     {
         case COMPRESSION_CODING_MODE:
         {
-    size_t image_size = config.imageSizeW*config.imageSizeH;
-    size_t c_len = (size_t)ceil(image_size / 2.0);
-    size_t cs_len = (size_t)ceil(image_size / 8.0);
+            size_t image_size = config.imageSizeW*config.imageSizeH;
+            size_t c_len = (size_t)ceil(image_size / 2.0);
+            size_t cs_len = (size_t)ceil(image_size / 8.0);
             buffer_len = sizeof(EDCC_CODING_T) + c_len + cs_len + kMagicKeyLen;
             break;
         }

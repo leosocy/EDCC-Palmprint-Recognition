@@ -177,16 +177,6 @@ bool Checker::CheckCodingBuffer(const EDCC_CODING_T *coding_buffer)
     return true;
 }
 
-bool Checker::CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
-                                             const PalmprintCode &second_palmprintcode)
-{
-    CHECK_POINTER_NULL_RETURN(first_palmprintcode.coding()->buffer(), false);
-    CHECK_POINTER_NULL_RETURN(second_palmprintcode.coding()->buffer(), false);
-
-    return CheckTwoConfigEqual(first_palmprintcode.coding()->buffer()->cfg,
-                               second_palmprintcode.coding()->buffer()->cfg);
-}
-
 bool Checker::CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
                                 const EDCC_CFG_T &second_config)
 {
