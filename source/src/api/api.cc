@@ -27,15 +27,14 @@ int GetEDCCCoding(const char *palmprint_image_path,
 {
     *buffer_len = 0;
 
-    CHECK_POINTER_NULL_RETURN(palmprint_image_path, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(config_file_name, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(coding_buffer, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(palmprint_image_path, Status::NullPtrError().ToExtCode());
+    CHECK_POINTER_NULL_RETURN(config_file_name, Status::NullPtrError().ToExtCode());
+    CHECK_POINTER_NULL_RETURN(coding_buffer, Status::NullPtrError().ToExtCode());
 
     IO train_io;
     ifstream config_in;
     
     config_in.open(config_file_name);
-    CHECK_FALSE_RETURN(config_in.is_open(), EDCC_LOAD_CONFIG_FAIL);
     Status s = train_io.LoadConfig(config_in);
     config_in.close();
     CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
@@ -55,8 +54,8 @@ int GetTwoPalmprintCodingMatchScore(const unsigned char *lhs_coding_buffer,
 {
     *score = 0.0;
 
-    CHECK_POINTER_NULL_RETURN(lhs_coding_buffer, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(rhs_coding_buffer, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(lhs_coding_buffer, Status::NullPtrError().ToExtCode());
+    CHECK_POINTER_NULL_RETURN(rhs_coding_buffer, Status::NullPtrError().ToExtCode());
 
     const EDCC_CODING_T * lhs_coding = (const EDCC_CODING_T*)lhs_coding_buffer;
     const EDCC_CODING_T * rhs_coding = (const EDCC_CODING_T*)rhs_coding_buffer;
@@ -72,14 +71,13 @@ int GetTwoPalmprintMatchScore(const char *lhs_image_path,
 {
     *score = 0.0;
 
-    CHECK_POINTER_NULL_RETURN(lhs_image_path, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(rhs_image_path, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(config_file_name, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(lhs_image_path, Status::NullPtrError().ToExtCode());
+    CHECK_POINTER_NULL_RETURN(rhs_image_path, Status::NullPtrError().ToExtCode());
+    CHECK_POINTER_NULL_RETURN(config_file_name, Status::NullPtrError().ToExtCode());
 
     IO match_io;
     ifstream config_in;
     config_in.open(config_file_name);
-    CHECK_FALSE_RETURN(config_in.is_open(), EDCC_LOAD_CONFIG_FAIL);
     Status s = match_io.LoadConfig(config_in);
     config_in.close();
     CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
@@ -112,9 +110,9 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
                            const char *features_output_file_name,
                            bool is_incremental)
 {
-    CHECK_POINTER_NULL_RETURN(trainingset_palmprint_group_file_name, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(config_file_name, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(features_output_file_name, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(trainingset_palmprint_group_file_name, Status::NullPtrError().ToExtCode());
+    CHECK_POINTER_NULL_RETURN(config_file_name, Status::NullPtrError().ToExtCode());
+    CHECK_POINTER_NULL_RETURN(features_output_file_name, Status::NullPtrError().ToExtCode());
 
     IO train_io;
     vector<PalmprintCode> all_features;
@@ -125,7 +123,6 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
     {
         ifstream config_in;
         config_in.open(config_file_name);
-        CHECK_FALSE_RETURN(config_in.is_open(), EDCC_LOAD_CONFIG_FAIL);
         s = train_io.LoadConfig(config_in);
         config_in.close();
         CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
@@ -134,7 +131,6 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
     {
         ifstream features_in;
         features_in.open(features_output_file_name);
-        CHECK_FALSE_RETURN(features_in.is_open(), EDCC_LOAD_FEATURES_FAIL);
         s = train_io.LoadPalmprintFeatureData(features_in, &original_features);
         features_in.close();
         CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
@@ -150,7 +146,6 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
 
     ifstream trainingset_in;
     trainingset_in.open(trainingset_palmprint_group_file_name);
-    CHECK_FALSE_RETURN(trainingset_in.is_open(), EDCC_LOAD_TAINING_SET_FAIL);
     s = train_io.LoadPalmprintTrainingSet(trainingset_in, &all_features);
     trainingset_in.close();
     CHECK_FALSE_RETURN(s.IsOk(), s.ToExtCode());
@@ -167,7 +162,6 @@ int GetTrainingSetFeatures(const char *trainingset_palmprint_group_file_name,
 
     ofstream features_out;
     features_out.open(features_output_file_name);
-    CHECK_FALSE_RETURN(features_out.is_open(), EDCC_SAVE_FEATURES_FAIL);
     s = train_io.SavePalmprintFeatureData(features_out, all_features);
     features_out.close();
 
@@ -181,9 +175,9 @@ int GetTopKMatchScore(const char *palmprint_image_path,
                       size_t k,
                       std::map<size_t, MatchResult> *top_k_result)
 {
-    CHECK_POINTER_NULL_RETURN(palmprint_image_path, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(trainingset_features_or_palmprint_group_file_name, EDCC_NULL_POINTER_ERROR);
-    CHECK_POINTER_NULL_RETURN(config_file_name, EDCC_NULL_POINTER_ERROR);
+    CHECK_POINTER_NULL_RETURN(palmprint_image_path, Status::NullPtrError().ToExtCode());
+    CHECK_POINTER_NULL_RETURN(trainingset_features_or_palmprint_group_file_name, Status::NullPtrError().ToExtCode());
+    CHECK_POINTER_NULL_RETURN(config_file_name, Status::NullPtrError().ToExtCode());
 
     IO match_io;
     Status s;
@@ -214,7 +208,6 @@ int GetTopKMatchScore(const char *palmprint_image_path,
 
         ifstream config_in;
         config_in.open(config_file_name);
-        CHECK_FALSE_RETURN(config_in.is_open(), EDCC_LOAD_CONFIG_FAIL);
         s = match_io.LoadConfig(config_in);
         config_in.close();
     }

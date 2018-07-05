@@ -147,23 +147,24 @@ TEST_F(ft_get_top_k, Given_FeaturesNotExists_When_GetTop10MatchScoreUseFeatures_
     CheckInterfaceRet(EDCC_LOAD_FEATURES_FAIL);
 }
 
-/*TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScoreUseFeatures_Then_EDCC_SUCCESS)
+TEST_F(ft_get_top_k, Given_FeaturesCorrect_When_GetTop10MatchScoreUseFeatures_Then_EDCC_SUCCESS)
 {
     SetMode(FEATURE);
+    
     SetFeaturePath(FEATURES_TRAINGING_SET_EXISTS);
     
     ExcuteInterface();
 
     CheckInterfaceRet(EDCC_SUCCESS);
     CheckTopKMatchScore(10);
-}*/
+}
 
-/*TEST_F(ft_get_top_k, Given_CodingInvalid_When_GetTop10MatchScoreUseFeatures_Then_EDCC_LOAD_FEATURES_FAIL)
+TEST_F(ft_get_top_k, Given_CodingInvalid_When_GetTop10MatchScoreUseFeatures_Then_EDCC_LOAD_FEATURES_FAIL)
 {
     SetMode(FEATURE);
-    SetFeaturePath(FEATURES_TRAINGING_SET_COING_BEEN_CHANGED);
+    SetFeaturePath(FEATURES_TRAINGING_SET_CODING_BEEN_CHANGED);
     
     ExcuteInterface();
     
     CheckInterfaceRet(EDCC_LOAD_FEATURES_FAIL);
-}*/
+}
