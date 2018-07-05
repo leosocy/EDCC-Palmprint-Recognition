@@ -170,7 +170,7 @@ Status EDCCoding::DecodeFromHexString(const string &hex_str)
     for (size_t i = 0; i < coding_len; ++i)
     {
         string hex_c = hex_str.substr(i * 2, 2);
-        sscanf(hex_c.c_str(), "%02x", reinterpret_cast<int*>(coding_buffer + i));
+        sscanf(hex_c.c_str(), "%02x", reinterpret_cast<unsigned int*>(coding_buffer + i));
     }
     Status s = DecodeFromBuffer(coding_buffer);
     free(coding_buffer);
