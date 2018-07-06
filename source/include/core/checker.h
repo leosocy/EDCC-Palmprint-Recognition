@@ -25,8 +25,6 @@ public:
                                  const EDCC_CFG_T &config);
     static bool CheckCoding(const EDCCoding &coding);
     static bool CheckCodingBuffer(const EDCC_CODING_T *coding_buffer);
-    static bool CheckTwoPalmprintCodeConfigEqual(const PalmprintCode &first_palmprintcode,
-                                                 const PalmprintCode &second_palmprintcode);
 private:
     static bool CheckTwoConfigEqual(const EDCC_CFG_T &first_config,
                                     const EDCC_CFG_T &second_config);
