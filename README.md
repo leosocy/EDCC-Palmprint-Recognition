@@ -118,5 +118,5 @@ Before running the example, make sure `make install` succeed.
     1. `cmake ..`
     1. `sudo make -j run_py_sample`
 
-## How to contribute code
+### How to contribute code
 
