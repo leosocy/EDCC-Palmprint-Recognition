@@ -17,7 +17,7 @@ class PalmprintCodeDTO(object):
 class EDCCSample(object):
     def __init__(self):
         self._edcc_api = EdccApi()
-        self._factory = PalmprintImageFactory(4)
+        self._factory = PalmprintImageFactory(8)
         self._dbPath = "./R_PALMPRINTCODE.db"
         if os.path.exists(self._dbPath):
             os.remove(self._dbPath)
@@ -106,7 +106,7 @@ class EDCCSample(object):
                   (resultLineMaxLen-len('Correct Match')-3)*' '+'|')
         else:
             self._failNum = self._failNum + 1
-            self._wrong_list.append(resultStr)
+            self._wrong_list.append('ID:%s\tMatchID:%s\tMatchScore:%f' % (predict.id, bestMatchID, bestMatchScore))
             print('| '+'Error Match'+(resultLineMaxLen-len('Error Match')-3)*' '+'|')
         print('-'*resultLineMaxLen+'\n\n')
 
