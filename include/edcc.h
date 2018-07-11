@@ -37,7 +37,7 @@
 #define EDCC_CODING_INVALID 501
 #define EDCC_CODINGS_DIFF_CONFIG 502
 
-EDCC_API typedef struct  {
+EDCC_API typedef struct {
     std::string identity;
     std::string imagePath;
     double score;

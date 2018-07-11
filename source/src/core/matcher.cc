@@ -12,8 +12,8 @@ namespace edcc
 {
 
 Status Matcher::MatchingProcess(const EDCC_CODING_T *lhs_coding,
-                              const EDCC_CODING_T *rhs_coding,
-                              double *score)
+                                const EDCC_CODING_T *rhs_coding,
+                                double *score)
 {
     assert(lhs_coding && rhs_coding);
     if (memcmp(&lhs_coding->cfg, &rhs_coding->cfg, sizeof(EDCC_CFG_T)))
@@ -43,8 +43,8 @@ Status Matcher::MatchingProcess(const EDCC_CODING_T *lhs_coding,
 }
 
 Status Matcher::ExecuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lhs_coding,
-                                                      const EDCC_CODING_T *rhs_coding,
-                                                      double *score)
+                                                         const EDCC_CODING_T *rhs_coding,
+                                                         double *score)
 {
     if (lhs_coding->cfg.matchingMode == RELIABLE_MATCHING_MODE)
     {
@@ -77,16 +77,16 @@ Status Matcher::ExecuteMatchingWhenCompressionCodingMode(const EDCC_CODING_T *lh
                 match_score += 1;
             }
         }
-        c_mask & 0x0f ? ++c_x_start_pos, ++c_y_start_pos, c_mask = 0xf0 : c_mask = 0x0f;
-        cs_mask & 0x01 ? ++cs_x_start_pos, ++cs_y_start_pos, cs_mask = 0x80 : cs_mask >>= 1;
+        (c_mask & 0x0f) ? ++c_x_start_pos, ++c_y_start_pos, c_mask = 0xf0 : c_mask = 0x0f;
+        (cs_mask & 0x01) ? ++cs_x_start_pos, ++cs_y_start_pos, cs_mask = 0x80 : cs_mask >>= 1;
     }
     *score = (image_size % 2 == 0 ? (match_score / (2.0 * image_size)) : ((match_score - 2) / (2.0 * image_size)));
     return Status::Ok();
 }
 
 Status Matcher::ExecuteMatchingWhenFastCodingMode(const EDCC_CODING_T *lhs_coding,
-                                               const EDCC_CODING_T *rhs_coding,
-                                               double *score)
+                                                  const EDCC_CODING_T *rhs_coding,
+                                                  double *score)
 {
     if (lhs_coding->cfg.matchingMode == RELIABLE_MATCHING_MODE)
     {

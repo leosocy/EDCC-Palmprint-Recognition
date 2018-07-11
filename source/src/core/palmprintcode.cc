@@ -70,7 +70,6 @@ void GaborFilter::GetGaborKernelReal(cv::Mat *kernel,
     double Kv = kmax / pow(f, dimension);
     double postmean = exp(-sqsigma / 2);
     kernel->create(width, height, ktype);
-    //Mat kernel(width, height, ktype);
     double tmp1, tmp2;
     for (int i = -half_height; i <= half_height; ++i)
     {
@@ -90,7 +89,6 @@ void GaborFilter::GetGaborKernelReal(cv::Mat *kernel,
             }
         }
     }
-    //gaborKernel = kernel.clone();
 }
 
 } // namespace
