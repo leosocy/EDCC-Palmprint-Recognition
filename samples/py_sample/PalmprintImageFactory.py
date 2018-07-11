@@ -16,11 +16,11 @@ edcc_database_base_path = os.path.normpath(os.path.join(os.getcwd(), "../../data
 Construct palmprint image list
 '''
 tongji_palmprint_image_dir = os.path.normpath(os.path.join(edcc_database_base_path, "Tongji/ROI"))
-tongji_people_num = 600
+tongji_people_num = 10
 tongji_one_session_image_num = 10
 
 polyu_palmprint_image_dir = os.path.normpath(os.path.join(edcc_database_base_path, "PolyU"))
-polyu_one_spec_people_num = 250
+polyu_one_spec_people_num = 10
 
 class PalmprintImageFactory(object):
     def __init__(self, trainSetNum = 4):
