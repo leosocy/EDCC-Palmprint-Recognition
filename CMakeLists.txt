@@ -1,5 +1,6 @@
-########################################################################
-# CMake build script for edcc.
+###############################
+# CMake build script for edcc #
+###############################
 
 option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." ON)
 
@@ -84,5 +85,8 @@ IF(PYTHONINTERP_FOUND AND PYTHON_VERSION_MAJOR GREATER 2)
     ADD_CUSTOM_TARGET(run_py_sample
                       COMMAND python run_sample.py
                       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/samples/py_sample)
-
+ELSE()
+    MESSAGE(STATUS "Not found PythonInterp")
+    ADD_CUSTOM_TARGET(run_py_sample
+                      COMMAND echo "[ERROR] run_py_sample need python 3.x!")
 ENDIF()

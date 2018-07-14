@@ -40,7 +40,7 @@ bool Palmprint::operator==(const Palmprint &rhs) const
 
 cv::Mat* Palmprint::GetOrigImg()
 {
-    image_ = cv::imread(image_path_, CV_LOAD_IMAGE_COLOR);
+    image_ = cv::imread(image_path_);
     if (!image_.data)
     {
         EDCC_Log("Read image failed!");
