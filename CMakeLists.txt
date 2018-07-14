@@ -64,7 +64,8 @@ INSTALL(FILES ${EDCC_PUB_HEADER}/README.md RENAME ApiUsage.md DESTINATION share/
 INSTALL(FILES ${PROJECT_ROOT}/README.md RENAME AboutEDCC.md DESTINATION share/edcc)
 INSTALL(FILES ${PROJECT_ROOT}/LICENSE DESTINATION share/edcc)
 INSTALL(FILES ${PROJECT_ROOT}/FindEDCC.cmake DESTINATION share/edcc)
-EXECUTE_PROCESS(COMMAND touch /etc/ld.so.conf.d/edcc.conf
+EXECUTE_PROCESS(COMMAND mkdir -p /etc/ld.so.conf.d
+                COMMAND touch /etc/ld.so.conf.d/edcc.conf
                 COMMAND echo "${CMAKE_INSTALL_PREFIX}/lib"
                 OUTPUT_FILE /etc/ld.so.conf.d/edcc.conf)
 INSTALL(CODE "execute_process(COMMAND ldconfig)")
