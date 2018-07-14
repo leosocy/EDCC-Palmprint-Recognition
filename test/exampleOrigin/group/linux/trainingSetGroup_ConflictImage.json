@@ -1,18 +1,18 @@
 {
 	"1" : [
-		"../test/palmprint_database/001/1_01_s.bmp",
-		"../test/palmprint_database/001/1_01_s.bmp",
-		"../test/palmprint_database/001/1_03_s.bmp",
-		"../test/palmprint_database/001/1_04_s.bmp",
-		"../test/palmprint_database/001/1_05_s.bmp",
-		"../test/palmprint_database/001/1_06_s.bmp"
+		"../database/PolyU/Multispectral_I/001/1_01_s.bmp",
+		"../database/PolyU/Multispectral_I/001/1_01_s.bmp",
+		"../database/PolyU/Multispectral_I/001/1_03_s.bmp",
+		"../database/PolyU/Multispectral_I/001/1_04_s.bmp",
+		"../database/PolyU/Multispectral_I/001/1_05_s.bmp",
+		"../database/PolyU/Multispectral_I/001/1_06_s.bmp"
 	],
 	"2" : [
-		"../test/palmprint_database/002/1_01_s.bmp",
-		"../test/palmprint_database/002/1_02_s.bmp",
-		"../test/palmprint_database/002/1_03_s.bmp",
-		"../test/palmprint_database/002/1_04_s.bmp",
-		"../test/palmprint_database/002/1_05_s.bmp",
-		"../test/palmprint_database/002/1_06_s.bmp"
+		"../database/PolyU/Multispectral_I/002/1_01_s.bmp",
+		"../database/PolyU/Multispectral_I/002/1_02_s.bmp",
+		"../database/PolyU/Multispectral_I/002/1_03_s.bmp",
+		"../database/PolyU/Multispectral_I/002/1_04_s.bmp",
+		"../database/PolyU/Multispectral_I/002/1_05_s.bmp",
+		"../database/PolyU/Multispectral_I/002/1_06_s.bmp"
 	]
 }

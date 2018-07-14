@@ -16,7 +16,7 @@ using namespace std;
 #define TEST_DATA_CONFIG_DIR            TEST_DATA_DIR"config\\"
 #define TEST_DATA_GROUP_DIR             TEST_DATA_DIR"group\\windows\\"
 #define TEST_DATA_FEATURES_DIR          TEST_DATA_DIR"features\\windows\\"
-#define TEST_DATA_PALMPRINT_IMAGE_DIR   "..\\test\\palmprint_database\\"
+#define TEST_DATA_PALMPRINT_IMAGE_DIR   "..\\database\\PolyU\\Multispectral_I\\"
 
 #define ID1_FIRST_PALMPRINT             TEST_DATA_PALMPRINT_IMAGE_DIR"001\\2_01_s.bmp"
 #define ID1_SECOND_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"001\\2_02_s.bmp"
@@ -32,7 +32,7 @@ using namespace std;
 #define TEST_DATA_CONFIG_DIR            TEST_DATA_DIR"config/"
 #define TEST_DATA_GROUP_DIR             TEST_DATA_DIR"group/linux/"
 #define TEST_DATA_FEATURES_DIR          TEST_DATA_DIR"features/linux/"
-#define TEST_DATA_PALMPRINT_IMAGE_DIR   "../test/palmprint_database/"
+#define TEST_DATA_PALMPRINT_IMAGE_DIR   "../database/PolyU/Multispectral_I/"
 
 #define ID1_FIRST_PALMPRINT             TEST_DATA_PALMPRINT_IMAGE_DIR"001/2_01_s.bmp"
 #define ID1_SECOND_PALMPRINT            TEST_DATA_PALMPRINT_IMAGE_DIR"001/2_02_s.bmp"
