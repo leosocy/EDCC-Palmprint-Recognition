@@ -1,6 +1,9 @@
 stages:
   - tests_and_lints
-  - build_onbuild_image
+  - build_image
+
+variables:
+  IMAGE: registry.cn-hangzhou.aliyuncs.com/leosocy/edcc:master
 
 # -------------------- Tests --------------------
 build_test_coverage:
@@ -35,3 +38,12 @@ cppcheck:
     - cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
 
 # -------------------- Build onbuild image --------------------
+
+build_image:
+  stage: build_image
+  only:
+    - master
+  script:
+    - docker build -t ${IMAGE} -f Dockerfile .
+    - docker push ${IMAGE}
+    
