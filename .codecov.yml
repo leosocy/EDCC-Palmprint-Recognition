@@ -11,14 +11,6 @@ coverage:
       app:
         target: 95%
         flags: app
-    patch:
-      default: false
-      tests:
-        target: 95%
-        flags: tests
-      app:
-        target: 98%
-        flags: app
   ignore:
     - "thirdparty/"
 
@@ -35,4 +27,4 @@ codecov:
   branch: master
 
 comment:
-  layout: "reach, diff, flags, files"
+  layout: "reach, flags, files"
