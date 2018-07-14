@@ -1,18 +1,18 @@
 {
 	"3" : [
-		"..\\test\\palmprint_database\\003\\1_01_s.bmp",
-		"..\\test\\palmprint_database\\003\\1_02_s.bmp",
-		"..\\test\\palmprint_database\\003\\1_03_s.bmp",
-		"..\\test\\palmprint_database\\003\\1_04_s.bmp",
-		"..\\test\\palmprint_database\\003\\1_05_s.bmp",
-		"..\\test\\palmprint_database\\003\\1_06_s.bmp"
+		"..\\database\\PolyU\\Multispectral_I\\003\\1_01_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\003\\1_02_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\003\\1_03_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\003\\1_04_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\003\\1_05_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\003\\1_06_s.bmp"
 	],
 	"4" : [
-		"..\\test\\palmprint_database\\004\\1_01_s.bmp",
-		"..\\test\\palmprint_database\\004\\1_02_s.bmp",
-		"..\\test\\palmprint_database\\004\\1_03_s.bmp",
-		"..\\test\\palmprint_database\\004\\1_04_s.bmp",
-		"..\\test\\palmprint_database\\004\\1_05_s.bmp",
-		"..\\test\\palmprint_database\\004\\1_06_s.bmp"
+		"..\\database\\PolyU\\Multispectral_I\\004\\1_01_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\004\\1_02_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\004\\1_03_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\004\\1_04_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\004\\1_05_s.bmp",
+		"..\\database\\PolyU\\Multispectral_I\\004\\1_06_s.bmp"
 	]
 }
