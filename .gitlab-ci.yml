@@ -1,13 +1,12 @@
 stages:
-  - test
-  - lint
-  - deploy_integration
+  - tests_and_lints
+  - build_onbuild_image
 
 # -------------------- Tests --------------------
 build_test_coverage:
-  stage: test
+  stage: test_and_lint
   image:
-    name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:3.4.1
+    name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:ci-3.4.2
   coverage: '/lines[\.]+\: (\d+\.\d+)\%/'
   script:
     - mkdir -p build; cd build
@@ -29,10 +28,10 @@ build_test_coverage:
 
 # -------------------- Lints --------------------
 cppcheck:
-  stage: lint
+  stage: test_and_lint
   image:
     name: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
   script:
     - cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
 
-# -------------------- Cov --------------------
+# -------------------- Build onbuild image --------------------
