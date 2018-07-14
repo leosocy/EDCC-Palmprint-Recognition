@@ -6,7 +6,7 @@ stages:
 build_test_coverage:
   stage: tests_and_lints
   image:
-    name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:ci-3.4.2
+    name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:ci
   coverage: '/lines[\.]+\: (\d+\.\d+)\%/'
   script:
     - mkdir -p build; cd build
