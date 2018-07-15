@@ -41,6 +41,7 @@ cppcheck:
 
 build_image:
   stage: build_image
+  image: docker:latest
   tags:
     - docker
   only:
