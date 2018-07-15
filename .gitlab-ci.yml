@@ -46,6 +46,8 @@ build_image:
   only:
     - master
   when: manual
+  services:
+    - docker:dind
   script:
     - docker build -t ${IMAGE} -f Dockerfile .
     - docker push ${IMAGE}
