@@ -41,6 +41,8 @@ cppcheck:
 
 build_image:
   stage: build_image
+  tags:
+    - docker
   only:
     - master
   when: manual
