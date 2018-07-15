@@ -55,7 +55,7 @@ build_image:
   services:
     - docker:dind
   script:
-    - docker login --username ${ALIYUN_DOCKER_REGISTRY_USERNAME} --password ${ALIYUN_DOCKER_REGISTRY_PASSWD} ${DOCKER_REGISTRY}
+    - docker login --username ${ALIYUN_DOCKER_REGISTRY_USERNAME} --password-stdin ${ALIYUN_DOCKER_REGISTRY_PASSWD} ${DOCKER_REGISTRY}
     - docker build -t ${BASE_IMAGE_TAG} -f Dockerfile.base .
     - docker build -t ${PYTHON_IMAGE_TAG} -f Dockerfile.python .
     - docker push ${IMAGE}
