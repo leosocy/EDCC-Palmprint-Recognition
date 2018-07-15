@@ -3,13 +3,18 @@ stages:
   - build_image
 
 variables:
-  IMAGE: registry.cn-hangzhou.aliyuncs.com/leosocy/edcc:master
+  DOCKER_REGISTRY: registry.cn-hangzhou.aliyuncs.com/leosocy
+  IMAGE: ${DOCKER_REGISTRY}/edcc
+
+before_script:
+  - BASE_IMAGE_TAG=${IMAGE}:base-latest
+  - PYTHON_IMAGE_TAG=${IMAGE}:python-latest
 
 # -------------------- Tests --------------------
 build_test_coverage:
   stage: tests_and_lints
   image:
-    name: registry.cn-hangzhou.aliyuncs.com/leosocy/opencv:ci
+    name: ${DOCKER_REGISTRY}/opencv:ci
   coverage: '/lines[\.]+\: (\d+\.\d+)\%/'
   script:
     - mkdir -p build; cd build
@@ -18,7 +23,7 @@ build_test_coverage:
     - lcov -b . -d edcc -c -o cov.info
     - lcov -r cov.info "/usr/*" "*/thirdparty/*" "*/test/*" -o cov.info -q
     - lcov -l cov.info
-    - bash <(curl -s https://codecov.io/bash) -t 24c051cb-8c6f-45e3-afa0-859f2db1418d
+    - bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
     - genhtml -o cov_result cov.info
     - mv cov_result ..
     - rm -rf *
@@ -33,7 +38,7 @@ build_test_coverage:
 cppcheck:
   stage: tests_and_lints
   image:
-    name: registry.cn-hangzhou.aliyuncs.com/leosocy/cppcheck:1.83
+    name: ${DOCKER_REGISTRY}/cppcheck:1.83
   script:
     - cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
 
@@ -50,6 +55,8 @@ build_image:
   services:
     - docker:dind
   script:
-    - docker build -t ${IMAGE} -f Dockerfile .
+    - docker login -u ${ALIYUN_DOCKER_REGISTRY_USERNAME} -p ${ALIYUN_DOCKER_REGISTRY_PASSWD} ${DOCKER_REGISTRY}
+    - docker build -t ${BASE_IMAGE_TAG} -f Dockerfile.base .
+    - docker build -t ${PYTHON_IMAGE_TAG} -f Dockerfile.python .
     - docker push ${IMAGE}
     
