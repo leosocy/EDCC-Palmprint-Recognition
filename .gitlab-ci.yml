@@ -23,7 +23,7 @@ build_test_coverage:
     - lcov -b . -d edcc -c -o cov.info
     - lcov -r cov.info "/usr/*" "*/thirdparty/*" "*/test/*" -o cov.info -q
     - lcov -l cov.info
-    - bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
+    - bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
     - genhtml -o cov_result cov.info
     - mv cov_result ..
     - rm -rf *
@@ -55,7 +55,7 @@ build_image:
   services:
     - docker:dind
   script:
-    - docker login -u $ALIYUN_DOCKER_REGISTRY_USERNAME -p $ALIYUN_DOCKER_REGISTRY_PASSWD ${DOCKER_REGISTRY}
+    - docker login --username ${ALIYUN_DOCKER_REGISTRY_USERNAME} --password ${ALIYUN_DOCKER_REGISTRY_PASSWD} ${DOCKER_REGISTRY}
     - docker build -t ${BASE_IMAGE_TAG} -f Dockerfile.base .
     - docker build -t ${PYTHON_IMAGE_TAG} -f Dockerfile.python .
     - docker push ${IMAGE}
