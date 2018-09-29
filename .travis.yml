@@ -1,0 +1,41 @@
+language: cpp
+
+sudo: required
+
+services:
+  - docker
+
+env:
+  - CI=true
+
+cache:
+  directories:
+    - $HOME/docker
+
+before_cache:
+  - ./manage.sh save_images
+
+
+stages:
+  - tests_and_lints
+  - name: build_image
+    if: branch = master
+
+jobs:
+  include:
+    - stage: tests_and_lints
+      name: test
+      script:
+        - ./manage.sh test
+        - ./manage.sh upload_codecov
+    - stage: tests_and_lints
+      name: lint
+      script:
+        - ./manage.sh lint
+    - stage: build_image
+      name: build image
+      when: manual
+      script:
+        - ./manage.sh build_images
+        - ./manage.sh upload_images
+
