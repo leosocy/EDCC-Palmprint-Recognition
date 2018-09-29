@@ -1,6 +1,6 @@
 # EDCC: An efficient and accurate algorithm for palmprint-recognition
 
-[![pipeline status](https://gitlab.com/leosocy/EDCC-Palmprint-Recognition/badges/master/pipeline.svg)](https://gitlab.com/leosocy/EDCC-Palmprint-Recognition/commits/master)
+[![Build Status](https://travis-ci.org/Leosocy/EDCC-Palmprint-Recognition.svg?branch=master)](https://travis-ci.org/Leosocy/EDCC-Palmprint-Recognition)
 [![codecov](https://codecov.io/gh/Leosocy/EDCC-Palmprint-Recognition/branch/master/graph/badge.svg)](https://codecov.io/gh/Leosocy/EDCC-Palmprint-Recognition)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://raw.githubusercontent.com/Leosocy/EDCC-Palmprint-Recognition/master/LICENSE)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/16141/badge.svg)](https://scan.coverity.com/projects/leosocy-edcc-palmprint-recognition)
