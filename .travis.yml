@@ -19,7 +19,7 @@ before_cache:
 stages:
   - tests_and_lints
   - name: build_image
-    if: branch = master
+    if: branch = master AND type = push
 
 jobs:
   include:
