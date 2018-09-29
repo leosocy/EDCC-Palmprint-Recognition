@@ -62,9 +62,6 @@ test_and_lint() {
 }
 
 upload_codecov() {
-    if [ "${TRAVIS_EVENT_TYPE}"x != "push"x ]; then
-        return 0
-    fi
     if [ -z ${CODECOV_TOKEN} ]; then
         echo "Please set CODECOV_TOKEN value"
         exit 1
