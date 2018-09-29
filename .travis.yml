@@ -18,8 +18,6 @@ before_cache:
 
 stages:
   - tests_and_lints
-  - name: upload_codecov
-    if: branch = master AND type = push
   - name: build_image
     if: branch = master AND type = push
 
@@ -29,16 +27,14 @@ jobs:
       name: test
       script:
         - ./manage.sh test
+        - ./manage.sh upload_codecov
     - stage: tests_and_lints
       name: lint
       script:
         - ./manage.sh lint
-    - stage: upload_codecov
-      name: upload codecov report
-      script:
-        - ./manage.sh upload_codecov
     - stage: build_image
       name: build image
+      when: manual
       script:
         - ./manage.sh build_images
         - ./manage.sh upload_images
