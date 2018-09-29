@@ -33,25 +33,25 @@ Ready to contribute? Here's how to set up `EDCC` for local development.
 
 1. Fork the [EDCC-Palmprint-Recognition](https://github.com/Leosocy/EDCC-Palmprint-Recognition) repo on Github.
 1. Clone your fork locally:
-```shell
-git clone git@github.com:your_name_here/EDCC-Palmprint-Recognition.git
-```
+    ```shell
+    git clone git@github.com:your_name_here/EDCC-Palmprint-Recognition.git
+    ```
 1. Create a branch for local development:
-```shell
-git checkout -b name-of-your-bugfix-or-feature
-```
+    ```shell
+    git checkout -b name-of-your-bugfix-or-feature
+    ```
 Now you can make your changes locally.
 1. When you're done making changes, check that your changes pass the tests and lints:
-```
-./manage.sh test_and_lint
-```
+    ```
+    ./manage.sh test_and_lint
+    ```
 and then it will pull docker image, and run tests and lints in container.
 1. Commit your changes and push your branch to GitHub:
-```shell
-git add .
-git commit -m "Your detailed description of your changes."
-git push origin name-of-your-bugfix-or-feature
-```
+    ```shell
+    git add .
+    git commit -m "Your detailed description of your changes."
+    git push origin name-of-your-bugfix-or-feature
+    ```
 1. Submit a pull request through the GitHub website.
 
 ## Pull Request Guidelines
