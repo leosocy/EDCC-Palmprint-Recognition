@@ -62,12 +62,13 @@ test_and_lint() {
 }
 
 upload_codecov() {
+    if [ S"${TRAVIS_EVENT_TYPE}" -ne S"push" ]; then
+        return 0
+    fi
     if [ -z ${CODECOV_TOKEN} ]; then
         echo "Please set CODECOV_TOKEN value"
         exit 1
     fi
-    load_images ${OPENCV_CI_IMAGE}
-    docker pull ${OPENCV_CI_IMAGE} > /dev/null
     docker run -d --rm -v $(pwd):/app -w /app/build -e CODECOV_TOKEN=${CODECOV_TOKEN} ${OPENCV_CI_IMAGE} /bin/bash -c "$(curl -s https://codecov.io/bash)"
     check_exec_success "$?" "upload codecov"
 }
