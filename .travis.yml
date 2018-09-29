@@ -21,8 +21,10 @@ jobs:
   include:
     - stage: tests_and_lints
       name: test
+      before_script:
+        - docker run -it -v $(pwd):/root/src -w /root/src ${OPENCV_CI_IMAGE}
       script:
-        - docker run -it -v .:/root/src -w /root/src ${OPENCV_CI_IMAGE} /bin/sh -c "mkdir build; cd build; cmake ../test; make -j; ./test_edcc"
+        - sh -c "mkdir build; cd build; cmake ../test; make -j; ./test_edcc"
         - lcov -b . -d edcc -c -o cov.info
         - lcov -r cov.info "/usr/*" "*/thirdparty/*" "*/test/*" -o cov.info -q
         - lcov -l cov.info
