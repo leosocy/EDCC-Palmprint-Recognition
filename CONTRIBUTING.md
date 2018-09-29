@@ -40,12 +40,12 @@ Ready to contribute? Here's how to set up `EDCC` for local development.
     ```shell
     git checkout -b name-of-your-bugfix-or-feature
     ```
-Now you can make your changes locally.
+    Now you can make your changes locally.
 1. When you're done making changes, check that your changes pass the tests and lints:
     ```
     ./manage.sh test_and_lint
     ```
-and then it will pull docker image, and run tests and lints in container.
+    and then it will pull docker image, and run tests and lints in container.
 1. Commit your changes and push your branch to GitHub:
     ```shell
     git add .
