@@ -6,12 +6,12 @@ services:
   - docker
 
 env:
-  - DOCKER_REGISTRY=registry.cn-hangzhou.aliyuncs.com/leosocy 
-  - IMAGE=${DOCKER_REGISTRY}/edcc
-  - OPENCV_CI_IMAGE=${DOCKER_REGISTRY}/opencv:ci
-  - CPPCHECK_CI_IMAGE=${DOCKER_REGISTRY}/cppcheck:1.83
-  - BASE_IMAGE_TAG=${IMAGE}:base-latest
-  - PYTHON_IMAGE_TAG=${IMAGE}:python-latest
+  - DOCKER_REGISTRY="registry.cn-hangzhou.aliyuncs.com/leosocy "
+  - IMAGE="${DOCKER_REGISTRY}/edcc"
+  - OPENCV_CI_IMAGE="${DOCKER_REGISTRY}/opencv:ci"
+  - CPPCHECK_CI_IMAGE="${DOCKER_REGISTRY}/cppcheck:1.83"
+  - BASE_IMAGE_TAG="${IMAGE}:base-latest"
+  - PYTHON_IMAGE_TAG="${IMAGE}:python-latest"
 
 before_install:
   - docker pull ${OPENCV_CI_IMAGE}
