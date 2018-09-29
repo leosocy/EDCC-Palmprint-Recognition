@@ -1,0 +1,39 @@
+language: cpp
+
+sudo: required
+
+services:
+  - docker
+
+env:
+  - DOCKER_REGISTRY=registry.cn-hangzhou.aliyuncs.com/leosocy 
+  - IMAGE=${DOCKER_REGISTRY}/edcc
+  - OPENCV_CI_IMAGE=${DOCKER_REGISTRY}/opencv:ci
+  - CPPCHECK_CI_IMAGE=${DOCKER_REGISTRY}/cppcheck:1.83
+  - BASE_IMAGE_TAG=${IMAGE}:base-latest
+  - PYTHON_IMAGE_TAG=${IMAGE}:python-latest
+
+before_install:
+  - docker pull ${OPENCV_CI_IMAGE}
+  - docker pull ${CPPCHECK_CI_IMAGE}
+
+stages:
+  - tests_and_lints
+  - name: build_image
+    if: branch = master
+
+jobs:
+  include:
+    - stage: tests_and_lints
+      name: test
+      script:
+        - docker run -it -v .:/root/src -w /root/src ${OPENCV_CI_IMAGE} /bin/sh -c "mkdir build; cd build; cmake ../test; make -j; ./test_edcc"
+        - lcov -b . -d edcc -c -o cov.info
+        - lcov -r cov.info "/usr/*" "*/thirdparty/*" "*/test/*" -o cov.info -q
+        - lcov -l cov.info
+    - stage: tests_and_lints
+      name: lint
+      script:
+        - docker run -it -p 127.0.0.1:80:4567 ${CPPCHECK_CI_IMAGE} /bin/sh -c ""
+
+
