@@ -62,7 +62,7 @@ test_and_lint() {
 }
 
 upload_codecov() {
-    if [ S"${TRAVIS_EVENT_TYPE}" -ne S"push" ]; then
+    if [ "${TRAVIS_EVENT_TYPE}"x = "push"x ]; then
         return 0
     fi
     if [ -z ${CODECOV_TOKEN} ]; then
