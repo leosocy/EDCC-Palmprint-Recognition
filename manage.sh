@@ -61,15 +61,6 @@ test_and_lint() {
     lint
 }
 
-upload_codecov() {
-    if [ -z ${CODECOV_TOKEN} ]; then
-        echo "Please set CODECOV_TOKEN value"
-        exit 1
-    fi
-    docker run -d --rm -v $(pwd):/app -w /app/build -e CODECOV_TOKEN=${CODECOV_TOKEN} ${OPENCV_CI_IMAGE} /bin/bash -c "$(curl -s https://codecov.io/bash)"
-    check_exec_success "$?" "upload codecov"
-}
-
 
 run_py_sample() {
     docker pull ${OPENCV_CI_IMAGE} > /dev/null
@@ -81,6 +72,17 @@ run_py_sample() {
     check_exec_success "$?" "run py sample"
 }
 
+
+######## below functions are used for travis-ci ########
+
+upload_codecov() {
+    if [ -z ${CODECOV_TOKEN} ]; then
+        echo "Please set CODECOV_TOKEN value"
+        exit 1
+    fi
+    docker run -d --rm -v $(pwd):/app -w /app/build -e CODECOV_TOKEN=${CODECOV_TOKEN} ${OPENCV_CI_IMAGE} /bin/bash -c "$(curl -s https://codecov.io/bash)"
+    check_exec_success "$?" "upload codecov"
+}
 
 build_images() {
     docker build -t ${BASE_IMAGE_TAG} -f Dockerfile.base .
@@ -134,8 +136,8 @@ case "$1" in
     test) test ;;
     lint) lint ;;
     test_and_lint) test_and_lint ;;
-    upload_codecov) upload_codecov ;;
     run_py_sample) run_py_sample ;;
+    upload_codecov) upload_codecov ;;
     build_images) build_images ;;
     upload_images) upload_images ;;
     save_images) save_images ;;
@@ -145,10 +147,7 @@ case "$1" in
         echo "./manage.sh test"
         echo "./manage.sh lint"
         echo "./manage.sh test_and_lint"
-        echo "./manage.sh upload_codecov"
         echo "./manage.sh run_py_sample"
-        echo "./manage.sh build_images | upload_images"
-        echo "./manage.sh save_images | load_iamges"
         exit 1
         ;;
 esac
