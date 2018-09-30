@@ -118,5 +118,13 @@ Before running the example, make sure `make install` succeed.
     1. `cmake ..`
     1. `sudo make -j run_py_sample`
 
-### How to contribute code
+    or you can use `manage.sh` to run samples, just like
+
+    ```shell
+    ./manage.sh run_py_sample
+    ```
+
+### Contributing
+
+Please see [CONTRIBUTING.md](https://github.com/Leosocy/EDCC-Palmprint-Recognition/blob/master/CONTRIBUTING.md)
 
