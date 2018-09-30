@@ -28,7 +28,10 @@ check_exec_success() {
 
 test() {
     load_images ${OPENCV_CI_IMAGE}
-    docker pull ${OPENCV_CI_IMAGE} > /dev/null
+    image_exist ${OPENCV_CI_IMAGE}
+    if [ $? -ne 0 ]; then
+        docker pull ${OPENCV_CI_IMAGE} > /dev/null
+    fi
     check_exec_success "$?" "pulling ${OPENCV_CI_IMAGE} image"
     docker run -it --rm -v $(pwd):/app -w /app ${OPENCV_CI_IMAGE} /bin/sh -c """
     mkdir build; cd build;
@@ -47,7 +50,9 @@ test() {
 
 lint() {
     load_images ${CPPCHECK_CI_IMAGE}
-    docker pull ${CPPCHECK_CI_IMAGE} > /dev/null
+    if [ $? -ne 0 ]; then
+        docker pull ${CPPCHECK_CI_IMAGE} > /dev/null
+    fi
     check_exec_success "$?" "pulling ${CPPCHECK_CI_IMAGE} image"
     docker run -it --rm -v $(pwd):/app -w /app ${CPPCHECK_CI_IMAGE} /bin/sh -c """
     cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
