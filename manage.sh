@@ -33,7 +33,7 @@ test() {
         docker pull ${OPENCV_CI_IMAGE} > /dev/null
     fi
     check_exec_success "$?" "pulling ${OPENCV_CI_IMAGE} image"
-    docker run -it --rm -v $(pwd):/app -w /app ${OPENCV_CI_IMAGE} /bin/sh -c """
+    docker run -it --rm -v $(pwd):/app -w /app ${OPENCV_CI_IMAGE} /bin/sh -ec """
     mkdir build; cd build;
     cmake ../test; make -j; ./test_edcc;
     lcov -b . -d edcc -c -o cov.info > /dev/null;
@@ -54,7 +54,7 @@ lint() {
         docker pull ${CPPCHECK_CI_IMAGE} > /dev/null
     fi
     check_exec_success "$?" "pulling ${CPPCHECK_CI_IMAGE} image"
-    docker run -it --rm -v $(pwd):/app -w /app ${CPPCHECK_CI_IMAGE} /bin/sh -c """
+    docker run -it --rm -v $(pwd):/app -w /app ${CPPCHECK_CI_IMAGE} /bin/sh -ec """
     cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
     """
     check_exec_success "$?" "run lint"
@@ -69,7 +69,7 @@ test_and_lint() {
 
 run_py_sample() {
     docker pull ${OPENCV_CI_IMAGE} > /dev/null
-    docker run -it --rm -v $(pwd):/app -w /app ${OPENCV_CI_IMAGE} /bin/sh -c """
+    docker run -it --rm -v $(pwd):/app -w /app ${OPENCV_CI_IMAGE} /bin/sh -ec """
     mkdir build_sample; cd build_sample;
     cmake ..; make -j; make install;
     make -j run_py_sample
@@ -85,7 +85,7 @@ upload_codecov() {
         echo "Please set CODECOV_TOKEN value"
         exit 1
     fi
-    docker run -d --rm -v $(pwd):/app -w /app/build -e CODECOV_TOKEN=${CODECOV_TOKEN} ${OPENCV_CI_IMAGE} /bin/bash -c "$(curl -s https://codecov.io/bash)"
+    docker run -d --rm -v $(pwd):/app -w /app/build -e CODECOV_TOKEN=${CODECOV_TOKEN} ${OPENCV_CI_IMAGE} /bin/bash -ec "$(curl -s https://codecov.io/bash)"
     check_exec_success "$?" "upload codecov"
 }
 
