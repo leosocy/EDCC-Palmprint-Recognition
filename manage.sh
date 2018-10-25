@@ -32,9 +32,9 @@ test() {
     if [ $? -ne 0 ]; then
         docker pull ${OPENCV_CI_IMAGE} > /dev/null
     fi
-    check_exec_success "$?" "pulling ${OPENCV_CI_IMAGE} image"
+    check_exec_success "$?" "pull ${OPENCV_CI_IMAGE}"
     docker run -it --rm -v $(pwd):/app -w /app ${OPENCV_CI_IMAGE} /bin/sh -ec """
-    mkdir build; cd build;
+    mkdir -p build; cd build;
     cmake ../test; make -j; ./test_edcc;
     lcov -b . -d edcc -c -o cov.info > /dev/null;
     lcov -r cov.info \"/usr/*\" \"*/thirdparty/*\" \"*/test/*\" -o cov.info -q;
@@ -53,7 +53,7 @@ lint() {
     if [ $? -ne 0 ]; then
         docker pull ${CPPCHECK_CI_IMAGE} > /dev/null
     fi
-    check_exec_success "$?" "pulling ${CPPCHECK_CI_IMAGE} image"
+    check_exec_success "$?" "pull ${CPPCHECK_CI_IMAGE}"
     docker run -it --rm -v $(pwd):/app -w /app ${CPPCHECK_CI_IMAGE} /bin/sh -ec """
     cppcheck --enable=warning --error-exitcode=1 -I source/include source/src
     """
@@ -69,12 +69,24 @@ test_and_lint() {
 
 run_py_sample() {
     docker pull ${OPENCV_CI_IMAGE} > /dev/null
+    check_exec_success "$?" "pull ${OPENCV_CI_IMAGE}"
     docker run -it --rm -v $(pwd):/app -w /app ${OPENCV_CI_IMAGE} /bin/sh -ec """
-    mkdir build_sample; cd build_sample;
+    mkdir -p build_sample; cd build_sample;
     cmake ..; make -j; make install;
     make -j run_py_sample
     """
     check_exec_success "$?" "run py sample"
+}
+
+enter_env() {
+    docker pull ${OPENCV_CI_IMAGE} > /dev/null
+    check_exec_success "$?" "pull ${OPENCV_CI_IMAGE}"
+    docker run -it --rm -v $(pwd):/app -w /app ${OPENCV_CI_IMAGE} /bin/sh -ec """
+    mkdir -p build_install; cd build_install;
+    cmake ..; make -j; make install;
+    cd ..; rm -rf build_install
+    sh
+    """
 }
 
 
@@ -143,6 +155,7 @@ case "$1" in
     test_and_lint) test_and_lint ;;
     run_py_sample) run_py_sample ;;
     upload_codecov) upload_codecov ;;
+    env) enter_env ;;
     build_images) build_images ;;
     upload_images) upload_images ;;
     save_images) save_images ;;
@@ -153,6 +166,7 @@ case "$1" in
         echo "./manage.sh lint"
         echo "./manage.sh test_and_lint"
         echo "./manage.sh run_py_sample"
+        echo "./manage.sh env"
         exit 1
         ;;
 esac
