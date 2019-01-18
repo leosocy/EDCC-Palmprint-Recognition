@@ -4,7 +4,7 @@ CurDir="$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
 
 ######## envs ########
 
-DOCKER_REGISTRY=registry.cn-hangzhou.aliyuncs.com/leosocy
+DOCKER_REGISTRY=leosocy
 IMAGE=${DOCKER_REGISTRY}/edcc
 BASE_IMAGE_TAG=${IMAGE}:base-${TRAVIS_COMMIT:0:8}
 PYTHON_IMAGE_TAG=${IMAGE}:python-${TRAVIS_COMMIT:0:8}
