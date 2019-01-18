@@ -4,7 +4,7 @@ CurDir="$(cd "$(dirname "${BASH_SOURCE[0]}" )" && pwd)"
 
 ######## envs ########
 
-DOCKER_REGISTRY=registry.cn-hangzhou.aliyuncs.com/leosocy
+DOCKER_REGISTRY=leosocy
 IMAGE=${DOCKER_REGISTRY}/edcc
 BASE_IMAGE_TAG=${IMAGE}:base-${TRAVIS_COMMIT:0:8}
 PYTHON_IMAGE_TAG=${IMAGE}:python-${TRAVIS_COMMIT:0:8}
@@ -109,15 +109,15 @@ build_images() {
 }
 
 upload_images() {
-    if [ -z ${ALIYUN_DOCKER_REGISTRY_USERNAME} ]; then
+    if [ -z ${DOCKER_HUB_REGISTRY_USERNAME} ]; then
         echo "Please set ALIYUN_DOCKER_REGISTRY_USERNAME value"
         exit 1
     fi
-    if [ -z ${ALIYUN_DOCKER_REGISTRY_PASSWD} ]; then
+    if [ -z ${DOCKER_HUB_REGISTRY_PASSWD} ]; then
         echo "Please set ALIYUN_DOCKER_REGISTRY_PASSWD value"
         exit 1
     fi
-    echo "${ALIYUN_DOCKER_REGISTRY_PASSWD}" | docker login -u "${ALIYUN_DOCKER_REGISTRY_USERNAME}" --password-stdin ${DOCKER_REGISTRY}
+    echo "${DOCKER_HUB_REGISTRY_PASSWD}" | docker login -u "${DOCKER_HUB_REGISTRY_USERNAME}" --password-stdin
     check_exec_success "$?" "docker login"
     docker push ${IMAGE}
     check_exec_success "$?" "push images"
