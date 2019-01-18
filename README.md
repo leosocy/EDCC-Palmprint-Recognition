@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.org/Leosocy/EDCC-Palmprint-Recognition.svg?branch=master)](https://travis-ci.org/Leosocy/EDCC-Palmprint-Recognition)
 [![codecov](https://codecov.io/gh/Leosocy/EDCC-Palmprint-Recognition/branch/master/graph/badge.svg)](https://codecov.io/gh/Leosocy/EDCC-Palmprint-Recognition)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-green.svg)](https://raw.githubusercontent.com/Leosocy/EDCC-Palmprint-Recognition/master/LICENSE)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/16141/badge.svg)](https://scan.coverity.com/projects/leosocy-edcc-palmprint-recognition)
 
 `EDCC(Enhanced and Discriminative Competitive Code)`, which is used for palmprint-recognition.
 
@@ -23,7 +22,7 @@ Advantages of `EDCC` algorithm:
 1. **Faster recognition speed.**
 1. **Higher recognition accuracy.**
 
-[**More details of `EDCC`**](https://leosocy.github.io/2017/10/18/EDCC-Algorithm/)
+[**More details of `EDCC`**](https://blog.leosocy.top/EDCC%20Algorithm/)
 
 ## Installation
 
