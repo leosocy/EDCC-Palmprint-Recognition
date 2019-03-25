@@ -4,32 +4,38 @@ coverage:
   range: "90...95"
   status:
     project:
-      default: false
-      tests:
+      default: off
+      test:
         target: 90%
-        flags: tests
+        paths:
+          - "test/"
       app:
         target: 95%
-        flags: app
+        paths:
+          - "include/"
+          - "src/"
     patch:
-      default: false
+      default: off
       tests:
         target: 95%
-        flags: tests
+        paths:
+          - "test/"
       app:
         target: 98%
-        flags: app
+        paths:
+          - "include/"
+          - "src/"
   ignore:
-    - "thirdparty/"
+    - "thirdparty"
 
 flags:
   app:
     paths:
-      - include/
-      - source/
-  tests:
+      - "include/"
+      - "src/"
+  test:
     paths:
-      - test/
+      - "test/"
 
 codecov:
   branch: master
