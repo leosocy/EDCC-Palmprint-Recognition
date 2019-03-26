@@ -1,6 +1,10 @@
 
 # Created by https://www.gitignore.io/api/c++,cmake,jetbrains,visualstudio,visualstudiocode
 
+**/.DS_Store
+cov_result
+build_*
+
 ### C++ ###
 # Prerequisites
 *.d
