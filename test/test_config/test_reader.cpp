@@ -69,7 +69,6 @@ TEST(SimpleConfigReaderTest, invalid_gabor_directions) {
   config.gabor_directions = edcc::limit::kMaxGaborDirections + 1;
   auto reader = SimpleConfigReader(config);
   auto status = reader.Load();
-  printf("%s", status.msg());
   EXPECT_EQ(status.code(), Status::kInvalidArgument);
 }
 

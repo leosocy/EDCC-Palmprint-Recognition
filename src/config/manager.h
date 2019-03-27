@@ -1,1 +1,0 @@
-// 管理Config，ConfigReader读取、存储到config对象。
