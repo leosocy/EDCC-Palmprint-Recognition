@@ -16,6 +16,13 @@ typedef struct {
   uint8_t gabor_directions;
 } EdccConfig;
 
+namespace limit {
+static const uint8_t kMinImageSize = 29;
+static const uint8_t kMaxLaplaceKernelSize = 31;
+static const uint8_t kMinGaborDirections = 4;
+static const uint8_t kMaxGaborDirections = 16;
+}  // namespace limit
+
 static const EdccConfig kDefaultEdccConfig = {29, 5, 5, 10};
 
 }  // namespace edcc

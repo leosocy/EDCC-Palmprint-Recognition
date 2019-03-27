@@ -17,6 +17,12 @@ class ConfigReader {
   virtual Status Load() = 0;
   const EdccConfig& GetConfig() { return cfg_; }
 
+  // we'll validate when set config.
+  Status SetImageSize(uint8_t size);
+  Status SetGaborKernelSize(uint8_t size);
+  Status SetLaplaceKernelSize(uint8_t size);
+  Status SetGaborDirecions(uint8_t num);
+
  protected:
   EdccConfig cfg_;
 };
