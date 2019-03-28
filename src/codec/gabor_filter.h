@@ -1,0 +1,28 @@
+// Copyright (c) 2019 leosocy. All rights reserved.
+// Use of this source code is governed by a MIT-style license
+// that can be found in the LICENSE file.
+
+#ifndef EDCC_SRC_CODEC_GABOR_FILTER_H_
+#define EDCC_SRC_CODEC_GABOR_FILTER_H_
+
+#include <opencv2/opencv.hpp>
+#include <vector>
+#include "config/config.h"
+
+namespace edcc {
+class GaborFilter {
+ public:
+  GaborFilter(const CoreEncoderConfig &config);
+  void Handle(const cv::Mat &src, std::vector<cv::Mat> *result);
+
+ private:
+  void InitKernels();
+  void GetKernelReal(cv::Mat *kernel, int width, int height, int dimension, int direction, double kmax = CV_PI / 2,
+                     double f = sqrt(2.0), double sigma = 2 * CV_PI);
+  void EnhanceImage(const cv::Mat &src, cv::Mat *dst);
+  const CoreEncoderConfig &cfg_;
+  std::vector<cv::Mat> kernels_;
+};
+}  // namespace edcc
+
+#endif  // EDCC_SRC_CODEC_GABOR_FILTER_H_

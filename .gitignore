@@ -4,6 +4,8 @@
 **/.DS_Store
 cov_result
 build_*
+**/*.bmp
+**/*.jpg
 
 ### C++ ###
 # Prerequisites
