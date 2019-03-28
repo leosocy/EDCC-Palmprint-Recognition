@@ -27,11 +27,8 @@ Status ConfigReader::SetGaborKernelSize(uint8_t size) {
 }
 
 Status ConfigReader::SetLaplaceKernelSize(uint8_t size) {
-  if (size > core_encoder_cfg_.image_size ||
-      size > limit::kMaxLaplaceKernelSize) {
-    return Status::InvalidArgument(
-        "Laplace kernel size larger than image size or %d.",
-        limit::kMaxLaplaceKernelSize);
+  if (size > core_encoder_cfg_.image_size || size > limit::kMaxLaplaceKernelSize) {
+    return Status::InvalidArgument("Laplace kernel size larger than image size or %d.", limit::kMaxLaplaceKernelSize);
   }
   if ((size & 0x01) == 0) {
     return Status::InvalidArgument("Laplace kernel size not odd.");
@@ -42,26 +39,20 @@ Status ConfigReader::SetLaplaceKernelSize(uint8_t size) {
 
 Status ConfigReader::SetGaborDirecions(uint8_t num) {
   if (num > limit::kMaxGaborDirections || num < limit::kMinGaborDirections) {
-    return Status::InvalidArgument("Gabor directions not in range [%d, %d].",
-                                   limit::kMinGaborDirections,
+    return Status::InvalidArgument("Gabor directions not in range [%d, %d].", limit::kMinGaborDirections,
                                    limit::kMaxGaborDirections);
   }
   core_encoder_cfg_.gabor_directions = num;
   return Status::Ok();
 }
 
-SimpleConfigReader::SimpleConfigReader(const CoreEncoderConfig& config) {
-  core_encoder_cfg_ = config;
-}
+SimpleConfigReader::SimpleConfigReader(const CoreEncoderConfig& config) { core_encoder_cfg_ = config; }
 
-Status SimpleConfigReader::Load() {
+Status SimpleConfigReader::LoadAndValidate() {
   INVOKE_FUNC_WITH_STATUS(SetImageSize(core_encoder_cfg_.image_size));
-  INVOKE_FUNC_WITH_STATUS(
-      SetGaborKernelSize(core_encoder_cfg_.gabor_kernel_size));
-  INVOKE_FUNC_WITH_STATUS(
-      SetLaplaceKernelSize(core_encoder_cfg_.laplace_kernel_size));
-  INVOKE_FUNC_WITH_STATUS(
-      SetGaborDirecions(core_encoder_cfg_.gabor_directions));
+  INVOKE_FUNC_WITH_STATUS(SetGaborKernelSize(core_encoder_cfg_.gabor_kernel_size));
+  INVOKE_FUNC_WITH_STATUS(SetLaplaceKernelSize(core_encoder_cfg_.laplace_kernel_size));
+  INVOKE_FUNC_WITH_STATUS(SetGaborDirecions(core_encoder_cfg_.gabor_directions));
   return Status::Ok();
 }
 
