@@ -11,26 +11,20 @@
 namespace edcc {
 
 typedef struct {
-  uint8_t c : 5;  // c is `gabor direction` which range is [4, 16], so pow(2, 6)
-                  // - 1 = 31 can cover direction.
-  uint8_t cs : 1;  // cs value is in range [0,1].
+  // `d` means `gabor direction` which range is [0, 15], so pow(2, 4) - 1 = 15
+  // can cover direction.
+  uint8_t d : 4;
+  // `s` means `direction side` which value is left(1) or right(0), so range
+  // [0,1] can cover side.
+  uint8_t s : 1;
+  uint8_t _pad : 3;
 } PalmprintCodeMetadata;
 
 typedef struct {
-  EdccConfig cfg;
+  CoreEncoderConfig cfg;
   uint32_t len;
   PalmprintCodeMetadata data[0];
-} ReliablePalmprintCode;  // `Reliable` means that for each Palmprint code we
-                          // store the corresponding encoder config for
-                          // comparison between different codes.
-
-typedef struct {
-  uint32_t len;
-  PalmprintCodeMetadata data[0];
-} FastPalmprintCode;  // `Fast` means no encoder config is stored, and
-                      // the caller guarantees that the two codes being compared
-                      // are encoded by the same config, or an unexpected
-                      // error will occur.
+} PalmprintCode;
 
 }  // namespace edcc
 

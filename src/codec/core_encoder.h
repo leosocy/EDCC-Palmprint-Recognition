@@ -1,4 +1,27 @@
-// 核心编码器，将roi中的一个个像素通过edcc算法转化成c/cs值。
-// 编码包括以下几种模式：
-// 1. 可靠模式: 将编码时使用的Config一同写入Code。
-// 2. 极速模式: 由调用者保证使用统一配置生成Code，Code中不携带Config信息。
+// Copyright (c) 2019 leosocy. All rights reserved.
+// Use of this source code is governed by a MIT-style license
+// that can be found in the LICENSE file.
+
+#ifndef EDCC_SRC_CODEC_CORE_ENCODER_H_
+#define EDCC_SRC_CODEC_CORE_ENCODER_H_
+
+#include <memory>
+#include <opencv2/opencv.hpp>
+#include "codec/code.h"
+#include "config/reader.h"
+
+namespace edcc {
+class CoreEncoder {
+ public:
+  CoreEncoder(std::shared_ptr<ConfigReader> reader);
+  Status BuildAndInitEncoder();
+  size_t GetCodeBufferSize();
+  Status Encode(const cv::Mat& palmprint, PalmprintCode* code);
+  Status Encode(const char* filename, PalmprintCode* code);
+
+ private:
+  std::shared_ptr<ConfigReader> config_reader_;
+};
+}  // namespace edcc
+
+#endif  // EDCC_SRC_CODEC_CORE_ENCODER_H_

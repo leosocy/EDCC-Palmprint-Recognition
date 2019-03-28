@@ -8,11 +8,9 @@
 namespace {
 
 TEST(PalmCodeMetadataTest, base_test) {
-  printf("PalmprintCodeMetadata size:%d\n",
+  printf("PalmprintCodeMetadata size:%lu\n",
          sizeof(edcc::PalmprintCodeMetadata));
-  printf("ReliablePalmprintCode size:%d\n",
-         sizeof(edcc::ReliablePalmprintCode));
-  printf("FastPalmprintCode size:%d\n", sizeof(edcc::FastPalmprintCode));
+  printf("ReliablePalmprintCode size:%lu\n", sizeof(edcc::PalmprintCode));
 }
 
 }  // namespace

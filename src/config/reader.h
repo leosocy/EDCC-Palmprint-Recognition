@@ -15,7 +15,7 @@ class ConfigReader {
  public:
   virtual ~ConfigReader(){};
   virtual Status Load() = 0;
-  const EdccConfig& GetConfig() { return cfg_; }
+  const CoreEncoderConfig& GetCoreEncoderConfig() { return core_encoder_cfg_; }
 
   // we'll validate when set config value.
   Status SetImageSize(uint8_t size);
@@ -24,12 +24,12 @@ class ConfigReader {
   Status SetGaborDirecions(uint8_t num);
 
  protected:
-  EdccConfig cfg_;
+  CoreEncoderConfig core_encoder_cfg_;
 };
 
 class SimpleConfigReader : public ConfigReader {
  public:
-  SimpleConfigReader(const EdccConfig& config);
+  SimpleConfigReader(const CoreEncoderConfig& config);
   Status Load() override;
 };
 
