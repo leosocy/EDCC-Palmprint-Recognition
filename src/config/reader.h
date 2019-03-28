@@ -14,7 +14,7 @@ namespace edcc {
 class ConfigReader {
  public:
   virtual ~ConfigReader(){};
-  virtual Status Load() = 0;
+  virtual Status LoadAndValidate() = 0;
   const CoreEncoderConfig& GetCoreEncoderConfig() { return core_encoder_cfg_; }
 
   // we'll validate when set config value.
@@ -30,7 +30,7 @@ class ConfigReader {
 class SimpleConfigReader : public ConfigReader {
  public:
   SimpleConfigReader(const CoreEncoderConfig& config);
-  Status Load() override;
+  Status LoadAndValidate() override;
 };
 
 // TODO: YamlConfigReader/JsonConfigReader
