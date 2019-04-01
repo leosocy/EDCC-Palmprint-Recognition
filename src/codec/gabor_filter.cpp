@@ -11,8 +11,12 @@ GaborFilter::GaborFilter(const CoreEncoderConfig &config) : cfg_(config) { InitK
 void GaborFilter::Handle(const cv::Mat &src, std::vector<cv::Mat> *result) {
   assert(result);
   cv::Mat enhanced_image(src.clone());
+<<<<<<< HEAD
   cv::resize(enhanced_image, enhanced_image, cv::Size(cfg_.image_size, cfg_.image_size));
   cvtColor(enhanced_image, enhanced_image, CV_BGR2GRAY);
+=======
+  PreprocessImage(src, &enhanced_image);
+>>>>>>> 2c2ce7e35fe309a9c48bf2b7e256dab1487a7edf
   EnhanceImage(enhanced_image, &enhanced_image);
   cv::Mat directional_filter_result;
   for (uint8_t d = 0; d < cfg_.gabor_directions; ++d) {
@@ -49,10 +53,16 @@ void GaborFilter::GetKernelReal(cv::Mat *kernel, int width, int height, int dime
   }
 }
 
-void GaborFilter::EnhanceImage(const cv::Mat &src, cv::Mat *dst) {
-  cv::Mat gaussian_result;
-  GaussianBlur(src, gaussian_result, cv::Size(5, 5), 0, 0, cv::BORDER_DEFAULT);
-  Laplacian(gaussian_result, *dst, CV_64F, cfg_.laplace_kernel_size);
+void GaborFilter::PreprocessImage(const cv::Mat &src, cv::Mat *result) {
+  assert(result);
+  cv::resize(src, *result, cv::Size(cfg_.image_size, cfg_.image_size));
+  cvtColor(*result, *result, CV_BGR2GRAY);
+}
+
+void GaborFilter::EnhanceImage(const cv::Mat &src, cv::Mat *result) {
+  assert(result);
+  GaussianBlur(src, *result, cv::Size(5, 5), 0, 0, cv::BORDER_DEFAULT);
+  Laplacian(*result, *result, CV_64F, cfg_.laplace_kernel_size);
 }
 
 }  // namespace edcc
