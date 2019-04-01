@@ -22,7 +22,7 @@ typedef struct {
 
 typedef struct {
   CoreEncoderConfig cfg;
-  uint32_t len;
+  uint32_t len;  // num of metadata
   PalmprintCodeMetadata data[0];
 } PalmprintCode;
 

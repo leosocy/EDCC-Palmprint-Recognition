@@ -9,22 +9,25 @@
 #include <opencv2/opencv.hpp>
 #include "codec/code.h"
 #include "codec/gabor_filter.h"
-#include "config/reader.h"
+#include "config/config.h"
+#include "edcc/status.h"
 
 namespace edcc {
 
 class CoreEncoder {
  public:
-  CoreEncoder(std::unique_ptr<ConfigReader> reader);
-  Status BuildAndInitEncoder();
-  size_t GetCodeBufferSize();
-  Status Encode(const cv::Mat& palmprint, PalmprintCode* code);
-  Status Encode(const char* filename, PalmprintCode* code);
+  CoreEncoder(const CoreEncoderConfig& cfg);
+
+  size_t GetCodeBufferSize() const;
+  Status Encode(const cv::Mat& palmprint, PalmprintCode* code, size_t buffer_size) const;
 
  private:
-  std::unique_ptr<ConfigReader> config_reader_;
+  uint8_t GetDirectionOfMaxResponse(const std::vector<cv::Mat>& gabor_filter_result, uint8_t x, uint8_t y) const;
+
+  const CoreEncoderConfig cfg_;
   std::unique_ptr<GaborFilter> gabor_filter_;
 };
+
 }  // namespace edcc
 
 #endif  // EDCC_SRC_CODEC_CORE_ENCODER_H_

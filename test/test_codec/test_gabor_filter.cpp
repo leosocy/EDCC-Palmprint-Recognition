@@ -41,7 +41,7 @@ TEST_F(CodecGaborFilterTestFixture, handle_palmprint_image) {
     const double *col_ptr = d1.ptr<double>(row);
     for (int col = 0; col < d1.cols; ++col) {
       // expect has been nomalized.
-      EXPECT_TRUE(*col_ptr >= 0 && *col_ptr <= 1);
+      EXPECT_TRUE(*col_ptr <= 1.0);
       ++col_ptr;
     }
   }
