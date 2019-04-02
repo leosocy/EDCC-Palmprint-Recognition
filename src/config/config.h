@@ -14,7 +14,7 @@ typedef struct {
   uint8_t gabor_kernel_size;
   uint8_t laplace_kernel_size;
   uint8_t gabor_directions;
-} CoreEncoderConfig;
+} EncoderConfig;
 
 namespace limit {
 static const uint8_t kMinImageSize = 29;
@@ -23,7 +23,7 @@ static const uint8_t kMinGaborDirections = 4;
 static const uint8_t kMaxGaborDirections = 16;
 }  // namespace limit
 
-static const CoreEncoderConfig kDefaultCoreEncoderConfig = {29, 5, 5, 10};
+static const EncoderConfig kDefaultEncoderConfig = {29, 5, 5, 10};
 
 }  // namespace edcc
 

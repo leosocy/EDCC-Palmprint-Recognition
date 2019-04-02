@@ -27,10 +27,12 @@ class Status {
     kOk = 0,
     kInvalidArgument = 1,
     kLackingCodeBuffer = 2,
+    kCodeCfgNEWhenComparing = 3,
   };
   DECL_STATUS_CODE_FUNC(Ok, kOk);
   DECL_STATUS_CODE_FUNC(InvalidArgument, kInvalidArgument);
   DECL_STATUS_CODE_FUNC(LackingCodeBuffer, kLackingCodeBuffer);
+  DECL_STATUS_CODE_FUNC(CodeCfgNEWhenComparing, kCodeCfgNEWhenComparing);
 
   Status() : state_(nullptr) {}
   Status(const Status& s) = delete;
