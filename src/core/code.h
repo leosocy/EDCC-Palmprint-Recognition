@@ -2,8 +2,8 @@
 // Use of this source code is governed by a MIT-style license
 // that can be found in the LICENSE file.
 
-#ifndef EDCC_SRC_CODEC_CODE_H_
-#define EDCC_SRC_CODEC_CODE_H_
+#ifndef EDCC_SRC_CORE_CODE_H_
+#define EDCC_SRC_CORE_CODE_H_
 
 #include <stdint.h>
 #include "config/config.h"
@@ -21,11 +21,11 @@ typedef struct {
 } PalmprintCodeMetadata;
 
 typedef struct {
-  CoreEncoderConfig cfg;
+  EncoderConfig cfg;
   uint32_t len;  // num of metadata
   PalmprintCodeMetadata data[0];
 } PalmprintCode;
 
 }  // namespace edcc
 
-#endif  // EDCC_SRC_CODEC_CODE_H_
+#endif  // EDCC_SRC_CORE_CODE_H_

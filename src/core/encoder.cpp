@@ -2,22 +2,22 @@
 // Use of this source code is governed by a MIT-style license
 // that can be found in the LICENSE file.
 
-#include "codec/core_encoder.h"
+#include "core/encoder.h"
 #include <cmath>
 #include <vector>
 
 namespace edcc {
 
-CoreEncoder::CoreEncoder(const CoreEncoderConfig &cfg) : cfg_(cfg) {
+Encoder::Encoder(const EncoderConfig &cfg) : cfg_(cfg) {
   gabor_filter_ = std::unique_ptr<GaborFilter>(new GaborFilter(cfg_));
 }
 
-size_t CoreEncoder::GetCodeBufferSize() const {
+size_t Encoder::GetCodeBufferSize() const {
   uint32_t metadata_len = cfg_.image_size * cfg_.image_size;
   return sizeof(PalmprintCode) + metadata_len * sizeof(PalmprintCodeMetadata);
 }
 
-Status CoreEncoder::Encode(const cv::Mat &palmprint, PalmprintCode *code, size_t buffer_size) const {
+Status Encoder::Encode(const cv::Mat &palmprint, PalmprintCode *code, size_t buffer_size) const {
   assert(code != nullptr);
   if (buffer_size < GetCodeBufferSize()) {
     return Status::LackingCodeBuffer("Buffer size:%lu is lacking.", buffer_size);
@@ -46,8 +46,8 @@ Status CoreEncoder::Encode(const cv::Mat &palmprint, PalmprintCode *code, size_t
   return Status::Ok();
 }
 
-inline uint8_t CoreEncoder::GetDirectionOfMaxResponse(const std::vector<cv::Mat> &gabor_filter_result, uint8_t x,
-                                                      uint8_t y) const {
+inline uint8_t Encoder::GetDirectionOfMaxResponse(const std::vector<cv::Mat> &gabor_filter_result, uint8_t x,
+                                                  uint8_t y) const {
   double max_response = -DBL_MAX;
   uint8_t direction_of = UINT8_MAX;
   for (uint8_t d = 0; d < cfg_.gabor_directions; ++d) {
