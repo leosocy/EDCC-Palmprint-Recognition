@@ -63,13 +63,16 @@ TEST_F(ComparerTestFixture, two_codes_have_differect_cfg) {
 }
 
 TEST_F(ComparerTestFixture, correctly_compare) {
-  double score_a1a2 = 0, score_a2a1 = 0, score_a1b1 = 0;
-  auto status = Comparer::Compare(*a_01_code_, *a_02_code_, &score_a1a2);
+  double score_a1a1 = 0, score_a1a2 = 0, score_a2a1 = 0, score_a1b1 = 0;
+  auto status = Comparer::Compare(*a_01_code_, *a_01_code_, &score_a1a1);
+  EXPECT_EQ(status.code(), Status::kOk);
+  status = Comparer::Compare(*a_01_code_, *a_02_code_, &score_a1a2);
   EXPECT_EQ(status.code(), Status::kOk);
   status = Comparer::Compare(*a_02_code_, *a_01_code_, &score_a2a1);
   EXPECT_EQ(status.code(), Status::kOk);
   status = Comparer::Compare(*a_01_code_, *b_01_code_, &score_a1b1);
   EXPECT_EQ(status.code(), Status::kOk);
+  EXPECT_EQ(score_a1a1, 1.0);
   EXPECT_GT(score_a1b1, 0.0);
   EXPECT_LT(score_a1b1, score_a2a1);
   EXPECT_EQ(score_a1a2, score_a2a1);
