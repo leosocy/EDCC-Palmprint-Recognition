@@ -57,6 +57,12 @@ class Status {
     return state_ + 1;
   }
   bool IsOk() { return code() == kOk; }
+  void CopyToBuffer(char* buffer) {
+    if (state_ != nullptr) {
+      *buffer++ = state_[0];
+      memcpy(buffer, state_ + 1, strlen(state_ + 1) + 1);
+    }
+  }
 
  private:
   Status(Code code, const char* fmt, va_list args);
