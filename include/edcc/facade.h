@@ -18,24 +18,31 @@ class Encoder;
 
 class EdccFacade {
  public:
-  typedef size_t eid;  // encoder id represents the position in the vector.
+  typedef int eid;  // encoder id represents the position in the vector.
+
+  EdccFacade(const EdccFacade&) = delete;
+  EdccFacade& operator=(const EdccFacade&) = delete;
+  EdccFacade(const EdccFacade&&) = delete;
+  EdccFacade& operator=(const EdccFacade&&) = delete;
 
   static EdccFacade* Instance();
   void ClearEncoders();
 
   EdccFacade::eid NewEncoderWithDefaultConfig(Status* s);
+  // will return -1 if config invalid.
   EdccFacade::eid NewEncoderWithConfig(uint8_t image_size, uint8_t gabor_kernel_size, uint8_t laplace_kernel_size,
                                        uint8_t gabor_directions, Status* s);
 
   size_t GetSizeOfCodeBufferRequired(EdccFacade::eid id);
-  void EncodePalmprint(EdccFacade::eid id, const cv::Mat& palmprint, uint8_t* code_buffer, size_t buffer_size,
-                       Status* s);
-  void EncodePalmprint(EdccFacade::eid id, const std::string& filename, uint8_t* code_buffer, size_t buffer_size,
+  void EncodePalmprint(EdccFacade::eid id, const cv::Mat& palmprint, char* code_buffer, size_t buffer_size, Status* s);
+  void EncodePalmprint(EdccFacade::eid id, const std::string& filename, char* code_buffer, size_t buffer_size,
                        Status* s);
 
-  double CalcCodeSimilarity(const uint8_t* lhs_code_buffer, const uint8_t* rhs_code_buffer, Status* s);
+  double CalcCodeSimilarity(const char* lhs_code_buffer, const char* rhs_code_buffer, Status* s);
 
  private:
+  EdccFacade();
+
   std::vector<std::unique_ptr<Encoder>> encoders_;
 };
 }  // namespace edcc

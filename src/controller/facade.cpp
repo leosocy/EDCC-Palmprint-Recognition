@@ -10,9 +10,11 @@
 
 namespace edcc {
 
+EdccFacade::EdccFacade() {}
+
 EdccFacade* EdccFacade::Instance() {
-  static EdccFacade* instance = new EdccFacade;
-  return instance;
+  static EdccFacade instance;
+  return &instance;
 }
 
 void EdccFacade::ClearEncoders() { encoders_.clear(); }
@@ -31,26 +33,30 @@ EdccFacade::eid EdccFacade::NewEncoderWithConfig(uint8_t image_size, uint8_t gab
   cfg.gabor_directions = gabor_directions;
   std::unique_ptr<ConfigReader> reader = std::unique_ptr<ConfigReader>(new SimpleConfigReader(cfg));
   *s = reader->LoadAndValidate();
-  std::unique_ptr<Encoder> encoder = std::unique_ptr<Encoder>(new Encoder(reader->GetEncoderConfig()));
-  encoders_.emplace_back(std::move(encoder));
-  return encoders_.size() - 1;
+  if (s->IsOk()) {
+    std::unique_ptr<Encoder> encoder = std::unique_ptr<Encoder>(new Encoder(reader->GetEncoderConfig()));
+    encoders_.emplace_back(std::move(encoder));
+    return encoders_.size() - 1;
+  } else {
+    return -1;
+  }
 }
 
 size_t EdccFacade::GetSizeOfCodeBufferRequired(EdccFacade::eid id) { return encoders_.at(id)->GetCodeBufferSize(); }
 
-void EdccFacade::EncodePalmprint(EdccFacade::eid id, const cv::Mat& palmprint, uint8_t* code_buffer, size_t buffer_size,
+void EdccFacade::EncodePalmprint(EdccFacade::eid id, const cv::Mat& palmprint, char* code_buffer, size_t buffer_size,
                                  Status* s) {
   PalmprintCode* code = reinterpret_cast<PalmprintCode*>(code_buffer);
   *s = encoders_.at(id)->Encode(palmprint, code, buffer_size);
 }
 
-void EdccFacade::EncodePalmprint(EdccFacade::eid id, const std::string& filename, uint8_t* code_buffer,
-                                 size_t buffer_size, Status* s) {
+void EdccFacade::EncodePalmprint(EdccFacade::eid id, const std::string& filename, char* code_buffer, size_t buffer_size,
+                                 Status* s) {
   cv::Mat palmprint = cv::imread(filename);
   EncodePalmprint(id, palmprint, code_buffer, buffer_size, s);
 }
 
-double EdccFacade::CalcCodeSimilarity(const uint8_t* lhs_code_buffer, const uint8_t* rhs_code_buffer, Status* s) {
+double EdccFacade::CalcCodeSimilarity(const char* lhs_code_buffer, const char* rhs_code_buffer, Status* s) {
   const PalmprintCode* lhs_code = reinterpret_cast<const PalmprintCode*>(lhs_code_buffer);
   const PalmprintCode* rhs_code = reinterpret_cast<const PalmprintCode*>(rhs_code_buffer);
   double score = .0;
