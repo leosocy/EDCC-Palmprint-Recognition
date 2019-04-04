@@ -3,9 +3,16 @@
 // that can be found in the LICENSE file.
 
 #include "config/reader.h"
-#include "util/util.h"
 
 namespace edcc {
+
+#define INVOKE_SETTER_WITH_STATUS_CHECKING(setter) \
+  do {                                             \
+    auto status = setter;                          \
+    if (!status.IsOk()) {                          \
+      return status;                               \
+    }                                              \
+  } while (0)
 
 Status ConfigReader::SetImageSize(uint8_t size) {
   if (size < limit::kMinImageSize) {
@@ -49,10 +56,10 @@ Status ConfigReader::SetGaborDirecions(uint8_t num) {
 SimpleConfigReader::SimpleConfigReader(const EncoderConfig& config) { encoder_cfg_ = config; }
 
 Status SimpleConfigReader::LoadAndValidate() {
-  INVOKE_FUNC_WITH_STATUS(SetImageSize(encoder_cfg_.image_size));
-  INVOKE_FUNC_WITH_STATUS(SetGaborKernelSize(encoder_cfg_.gabor_kernel_size));
-  INVOKE_FUNC_WITH_STATUS(SetLaplaceKernelSize(encoder_cfg_.laplace_kernel_size));
-  INVOKE_FUNC_WITH_STATUS(SetGaborDirecions(encoder_cfg_.gabor_directions));
+  INVOKE_SETTER_WITH_STATUS_CHECKING(SetImageSize(encoder_cfg_.image_size));
+  INVOKE_SETTER_WITH_STATUS_CHECKING(SetGaborKernelSize(encoder_cfg_.gabor_kernel_size));
+  INVOKE_SETTER_WITH_STATUS_CHECKING(SetLaplaceKernelSize(encoder_cfg_.laplace_kernel_size));
+  INVOKE_SETTER_WITH_STATUS_CHECKING(SetGaborDirecions(encoder_cfg_.gabor_directions));
   return Status::Ok();
 }
 

@@ -1,4 +1,4 @@
-# 掌纹图像ROI
+# ROI Of Palmprint
 
 Partial palmprint data set.
 
