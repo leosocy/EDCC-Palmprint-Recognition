@@ -17,7 +17,7 @@ class EdccExceptionBase(Exception):
         self.errmsg = errmsg
 
     def __str__(self):
-        return "Error code: {code}, means: {code_name} message: {msg}".format(
+        return "Error code: {code}, means: {code_name}. Error message: {msg}".format(
             code=self.errcode,
             code_name=ReversedEdccErrorCode[self.errcode],
             msg=self.errmsg,

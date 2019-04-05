@@ -2,82 +2,26 @@
 # Use of this source code is governed by a MIT-style license
 # that can be found in the LICENSE file.
 
-"""An efficient and accurate algorithm for palmprint-recognition"""
-
-__author__ = "Leosocy <leosocy@gmail.com>"
-__version__ = "0.2.0"
-
-import enum
+import platform
 import ctypes
 
-
-@enum.unique
-class EdccRuntimeErrorCode(enum.IntEnum):
-    InvalidArgument = 1
-    LackingCodeBuffer = 2
-    CodeCfgNEWhenComparing = 3
+from .exceptions import EdccExceptionBase
+from .config import EncoderConfig
 
 
-class EdccRuntimeException(Exception):
-    """Base exception for edcc"""
+class EdccAdapter(object):
+    """An adapter for c apis in edcc library."""
 
-    def __init__(self, errcode, errmsg):
-        """
-        :param errcode: Error code
-        :param errmsg: Error message
-        """
-        self.errcode = errcode
-        self.errmsg = errmsg
-
-    def __str__(self):
-        return "Error code: {code}, message: {msg}".format(
-            code=self.errcode, msg=self.errmsg
-        )
-
-    def __repr__(self):
-        return self.__str__()
-
-
-class EncoderConfig(object):
-    """Config which is used to initialize `Encoder`"""
-
-    def __init__(
-        self, image_size, gabor_kernel_size, laplace_kernel_size, gabor_directions
-    ):
-        self.image_size = image_size
-        self.gabor_kernel_size = gabor_kernel_size
-        self.laplace_kernel_size = laplace_kernel_size
-        self.gabor_directions = gabor_directions
-
-
-class Encoder(object):
-    """Encode palmprint image to `Palmprint code`."""
-
-    def __init__(self, config, lib=_edcc_lib):
-        self._cfg = config
-        self._lib = lib
-
-
-class PalmprintCode(object):
-    """Store code, compare to another code."""
-
-    pass
-
-
-class EdccLibrary(object):
-    """Use ctypes to call functions in so."""
-
-    LIB_NAME = "libedcc"
-    LIB_SUFFIX = "so" if platform.uname()[0] == "Linux" else "dylib"
+    LIB_NAME = "libedcc.{suffix}".format(
+        suffix="so" if platform.uname()[0] == "Linux" else "dylib"
+    )
     LIB_INSTALLATION_URL = (
         "https://github.com/Leosocy/EDCC-Palmprint-Recognition#installation"
     )
 
     def __init__(self):
         try:
-            self._lib = ctypes.cdll.LoadLibrary(
-                "{}.{}".format(self.LIB_NAME, self.LIB_SUFFIX)
-            )
+            self._lib = ctypes.cdll.LoadLibrary(self.LIB_NAME)
         except OSError:
             raise OSError(
                 "Library [{:s}] not found.\nPlease see {:s}".format(
@@ -116,6 +60,7 @@ class EdccLibrary(object):
         self._lib.calculate_codes_similarity.restype = ctypes.c_double
 
     def new_encoder(self, config: EncoderConfig):
+        """Create a new encoder and return it's id."""
         status = ctypes.create_string_buffer(128)
         encoder_id = self._lib.new_encoder_with_config(
             config.image_size,
@@ -127,12 +72,33 @@ class EdccLibrary(object):
         self._check_status(status)
         return encoder_id
 
+    def do_encode(self, encoder_id, palmprint_bytes):
+        """Encode palmprint image bytes to code bytes."""
+        status = ctypes.create_string_buffer(128)
+        code_bytes_size = self._lib.get_size_of_code_buffer_required(encoder_id)
+        code_bytes = ctypes.create_string_buffer(code_bytes_size)
+        self._lib.encode_palmprint_bytes(
+            encoder_id,
+            palmprint_bytes,
+            len(palmprint_bytes),
+            code_bytes,
+            code_bytes_size,
+            status,
+        )
+        self._check_status(status)
+        return code_bytes
+
+    def calc_score(self, lhs_code_bytes, rhs_code_bytes):
+        """Calculate two codes similarity score."""
+        status = ctypes.create_string_buffer(128)
+        score = self._lib.calculate_codes_similarity(
+            lhs_code_bytes, rhs_code_bytes, status
+        )
+        self._check_status(status)
+        return score
+
     @staticmethod
     def _check_status(status):
         code = status.raw[0]
         if code != 0:
-            raise EdccRuntimeException(errcode=code, errmsg=status.raw[1:].decode())
-
-
-default_encoder_config = EncoderConfig(29, 5, 5, 10)
-_edcc_lib = EdccLibrary()
+            raise EdccExceptionBase(errcode=code, errmsg=status.raw[1:].decode())
