@@ -3,15 +3,15 @@
 # that can be found in the LICENSE file.
 
 
-from .clib import EdccLibrary
+from .adapter import EdccAdapter
 
 
 class PalmprintCode(object):
     """Store code, compare to another code."""
 
-    def __init__(self, code_bytes, lib: EdccLibrary):
+    def __init__(self, code_bytes, adapter: EdccAdapter):
         self._code = code_bytes
-        self._lib = lib
+        self._adapter = adapter
 
     def compare_to(self, another):
-        return self._lib.calc_score(self._code, another._code)
+        return self._adapter.calc_score(self._code, another._code)
