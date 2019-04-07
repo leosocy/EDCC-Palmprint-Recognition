@@ -16,7 +16,7 @@ class EdccAdapter(object):
         suffix="so" if platform.uname()[0] == "Linux" else "dylib"
     )
     LIB_INSTALLATION_URL = (
-        "https://github.com/Leosocy/EDCC-Palmprint-Recognition#installation"
+        "https://github.com/Leosocy/EDCC-Palmprint-Recognition#install-library"
     )
 
     def __init__(self):

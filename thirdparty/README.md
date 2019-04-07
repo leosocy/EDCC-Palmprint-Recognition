@@ -1,3 +1,0 @@
-# thirdparty libraries
-
-- gtest

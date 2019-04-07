@@ -7,8 +7,6 @@
 
 #define EDCC_API
 
-#include <stdint.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -18,8 +16,9 @@ extern "C" {
  * @param status_ptr: a pointer of status, status[0] stands for code, status[1:] stands for msg.
  * @return: id of encoder. return -1 if config is invalid.
  */
-EDCC_API int new_encoder_with_config(uint8_t image_size, uint8_t gabor_kernel_size, uint8_t laplace_kernel_size,
-                                     uint8_t gabor_directions, char* status_ptr);
+EDCC_API int new_encoder_with_config(unsigned char image_size, unsigned char gabor_kernel_size,
+                                     unsigned char laplace_kernel_size, unsigned char gabor_directions,
+                                     char* status_ptr);
 
 /**
  * Get the length used to initialize code buffer.

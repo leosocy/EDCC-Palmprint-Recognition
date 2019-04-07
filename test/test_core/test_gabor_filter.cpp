@@ -37,13 +37,5 @@ TEST_F(GaborFilterTestFixture, handle_palmprint_image) {
   auto d1 = result[0];
   EXPECT_EQ(d1.cols, cfg.image_size);  // has been resized
   EXPECT_EQ(d1.channels(), 1);         // has been converted to gray image.
-  for (int row = 0; row < d1.rows; ++row) {
-    const double *col_ptr = d1.ptr<double>(row);
-    for (int col = 0; col < d1.cols; ++col) {
-      // expect has been nomalized.
-      EXPECT_TRUE(*col_ptr <= 1.0);
-      ++col_ptr;
-    }
-  }
 }
 }  // namespace

@@ -39,9 +39,9 @@ There are ***some requirements*** if you want to install `EDCC` library:
 2. `cd EDCC-Palmprint-Recognition && mkdir -p build && cd build`
 3. `cmake .. && sudo make install`
 
-### Install Python module
+### Install Python Package
 
-Please make sure the C++ library is installed successfully.
+Please make sure that the core library has been successfully installed by following the steps above.
 
 **Python3.x** required.
 
@@ -52,9 +52,7 @@ Please make sure the C++ library is installed successfully.
 
 ## Usage
 
-### C
-
-### C++
+### C/C++
 
 In your CMakeLists.txt, add these lines:
 
@@ -69,13 +67,63 @@ target_link_libraries(${YOUR_PROJECT} ${EDCC_LIBRARIES})
 Then you can use it in your source code like this:
 
 ```c++
+#include <edcc/facade.h>
+#include <edcc/status.h>
+
+#define ASSERT_STATUS_OK(s) \
+  do {                      \
+    if (!s.IsOk()) {        \
+      perror(s.msg());      \
+      return -1;            \
+    }                       \
+  } while (0)
+
+using edcc::EdccFacade;
+using edcc::Status;
+
+int main() {
+  Status s;
+  // create a new encoder.
+  auto inst = EdccFacade::Instance();
+  auto encoder_id = inst->NewEncoderWithConfig(29, 5, 5, 10, &s);
+  ASSERT_STATUS_OK(s);
+  // encode palmprints to code buffer.
+  size_t buffer_size = inst->GetSizeOfCodeBufferRequired(encoder_id);
+  char* code_buffer_one = new char[buffer_size];
+  char* code_buffer_another = new char[buffer_size];
+  inst->EncodePalmprint(encoder_id, one_image_file_path, code_buffer_one, buffer_size, &s);
+  inst->EncodePalmprint(encoder_id, another_image_file_path, code_buffer_another, buffer_size, &s);
+  ASSERT_STATUS_OK(s);
+  // calculate the similarity score of two codes.
+  double score = inst->CalcCodeSimilarity(code_buffer_one, code_buffer_another, &s);
+  ASSERT_STATUS_OK(s);
+  return 0;
+}
 ```
 
-You can find the detail under `samples/cpp_sample` directory.
+You can find the detail under `examples/cpp_example` directory.
 
 ### Python
 
-## Run samples
+```Python
+import edcc
+
+config  = edcc.EncoderConfig(29, 5, 5 ,10)
+encoder = edcc.create_encoder(config)
+one_palmprint_code = encoder.encode_using_filename("./palmprint_one.bmp")
+another_palmprint_code = encoder.encode_using_filename("./palmprint_another.bmp")
+# TODO: encode_using_image_bytes from requests.
+similarity_score = one_palmprint_code.compare_to(another_palmprint_code)
+```
+
+## Examples
+
+Make sure you have installed [library](#Install\ library) and [python package](#Install\ Python\ Package) before running examples.
+
+Before you run examples, please prepare some date follow this:
+
+1. `cd examples/palmprint_data`
+1. `sh download.sh`
 
 ### C
 
@@ -83,6 +131,6 @@ You can find the detail under `samples/cpp_sample` directory.
 
 ### Python
 
-### Contributing
+## Contributing
 
 Please see [CONTRIBUTING.md](https://github.com/Leosocy/EDCC-Palmprint-Recognition/blob/master/CONTRIBUTING.md)

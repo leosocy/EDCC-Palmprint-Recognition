@@ -8,8 +8,8 @@
 using edcc::EdccFacade;
 using edcc::Status;
 
-int new_encoder_with_config(uint8_t image_size, uint8_t gabor_kernel_size, uint8_t laplace_kernel_size,
-                            uint8_t gabor_directions, char* status_ptr) {
+int new_encoder_with_config(unsigned char image_size, unsigned char gabor_kernel_size,
+                            unsigned char laplace_kernel_size, unsigned char gabor_directions, char* status_ptr) {
   Status s;
   int eid = EdccFacade::Instance()->NewEncoderWithConfig(image_size, gabor_kernel_size, laplace_kernel_size,
                                                          gabor_directions, &s);

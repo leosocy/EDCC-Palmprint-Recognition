@@ -11,19 +11,18 @@ GaborFilter::GaborFilter(const EncoderConfig &config) : cfg_(config) { InitKerne
 void GaborFilter::Handle(const cv::Mat &src, std::vector<cv::Mat> *result) {
   assert(result);
   cv::Mat enhanced_image;
-  PreprocessImage(src, &enhanced_image);
+  PreProcessImage(src, &enhanced_image);
   EnhanceImage(enhanced_image, &enhanced_image);
-  cv::Mat directional_filter_result;
   for (uint8_t d = 0; d < cfg_.gabor_directions; ++d) {
+    cv::Mat directional_filter_result;
     filter2D(enhanced_image, directional_filter_result, CV_64F, kernels_[d]);
-    cv::normalize(directional_filter_result, directional_filter_result, 0, 1, CV_MINMAX);
     result->push_back(directional_filter_result.clone());
   }
 }
 
 void GaborFilter::InitKernels() {
-  cv::Mat directional_kernel;
   for (uint8_t d = 0; d < cfg_.gabor_directions; ++d) {
+    cv::Mat directional_kernel;
     GetKernelReal(&directional_kernel, cfg_.gabor_kernel_size, cfg_.gabor_kernel_size, 0, d);
     kernels_.push_back(directional_kernel.clone());
   }
@@ -48,7 +47,7 @@ void GaborFilter::GetKernelReal(cv::Mat *kernel, int width, int height, int dime
   }
 }
 
-void GaborFilter::PreprocessImage(const cv::Mat &src, cv::Mat *result) {
+void GaborFilter::PreProcessImage(const cv::Mat &src, cv::Mat *result) {
   assert(result);
   cv::Mat resized;
   cv::resize(src, resized, cv::Size(cfg_.image_size, cfg_.image_size));
