@@ -1,6 +1,5 @@
 # Contributing
 
-
 Contributions are welcome, and they are greatly appreciated! Every little bit helps, and credit will always be given.
 
 You can contribute in many ways:
@@ -60,4 +59,3 @@ Before you submit a pull request, check that it meets these guidelines:
 
 1. The pull request should include tests and reach the codecov requirement(see in [.codecov.yml](https://github.com/Leosocy/EDCC-Palmprint-Recognition/blob/master/.codecov.yml)).
 1. Please follow `Clean Code` standards, and it would be nicer to follow the [Google C++ Code Style](https://leosocy.top/Google%20C++%20Code%20Style/).
-
