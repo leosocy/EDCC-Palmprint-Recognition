@@ -28,6 +28,16 @@ EDCC_API int new_encoder_with_config(unsigned char image_size, unsigned char gab
 EDCC_API unsigned long get_size_of_code_buffer_required(int eid);
 
 /**
+ * Encode a palmprint image to code buffer.
+ * @param eid: encoder id returned from `new_encoder_with_config`.
+ * @param filepath: path of palmprint image.
+ * @param code_bytes: a bytes of palmprint code buffer.
+ * @param code_bytes_size: the size of code_bytes buffer.
+ */
+EDCC_API void encode_palmprint_using_file(int eid, const char* filepath, char* code_bytes,
+                                          unsigned long code_bytes_size, char* status_ptr);
+
+/**
  * Encode a palmprint bytes to code buffer.
  * @param eid: encoder id returned from `new_encoder_with_config`.
  * @param palmprint_bytes: a bytes of palmprint image.
@@ -35,8 +45,8 @@ EDCC_API unsigned long get_size_of_code_buffer_required(int eid);
  * @param code_bytes: a bytes of palmprint code buffer.
  * @param code_bytes_size: the size of code_bytes buffer.
  */
-EDCC_API void encode_palmprint_bytes(int eid, const char* palmprint_bytes, unsigned long palmprint_bytes_size,
-                                     char* code_bytes, unsigned long code_bytes_size, char* status_ptr);
+EDCC_API void encode_palmprint_using_bytes(int eid, const char* palmprint_bytes, unsigned long palmprint_bytes_size,
+                                           char* code_bytes, unsigned long code_bytes_size, char* status_ptr);
 
 /**
  * Calculate similarity of two codes.

@@ -42,7 +42,7 @@ class EdccAdapter(object):
         self._lib.get_size_of_code_buffer_required.argtypes = [ctypes.c_int]
         self._lib.get_size_of_code_buffer_required.restype = ctypes.c_ulong
 
-        self._lib.encode_palmprint_bytes.argtypes = [
+        self._lib.encode_palmprint_using_bytes.argtypes = [
             ctypes.c_int,
             ctypes.c_char_p,
             ctypes.c_ulong,
@@ -50,7 +50,7 @@ class EdccAdapter(object):
             ctypes.c_ulong,
             ctypes.c_char_p,
         ]
-        self._lib.encode_palmprint_bytes.restype = None
+        self._lib.encode_palmprint_using_bytes.restype = None
 
         self._lib.calculate_codes_similarity.argtypes = [
             ctypes.c_char_p,
@@ -77,7 +77,7 @@ class EdccAdapter(object):
         status = ctypes.create_string_buffer(128)
         code_bytes_size = self._lib.get_size_of_code_buffer_required(encoder_id)
         code_bytes = ctypes.create_string_buffer(code_bytes_size)
-        self._lib.encode_palmprint_bytes(
+        self._lib.encode_palmprint_using_bytes(
             encoder_id,
             palmprint_bytes,
             len(palmprint_bytes),

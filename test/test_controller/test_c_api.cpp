@@ -29,10 +29,11 @@ TEST_F(CApiTestFixture, compare_two_palmprint) {
   unsigned long code_buffer_size = get_size_of_code_buffer_required(eid);
   char* a_01_code_bytes = new char[code_buffer_size];
   char* b_01_code_bytes = new char[code_buffer_size];
-  encode_palmprint_bytes(eid, (char*)a_01_bytes_.data(), a_01_bytes_.size(), a_01_code_bytes, code_buffer_size, status);
+  encode_palmprint_using_bytes(eid, (char*)a_01_bytes_.data(), a_01_bytes_.size(), a_01_code_bytes, code_buffer_size,
+                               status);
   EXPECT_EQ(status[0], 0);
   status[0] = 1;
-  encode_palmprint_bytes(eid, (char*)b_01_bytes_.data(), b_01_bytes_.size(), b_01_code_bytes, code_buffer_size, status);
+  encode_palmprint_using_file(eid, TEST_B_01_PALMPRINT_IMAGE, b_01_code_bytes, code_buffer_size, status);
   EXPECT_EQ(status[0], 0);
   status[0] = 1;
   double score = .0;

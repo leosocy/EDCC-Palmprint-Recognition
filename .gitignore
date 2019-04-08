@@ -8,6 +8,7 @@ build*
 **/*.bmp
 **/*.jpg
 .vscode
+**/*.tar.gz
 
 ### C ###
 # Prerequisites
