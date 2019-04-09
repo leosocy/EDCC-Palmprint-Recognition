@@ -1,6 +1,6 @@
-############################################
-#   RobustPalmRoi test cmake configuration #
-############################################
+###################################
+#   EDCC test cmake configuration #
+###################################
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
