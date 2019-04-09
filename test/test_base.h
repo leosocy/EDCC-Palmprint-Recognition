@@ -7,7 +7,7 @@
 #include <gtest/gtest.h>
 #include <opencv2/opencv.hpp>
 
-#define TEST_PALMPRINT_DATA_DIR "../../test/palmprint_data"
+#define TEST_PALMPRINT_DATA_DIR "../../palmprint_data"
 
 #define TEST_A_01_PALMPRINT_IMAGE TEST_PALMPRINT_DATA_DIR "/a_01.bmp"
 #define TEST_A_02_PALMPRINT_IMAGE TEST_PALMPRINT_DATA_DIR "/a_02.bmp"

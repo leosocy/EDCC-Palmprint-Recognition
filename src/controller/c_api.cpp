@@ -21,8 +21,15 @@ unsigned long get_size_of_code_buffer_required(int eid) {
   return EdccFacade::Instance()->GetSizeOfCodeBufferRequired(eid);
 }
 
-void encode_palmprint_bytes(int eid, const char* palmprint_bytes, unsigned long palmprint_bytes_size, char* code_bytes,
-                            unsigned long code_bytes_size, char* status_ptr) {
+void encode_palmprint_using_file(int eid, const char* filepath, char* code_bytes, unsigned long code_bytes_size,
+                                 char* status_ptr) {
+  Status s;
+  EdccFacade::Instance()->EncodePalmprint(eid, filepath, code_bytes, code_bytes_size, &s);
+  s.CopyToBuffer(status_ptr);
+}
+
+void encode_palmprint_using_bytes(int eid, const char* palmprint_bytes, unsigned long palmprint_bytes_size,
+                                  char* code_bytes, unsigned long code_bytes_size, char* status_ptr) {
   Status s;
   std::vector<unsigned char> vp_bytes(palmprint_bytes_size);
   memcpy(vp_bytes.data(), palmprint_bytes, palmprint_bytes_size);
