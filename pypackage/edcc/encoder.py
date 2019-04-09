@@ -15,10 +15,10 @@ class Encoder(object):
         self._adapter = adapter
         self._id = self._adapter.new_encoder(self._cfg)
 
-    def encode_using_filename(self, filepath):
+    def encode_using_file(self, filepath):
         with open(filepath, "rb") as palmprint:
-            return self.encode_using_image_bytes(palmprint.read())
+            return self.encode_using_bytes(palmprint.read())
 
-    def encode_using_image_bytes(self, image_bytes):
+    def encode_using_bytes(self, image_bytes):
         code_bytes = self._adapter.do_encode(self._id, image_bytes)
         return PalmprintCode(code_bytes, self._adapter)

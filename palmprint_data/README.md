@@ -1,8 +1,12 @@
-# ROI Of Palmprint
+# ROI of palmprint
 
-Partial palmprint data set.
+There are only four palmprint images from two people for testing and example.
 
-For full data, [click here](https://pan.baidu.com/s/1sloOpjR)  (`passwd:`**q3cf**).
+For full data, run the following command
+
+```shell
+sh download.sh all
+```
 
 ## PolyU Palmprint Database
 
@@ -23,11 +27,3 @@ Contains images of palms from 300 individuals (192 men and 108 women), of whom 2
 The whole collection process is divided into two times. The average time interval between the first and second time is about 61 days. The maximum and the shortest time intervals are 106 days and 21 days respectively. Each time, 20 pictures of two palms are collected.
 
 Therefore, each subject collected 40 images from 2 palms, which contained a total of 12,000 image samples.
-
-## Use these palmprint ROI images to build a palmprint feature library
-
-You can see some examples written in C/C++/Python in [samples](https://github.com/Leosocy/EDCC-Palmprint-Recognition/tree/master/samples).
-
-These examples demonstrate how to use the palmprint ROI for **training** and **prediction**.
-
-***Use the EDCC library to generate your PalmID!***
