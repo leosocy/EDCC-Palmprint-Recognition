@@ -34,10 +34,10 @@ test() {
     docker run -it --rm -v ${CurDir}:/app -w /app ${OPENCV_CI_IMAGE} /bin/sh -ec """
         mkdir -p build_test; cd build_test;
         cmake .. -DEDCC_BUILD_TESTS=ON; make -j2 build_and_test;
-        lcov -b . -d . -c -o cov.info > /dev/null;
-        lcov -r cov.info \"/usr/*\" \"*/thirdparty/*\" \"*/test/*\" \"*/build_test/*\" \"/**/b64.*\" -o cov.info -q;
-        lcov -l cov.info;
-        genhtml -o cov_result cov.info > /dev/null; rm -rf ../cov_result; mv cov_result ..;
+        lcov -b . -d . -c -o cov_info.lst > /dev/null;
+        lcov -r cov_info.lst \"/usr/*\" \"*/thirdparty/*\" \"*/test/*\" \"*/build_test/*\" -o cov_info.lst -q;
+        lcov -l cov_info.lst;
+        genhtml -o cov_result cov_info.lst > /dev/null; rm -rf ../cov_result; mv cov_result ..;
         echo ""
         echo ""
         echo \"==========Generated code coverage report under ./cov_result directory.==========\"
