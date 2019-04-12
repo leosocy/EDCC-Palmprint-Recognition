@@ -51,7 +51,7 @@ void GaborFilter::PreProcessImage(const cv::Mat &src, cv::Mat *result) {
   assert(result);
   cv::Mat resized;
   cv::resize(src, resized, cv::Size(cfg_.image_size, cfg_.image_size));
-  cvtColor(resized, *result, CV_BGR2GRAY);
+  cvtColor(resized, *result, cv::COLOR_BGR2GRAY);
 }
 
 void GaborFilter::EnhanceImage(const cv::Mat &src, cv::Mat *result) {
