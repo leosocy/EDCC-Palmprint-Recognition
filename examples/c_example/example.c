@@ -38,5 +38,7 @@ int main() {
   double score = calculate_codes_similarity(code_buffer_one, code_buffer_another, status);
   ASSERT_STATUS_OK(status);
   printf("%s <-> %s similarity score:%lf\n", TEST_A_01_PALMPRINT_IMAGE, TEST_B_01_PALMPRINT_IMAGE, score);
+  free(code_buffer_one);
+  free(code_buffer_another);
   return 0;
 }
