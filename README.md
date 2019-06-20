@@ -6,7 +6,7 @@
 
 `EDCC(Enhanced and Discriminative Competitive Code)`, which is used for palmprint-recognition.
 
-Use the `EDCC` algorithm to validate on several published palmprint databases(`multispectral`, `tongji`), the first `N(N = 2, 4, 6, 8)` palmprint images of each palm are employed as training samples and the remaining palmprint images form the test sample set. Each sample in the test sample set is compared with all samples of each class in the training set to calculate the matching score. The class that produces the highest matching score is treated as the class of the test sample.
+Use the `EDCC` algorithm with [default config](https://github.com/Leosocy/EDCC-Palmprint-Recognition/blob/master/pypackage/edcc/config.py#L18) to validate on several published palmprint databases(`multispectral`, `tongji`), the first `N(N = 2, 4, 6, 8)` palmprint images of each palm are employed as training samples and the remaining palmprint images form the test sample set. Each sample in the test sample set is compared with all samples of each class in the training set to calculate the matching score. The class that produces the highest matching score is treated as the class of the test sample.
 
 |     Database      |   N=2    |   N=4    |   N=6    |   N=8    |
 | :---------------: | :------: | :------: | :------: | :------: |
@@ -41,14 +41,14 @@ There are ***some requirements*** if you want to install `EDCC` library:
 
 ### Install Python Package
 
-Please make sure that the core library has been successfully installed by following the steps above.
+Please make sure that the ***core library has been successfully installed*** by following the steps above.
 
 **Python3.x** required.
 
 *Steps:*
 
 1. `cd pypackage`
-1. `python setup.py install`
+2. `python setup.py install`
 
 ## Usage
 

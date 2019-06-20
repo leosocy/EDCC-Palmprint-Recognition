@@ -41,5 +41,7 @@ int main() {
   double score = inst->CalcCodeSimilarity(code_buffer_one, code_buffer_another, &s);
   ASSERT_STATUS_OK(s);
   printf("%s <-> %s similarity score:%lf\n", TEST_A_01_PALMPRINT_IMAGE, TEST_B_01_PALMPRINT_IMAGE, score);
+  delete code_buffer_one;
+  delete code_buffer_another;
   return 0;
 }
