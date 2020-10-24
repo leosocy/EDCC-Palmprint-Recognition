@@ -22,7 +22,7 @@ Advantages of `EDCC` algorithm:
 1. **Faster recognition speed.**
 1. **Higher recognition accuracy.**
 
-[**More details of `EDCC`**](https://blog.leosocy.top/EDCC%20Algorithm/)
+[**More details about `EDCC`**](https://blog.leosocy.top/posts/4354/)
 
 ## Installation
 
