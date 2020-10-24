@@ -140,6 +140,10 @@ INSTALL(EXPORT ${LIBRARY_NAME}-targets DESTINATION ${INSTALL_CMAKE_DIR})
 IF(${PROJECT_NAME}_BUILD_TESTS)
 	ENABLE_TESTING()
 	ADD_SUBDIRECTORY(test)
+ELSE()
+    ADD_SUBDIRECTORY(test/)
+    ADD_SUBDIRECTORY(examples/c_example)
+    ADD_SUBDIRECTORY(examples/cpp_example)
 ENDIF()
 
 
@@ -149,8 +153,3 @@ ADD_CUSTOM_TARGET(fmt
   COMMENT "Running clang-format"
   VERBATIM
 )
-
-# Subdirectories
-ADD_SUBDIRECTORY(test/)
-ADD_SUBDIRECTORY(examples/c_example)
-ADD_SUBDIRECTORY(examples/cpp_example)
