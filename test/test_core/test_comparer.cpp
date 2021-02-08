@@ -36,7 +36,7 @@ class ComparerTestFixture : public EdccTestFixtureBase {
     encoder.Encode(a_01_, a_01_code_, buffer_size);
     encoder.Encode(a_02_, a_02_code_, buffer_size);
     encoder.Encode(b_01_, b_01_code_, buffer_size);
-    config_reader_->SetGaborDirecions(15);
+    config_reader_->SetGaborDirections(15);
     Encoder encoder1(config_reader_->GetEncoderConfig());
     encoder1.Encode(b_02_, b_02_code_, buffer_size);
   }

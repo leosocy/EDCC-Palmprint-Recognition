@@ -29,7 +29,7 @@ void GaborFilter::InitKernels() {
 }
 
 void GaborFilter::GetKernelReal(cv::Mat *kernel, int width, int height, int dimension, int direction, double kmax,
-                                double f, double sigma) {
+                                double f, double sigma) const {
   int half_width = width / 2;
   int half_height = height / 2;
   double Qu = CV_PI * direction / cfg_.gabor_directions;
@@ -47,14 +47,14 @@ void GaborFilter::GetKernelReal(cv::Mat *kernel, int width, int height, int dime
   }
 }
 
-void GaborFilter::PreProcessImage(const cv::Mat &src, cv::Mat *result) {
+void GaborFilter::PreProcessImage(const cv::Mat &src, cv::Mat *result) const {
   assert(result);
   cv::Mat resized;
   cv::resize(src, resized, cv::Size(cfg_.image_size, cfg_.image_size));
   cvtColor(resized, *result, cv::COLOR_BGR2GRAY);
 }
 
-void GaborFilter::EnhanceImage(const cv::Mat &src, cv::Mat *result) {
+void GaborFilter::EnhanceImage(const cv::Mat &src, cv::Mat *result) const {
   assert(result);
   cv::Mat gaussian;
   GaussianBlur(src, gaussian, cv::Size(5, 5), 0, 0, cv::BORDER_DEFAULT);

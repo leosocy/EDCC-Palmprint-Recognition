@@ -38,10 +38,10 @@ int main() {
   inst->EncodePalmprint(encoder_id, TEST_B_02_PALMPRINT_IMAGE, code_buffer_another, buffer_size, &s);
   ASSERT_STATUS_OK(s);
   // calculate the similarity score of two codes.
-  double score = inst->CalcCodeSimilarity(code_buffer_one, code_buffer_another, &s);
+  double score = EdccFacade::CalcCodeSimilarity(code_buffer_one, code_buffer_another, &s);
   ASSERT_STATUS_OK(s);
   printf("%s <-> %s similarity score:%lf\n", TEST_B_01_PALMPRINT_IMAGE, TEST_B_02_PALMPRINT_IMAGE, score);
-  delete code_buffer_one;
-  delete code_buffer_another;
+  delete []code_buffer_one;
+  delete []code_buffer_another;
   return 0;
 }

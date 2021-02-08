@@ -13,7 +13,7 @@ namespace edcc {
 
 class ConfigReader {
  public:
-  virtual ~ConfigReader(){};
+  virtual ~ConfigReader() = default;;
   virtual Status LoadAndValidate() = 0;
   const EncoderConfig& GetEncoderConfig() { return encoder_cfg_; }
 
@@ -21,7 +21,7 @@ class ConfigReader {
   Status SetImageSize(uint8_t size);
   Status SetGaborKernelSize(uint8_t size);
   Status SetLaplaceKernelSize(uint8_t size);
-  Status SetGaborDirecions(uint8_t num);
+  Status SetGaborDirections(uint8_t num);
 
  protected:
   EncoderConfig encoder_cfg_;
@@ -29,7 +29,7 @@ class ConfigReader {
 
 class SimpleConfigReader : public ConfigReader {
  public:
-  SimpleConfigReader(const EncoderConfig& config);
+  explicit SimpleConfigReader(const EncoderConfig& config);
   Status LoadAndValidate() override;
 };
 

@@ -16,7 +16,7 @@ namespace edcc {
 
 class Encoder {
  public:
-  Encoder(const EncoderConfig& cfg);
+  explicit Encoder(const EncoderConfig& cfg);
 
   size_t GetCodeBufferSize() const;
   Status Encode(const cv::Mat& palmprint, PalmprintCode* code, size_t buffer_size) const;

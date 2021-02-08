@@ -10,7 +10,7 @@
 
 namespace edcc {
 
-EdccFacade::EdccFacade() {}
+EdccFacade::EdccFacade() = default;
 
 EdccFacade* EdccFacade::Instance() {
   static EdccFacade instance;
@@ -46,7 +46,7 @@ size_t EdccFacade::GetSizeOfCodeBufferRequired(EdccFacade::eid id) { return enco
 
 void EdccFacade::EncodePalmprint(EdccFacade::eid id, const cv::Mat& palmprint, char* code_buffer, size_t buffer_size,
                                  Status* s) {
-  PalmprintCode* code = reinterpret_cast<PalmprintCode*>(code_buffer);
+  auto* code = reinterpret_cast<PalmprintCode*>(code_buffer);
   *s = encoders_.at(id)->Encode(palmprint, code, buffer_size);
 }
 
@@ -57,8 +57,8 @@ void EdccFacade::EncodePalmprint(EdccFacade::eid id, const std::string& filename
 }
 
 double EdccFacade::CalcCodeSimilarity(const char* lhs_code_buffer, const char* rhs_code_buffer, Status* s) {
-  const PalmprintCode* lhs_code = reinterpret_cast<const PalmprintCode*>(lhs_code_buffer);
-  const PalmprintCode* rhs_code = reinterpret_cast<const PalmprintCode*>(rhs_code_buffer);
+  const auto* lhs_code = reinterpret_cast<const PalmprintCode*>(lhs_code_buffer);
+  const auto* rhs_code = reinterpret_cast<const PalmprintCode*>(rhs_code_buffer);
   double score = .0;
   *s = Comparer::Compare(*lhs_code, *rhs_code, &score);
   return score;
