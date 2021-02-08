@@ -44,7 +44,7 @@ Status ConfigReader::SetLaplaceKernelSize(uint8_t size) {
   return Status::Ok();
 }
 
-Status ConfigReader::SetGaborDirecions(uint8_t num) {
+Status ConfigReader::SetGaborDirections(uint8_t num) {
   if (num > limit::kMaxGaborDirections || num < limit::kMinGaborDirections) {
     return Status::InvalidArgument("Gabor directions not in range [%d, %d].", limit::kMinGaborDirections,
                                    limit::kMaxGaborDirections);
@@ -59,7 +59,7 @@ Status SimpleConfigReader::LoadAndValidate() {
   INVOKE_SETTER_WITH_STATUS_CHECKING(SetImageSize(encoder_cfg_.image_size));
   INVOKE_SETTER_WITH_STATUS_CHECKING(SetGaborKernelSize(encoder_cfg_.gabor_kernel_size));
   INVOKE_SETTER_WITH_STATUS_CHECKING(SetLaplaceKernelSize(encoder_cfg_.laplace_kernel_size));
-  INVOKE_SETTER_WITH_STATUS_CHECKING(SetGaborDirecions(encoder_cfg_.gabor_directions));
+  INVOKE_SETTER_WITH_STATUS_CHECKING(SetGaborDirections(encoder_cfg_.gabor_directions));
   return Status::Ok();
 }
 

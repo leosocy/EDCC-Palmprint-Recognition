@@ -5,7 +5,7 @@
 #ifndef EDCC_SRC_CONFIG_CONFIG_H_
 #define EDCC_SRC_CONFIG_CONFIG_H_
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace edcc {
 

@@ -38,7 +38,7 @@ class EdccFacade {
   void EncodePalmprint(EdccFacade::eid id, const std::string& filename, char* code_buffer, size_t buffer_size,
                        Status* s);
 
-  double CalcCodeSimilarity(const char* lhs_code_buffer, const char* rhs_code_buffer, Status* s);
+  static double CalcCodeSimilarity(const char* lhs_code_buffer, const char* rhs_code_buffer, Status* s);
 
  private:
   EdccFacade();

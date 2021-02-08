@@ -40,8 +40,8 @@ void encode_palmprint_using_bytes(int eid, const char* palmprint_bytes, unsigned
 
 double calculate_codes_similarity(char* lhs_code_bytes, char* rhs_code_bytes, char* status_ptr) {
   Status s;
-  double score = .0;
-  score = EdccFacade::Instance()->CalcCodeSimilarity(lhs_code_bytes, rhs_code_bytes, &s);
+  double score;
+  score = EdccFacade::CalcCodeSimilarity(lhs_code_bytes, rhs_code_bytes, &s);
   s.CopyToBuffer(status_ptr);
   return score;
 }
