@@ -31,7 +31,7 @@ Advantages of `EDCC` algorithm:
 There are ***some requirements*** if you want to install `EDCC` library:
 
 - OS *nix like.
-- [`OpenCV`](https://docs.opencv.org/3.4/d7/d9f/tutorial_linux_install.html) installed.
+- [`OpenCV 3.4`](https://docs.opencv.org/3.4/d7/d9f/tutorial_linux_install.html) or [`OpenCV 4.5`](https://docs.opencv.org/4.5.1/d7/d9f/tutorial_linux_install.html) installed.
 
 *Steps:*
 
@@ -41,7 +41,7 @@ There are ***some requirements*** if you want to install `EDCC` library:
 
 ### Install Python Package
 
-Please make sure that the ***core library has been successfully installed*** by following the steps above.
+Please make sure that the ***edcc library has been successfully installed*** by following the steps above.
 
 **Python3.x** required.
 
@@ -50,11 +50,31 @@ Please make sure that the ***core library has been successfully installed*** by 
 1. `cd pypackage`
 2. `python setup.py install`
 
+## QuickStart
+
+The project provides a Docker container runtime environment with edcc library and python package installed.
+
+You can quick start accord to the following commands:
+
+```shell
+# bootstrap a docker container with edcc library installed
+./manage.sh env
+
+# run c example
+cd /app/examples/c_example && mkdir -p build && cd build && cmake .. && make && ./run_c_sample
+
+# run cpp example
+cd /app/examples/cpp_example && mkdir -p build && cd build && cmake .. && make && ./run_cpp_sample
+
+# run python example
+cd /app/examples/py_example && python example.py
+```
+
 ## Usage
 
 Make sure you have installed [library](#install-library) and [Python package](#install-python-package) before using edcc.
 
-And you can see more details under [examples](./examples) directory about usage.
+And you can see more usage details under [examples](./examples) directory about usage.
 
 ### C/C++
 

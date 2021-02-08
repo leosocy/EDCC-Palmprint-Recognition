@@ -19,7 +19,7 @@ usage:
 """
 
 __author__ = "Leosocy <leosocy@gmail.com>"
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 from .adapter import EdccAdapter
 from .config import EncoderConfig, default_encoder_config
